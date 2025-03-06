@@ -1,29 +1,37 @@
 package com.example.mybudgetbuddy
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MyBudgetBuddyNav()  {
+fun MyBudgetBuddyNav(budgetViewModel: BudgetViewModel = viewModel())  {
 
     val navController = rememberNavController()
+    val loggedin by budgetViewModel.loggedin.collectAsState()
 
-    NavHost(navController = navController, startDestination = "unlogged") {
+    NavHost(
+        navController = navController,
+        startDestination = if (loggedin) "main" else "unlogged"
+    ) {
         composable("unlogged") {
             UnloggedScreen(navController)
         }
         composable("login") {
-            LoginScreen(navController)
+            LoginScreen(navController, budgetViewModel)
         }
         composable("register") {
-            RegisterScreen()
+            RegisterScreen(budgetViewModel)
         }
         composable("forgotPassword") {
             ForgotPasswordScreen()
+        }
+        composable("main") {
+            HomeView(budgetViewModel)
         }
     }
 }
