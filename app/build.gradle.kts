@@ -63,8 +63,11 @@ dependencies {
 
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-functions")
+
+    val nav_version = "2.8.8"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
