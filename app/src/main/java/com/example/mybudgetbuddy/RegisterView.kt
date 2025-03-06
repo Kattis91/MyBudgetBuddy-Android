@@ -12,21 +12,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(budgetViewModel : BudgetViewModel) {
 
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val confirmPassword = remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,31 +50,31 @@ fun RegisterScreen() {
         Spacer(modifier = Modifier.height(70.dp))
 
         TextField(
-            value = email.value,
-            onValueChange = { email.value = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Email") }
         )
 
         Spacer(modifier = Modifier.height(25.dp))
 
         TextField(
-            value = password.value,
-            onValueChange = { password.value = it },
+            value = password,
+            onValueChange = { password = it },
             label = { Text("Password") }
         )
 
         Spacer(modifier = Modifier.height(25.dp))
 
         TextField(
-            value = confirmPassword.value,
-            onValueChange = { confirmPassword.value = it },
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
             label = { Text("Confirm Password") }
         )
 
         Spacer(modifier = Modifier.height(70.dp))
 
         Button(onClick = {
-
+            budgetViewModel.register(email, password)
         },
             modifier = Modifier.width(150.dp)
         ) {
@@ -85,5 +88,5 @@ fun RegisterScreen() {
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen()
+    RegisterScreen(viewModel())
 }
