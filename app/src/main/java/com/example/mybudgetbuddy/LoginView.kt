@@ -23,9 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
 
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -71,7 +73,7 @@ fun LoginScreen() {
             Spacer(modifier = Modifier.weight(1f))
 
             TextButton(onClick = {
-
+                navController.navigate("forgotPassword")
             },
                modifier = Modifier.padding(end = 38.dp)
             ) {
@@ -95,5 +97,6 @@ fun LoginScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    val previewNavController = rememberNavController()
+    LoginScreen(previewNavController)
 }
