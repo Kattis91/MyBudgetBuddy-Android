@@ -28,64 +28,62 @@ fun UnloggedScreen(navController: NavController) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()) {
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(
+            painter = painterResource(id = R.drawable.savings),
+            contentDescription = "App Logo",
+            modifier = Modifier
+                .height(225.dp)
+                .width(225.dp),
 
-            Icon(
-                painter = painterResource(id = R.drawable.savings),
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .height(300.dp)
-                    .width(300.dp)
-                    .padding(bottom = 16.dp)
-                    .padding(top = 70.dp),
-                tint = Color.Unspecified
-            )
+            tint = Color.Unspecified
+        )
 
-            Text(
-                "MyBudgetBuddy",
-                fontSize = 30.sp,
-                color = colorResource(id = R.color.text_color),
-                modifier = Modifier
-                    .padding(top = 75.dp)
-            )
+        Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                "Managing Money shouldn't be hard",
-                fontSize = 20.sp,
-                color = colorResource(id = R.color.text_color),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-            )
-        }
+        Text(
+            "MyBudgetBuddy",
+            fontSize = 30.sp,
+            color = colorResource(id = R.color.text_color),
+            modifier = Modifier
+                .padding(top = 55.dp)
+        )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            "Managing Money shouldn't be hard",
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.text_color),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+        )
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(bottom = 100.dp)
-        ) {
-            Button(onClick = {
+        Spacer(modifier = Modifier.height(70.dp))
+
+
+        Button(
+            onClick = {
                 navController.navigate("login")
             },
-                modifier = Modifier.width(180.dp)
-            ) {
-                Text("Sign In")
-            }
+            modifier = Modifier
+                .width(180.dp)
+                .padding(bottom = 5.dp)
+        ) {
+            Text("Sign In")
+        }
 
-            Button(onClick = {
+        Button(
+            onClick = {
                 navController.navigate("register")
             },
-                modifier = Modifier.width(180.dp)
-            ) {
-                Text("Create account")
-            }
+            modifier = Modifier.width(180.dp)
+        ) {
+            Text("Create account")
         }
-        Spacer(modifier = Modifier.weight(1f))
     }
-
 }
 
 @Preview(showBackground = true)
