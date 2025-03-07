@@ -1,4 +1,4 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

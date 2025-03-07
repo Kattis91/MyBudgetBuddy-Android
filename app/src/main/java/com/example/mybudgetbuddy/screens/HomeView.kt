@@ -1,4 +1,4 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,12 +10,18 @@ import androidx.compose.material3.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mybudgetbuddy.screens.IncomesTabView
+import com.example.mybudgetbuddy.BudgetViewModel
+import com.example.mybudgetbuddy.TabBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(budgetViewModel: BudgetViewModel) {
     val navController = rememberNavController()
+
+    val startDate = "2023-01-01"
+    val endDate = "2023-12-31"
+    val totalIncome = 10000.0
+    val totalExpense = 5000.0
 
     Scaffold(
         topBar = {
@@ -44,10 +50,10 @@ fun HomeView(budgetViewModel: BudgetViewModel) {
                 HomeTabView()
             }
             composable("incomes") {
-                IncomesTabView()
+                IncomesTabView(startDate, endDate, totalIncome)
             }
             composable("expenses") {
-                ExpensesTabView()
+                ExpensesTabView(startDate, endDate, totalExpense)
             }
             composable("overview") {
                 OverviewTabView()
