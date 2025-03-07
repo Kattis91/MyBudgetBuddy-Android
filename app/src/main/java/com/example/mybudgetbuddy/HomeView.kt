@@ -1,27 +1,56 @@
 package com.example.mybudgetbuddy
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(budgetViewModel : BudgetViewModel) {
+fun HomeView(budgetViewModel: BudgetViewModel) {
+    val navController = rememberNavController()
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(onClick = {
-            budgetViewModel.logout()
-        }) {
-            Text("Log out")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("MyBudgetBuddy") },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Filled.Info, contentDescription = "Info")
+                    }
+                    IconButton(onClick = { budgetViewModel.logout() }) {
+                        Icon(Icons.Filled.ExitToApp, contentDescription = "Sign Out")
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            TabBar(navController = navController)
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("home") {
+                HomeTabView()
+            }
+            composable("incomes") {
+                IncomesTabView()
+            }
+            composable("expenses") {
+                ExpensesTabView()
+            }
+            composable("overview") {
+                OverviewTabView()
+            }
         }
     }
-
 }
