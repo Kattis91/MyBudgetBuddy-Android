@@ -3,7 +3,6 @@ package com.example.mybudgetbuddy
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -42,9 +41,9 @@ fun TabBar(navController: NavController) {
                                 saveState = true
                             }
                             // Avoid multiple copies of the same destination when
-                            // reselecting the same item
+                            // re-selecting the same item
                             launchSingleTop = true
-                            // Restore state when reselecting a previously selected item
+                            // Restore state when re-selecting a previously selected item
                             restoreState = true
                         }
                     }

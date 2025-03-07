@@ -12,11 +12,11 @@ import androidx.navigation.compose.rememberNavController
 fun MyBudgetBuddyNav(budgetViewModel: BudgetViewModel = viewModel())  {
 
     val navController = rememberNavController()
-    val loggedin by budgetViewModel.loggedin.collectAsState()
+    val loggedIn by budgetViewModel.loggedIn.collectAsState()
 
     NavHost(
         navController = navController,
-        startDestination = if (loggedin) "main" else "unlogged"
+        startDestination = if (loggedIn) "main" else "unlogged"
     ) {
         composable("unlogged") {
             UnloggedScreen(navController)

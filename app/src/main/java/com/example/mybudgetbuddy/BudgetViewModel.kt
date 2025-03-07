@@ -8,32 +8,32 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class BudgetViewModel : ViewModel() {
 
-    private val _loggedin = MutableStateFlow(false)
-    val loggedin = _loggedin.asStateFlow()
+    private val _loggedIn = MutableStateFlow(false)
+    val loggedIn = _loggedIn.asStateFlow()
 
     init {
-        checklogin()
+        checkLogin()
     }
 
-    fun checklogin() {
-        if(Firebase.auth.currentUser == null) {
-            _loggedin.value = false
+    private fun checkLogin() {
+        if (Firebase.auth.currentUser == null) {
+            _loggedIn.value = false
         } else {
-            _loggedin.value = true
+            _loggedIn.value = true
         }
     }
 
-    fun login(email : String, password : String) {
+    fun login(email: String, password: String) {
         Firebase.auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            checklogin()
+            checkLogin()
         }.addOnFailureListener {
 
         }
     }
 
-    fun register(email : String, password : String) {
+    fun register(email: String, password: String) {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-            checklogin()
+            checkLogin()
         }.addOnFailureListener {
 
         }
@@ -41,6 +41,6 @@ class BudgetViewModel : ViewModel() {
 
     fun logout() {
         Firebase.auth.signOut()
-        checklogin()
+        checkLogin()
     }
 }

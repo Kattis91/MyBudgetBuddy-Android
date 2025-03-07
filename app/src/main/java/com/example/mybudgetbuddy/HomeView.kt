@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.navigation.compose.NavHost
@@ -25,7 +25,7 @@ fun HomeView(budgetViewModel: BudgetViewModel) {
                         Icon(Icons.Filled.Info, contentDescription = "Info")
                     }
                     IconButton(onClick = { budgetViewModel.logout() }) {
-                        Icon(Icons.Filled.ExitToApp, contentDescription = "Sign Out")
+                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
                     }
                 }
             )
