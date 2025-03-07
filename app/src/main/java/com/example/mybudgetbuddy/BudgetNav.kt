@@ -33,7 +33,7 @@ fun MyBudgetBuddyNav(budgetViewModel: BudgetViewModel = viewModel())  {
             RegisterScreen(budgetViewModel)
         }
         composable("forgotPassword") {
-            ForgotPasswordScreen(navController)
+            ForgotPasswordScreen(navController, budgetViewModel)
         }
         composable("main") {
             HomeView(budgetViewModel)

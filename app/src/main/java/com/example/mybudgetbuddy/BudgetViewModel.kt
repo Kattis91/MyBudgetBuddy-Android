@@ -43,4 +43,13 @@ class BudgetViewModel : ViewModel() {
         Firebase.auth.signOut()
         checkLogin()
     }
+
+    fun resetPassword(email: String) {
+        Firebase.auth.sendPasswordResetEmail(email).addOnSuccessListener {
+            checkLogin()
+        }.addOnFailureListener {
+
+        }
+    }
 }
+

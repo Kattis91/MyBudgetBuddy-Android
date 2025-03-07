@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -24,14 +26,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
 
 @Composable
-fun ForgotPasswordScreen(navController: NavController) {
+fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetViewModel) {
 
-    val email = remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -72,8 +76,8 @@ fun ForgotPasswordScreen(navController: NavController) {
             )
 
             TextField(
-                value = email.value,
-                onValueChange = { email.value = it },
+                value = email,
+                onValueChange = { email = it },
                 label = { Text("Email") }
             )
 
@@ -81,7 +85,7 @@ fun ForgotPasswordScreen(navController: NavController) {
 
             Button(
                 onClick = {
-
+                    budgetViewModel.resetPassword(email)
                 },
                 modifier = Modifier.width(150.dp)
             ) {
@@ -95,5 +99,5 @@ fun ForgotPasswordScreen(navController: NavController) {
 @Composable
 fun ForgotPasswordScreenPreview() {
     val previewNavController = rememberNavController()
-    ForgotPasswordScreen(previewNavController)
+    ForgotPasswordScreen(previewNavController, viewModel())
 }
