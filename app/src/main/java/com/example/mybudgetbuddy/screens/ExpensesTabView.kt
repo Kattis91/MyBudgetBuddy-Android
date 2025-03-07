@@ -3,8 +3,10 @@ package com.example.mybudgetbuddy.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -53,7 +55,7 @@ fun ExpensesTabView(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "$${"%.2f".format(totalExpense)}"
+                text = "%.2f".format(totalExpense)
             )
         }
 
@@ -65,15 +67,27 @@ fun ExpensesTabView(
                 onValueChange = { expenseAmount = it },
                 label = { Text("Amount") }
             )
+
+            CategoryMenu(
+                categories = categories,
+                selectedCategory = selectedCategory,
+                onCategorySelected = { category -> selectedCategory = category },
+                showNewCategoryField = showNewCategoryField,
+                onShowNewCategoryFieldChange = { showNewCategoryField = it }
+            )
         }
 
-        CategoryMenu(
-            categories = categories,
-            selectedCategory = selectedCategory,
-            onCategorySelected = { category -> selectedCategory = category },
-            showNewCategoryField = showNewCategoryField,
-            onShowNewCategoryFieldChange = { showNewCategoryField = it }
-        )
+        Button(onClick = {
+
+        },
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .padding(horizontal = 50.dp)
+                .fillMaxWidth()
+        ) {
+            Text("Add Expense")
+
+        }
     }
 }
 
