@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mybudgetbuddy.CategoryMenu
+import com.example.mybudgetbuddy.components.CategoryMenu
 
 @Composable
 fun IncomesTabView(
@@ -66,6 +66,14 @@ fun IncomesTabView(
                 label = { Text("Amount") }
             )
         }
+
+        CategoryMenu(
+            categories = categories,
+            selectedCategory = selectedCategory,
+            onCategorySelected = { category -> selectedCategory = category },
+            showNewCategoryField = showNewCategoryField,
+            onShowNewCategoryFieldChange = { showNewCategoryField = it }
+        )
     }
 }
 
