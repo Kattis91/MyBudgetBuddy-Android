@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.BudgetViewModel
-import com.example.mybudgetbuddy.TabBar
+import com.example.mybudgetbuddy.components.TabBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

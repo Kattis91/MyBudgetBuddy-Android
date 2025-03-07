@@ -1,4 +1,4 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.mybudgetbuddy.TabItem
 
 @Composable
 fun TabBar(navController: NavController) {
