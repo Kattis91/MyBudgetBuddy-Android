@@ -1,15 +1,18 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,13 +26,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.mybudgetbuddy.BudgetViewModel
+import com.example.mybudgetbuddy.R
 
 @Composable
-fun RegisterScreen(budgetViewModel : BudgetViewModel) {
+fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,30 +69,39 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             label = { Text("Password") }
         )
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(3.dp))
 
-        TextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") }
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            TextButton(onClick = {
+                navController.navigate("forgotPassword")
+            },
+               modifier = Modifier.padding(end = 38.dp)
+            ) {
+                Text("Forgot Password?")
+            }
+        }
 
         Spacer(modifier = Modifier.height(70.dp))
 
         Button(onClick = {
-            budgetViewModel.register(email, password)
+            budgetViewModel.login(email, password)
         },
             modifier = Modifier.width(150.dp)
         ) {
-            Text("Sign Up")
+            Text("Sign In")
         }
 
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(viewModel())
+fun LoginScreenPreview() {
+    val previewNavController = rememberNavController()
+    LoginScreen(previewNavController, viewModel())
 }

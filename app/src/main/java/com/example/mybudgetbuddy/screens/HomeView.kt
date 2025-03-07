@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.mybudgetbuddy.screens.IncomesTabView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
