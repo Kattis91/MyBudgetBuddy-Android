@@ -1,9 +1,11 @@
 package com.example.mybudgetbuddy
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,66 +24,75 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ForgotPasswordScreen() {
+fun ForgotPasswordScreen(navController: NavController) {
 
     val email = remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(330.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(1f))
 
-            TextButton(onClick = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
 
-            },
-                modifier = Modifier.padding(end = 20.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("X")
+                Spacer(modifier = Modifier.weight(1f))
+
+                TextButton(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    modifier = Modifier.padding(end = 20.dp)
+                ) {
+                    Text("X")
+                }
+            }
+
+            Text(
+                "Reset Password",
+                fontSize = 20.sp,
+                color = colorResource(id = R.color.text_color),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(bottom = 50.dp)
+            )
+
+            TextField(
+                value = email.value,
+                onValueChange = { email.value = it },
+                label = { Text("Email") }
+            )
+
+            Spacer(modifier = Modifier.height(70.dp))
+
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier.width(150.dp)
+            ) {
+                Text("Send Reset Link")
             }
         }
-
-        Text(
-            "Reset Password",
-            fontSize = 20.sp,
-            color = colorResource(id = R.color.text_color),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(bottom = 50.dp)
-        )
-
-        TextField(
-            value = email.value,
-            onValueChange = { email.value = it },
-            label = { Text("Email") }
-        )
-
-        Spacer(modifier = Modifier.height(70.dp))
-
-        Button(onClick = {
-
-        },
-            modifier = Modifier.width(150.dp)
-        ) {
-            Text("Send Reset Link")
-        }
-
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ForgotPasswordScreenPreview() {
-    ForgotPasswordScreen()
+    val previewNavController = rememberNavController()
+    ForgotPasswordScreen(previewNavController)
 }

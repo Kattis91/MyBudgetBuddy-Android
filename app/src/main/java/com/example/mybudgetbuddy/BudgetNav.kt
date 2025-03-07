@@ -28,7 +28,7 @@ fun MyBudgetBuddyNav(budgetViewModel: BudgetViewModel = viewModel())  {
             RegisterScreen(budgetViewModel)
         }
         composable("forgotPassword") {
-            ForgotPasswordScreen()
+            ForgotPasswordScreen(navController)
         }
         composable("main") {
             HomeView(budgetViewModel)
