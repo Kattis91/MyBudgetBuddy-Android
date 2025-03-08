@@ -10,4 +10,5 @@
 
     <color name="text_color">#003366</color>
     <color name="error_message_color">#C95E7B</color>
+    <color name="success_message_color">#78B6A8</color>
 </resources>

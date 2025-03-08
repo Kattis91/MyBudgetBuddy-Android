@@ -1,20 +1,11 @@
 package com.example.mybudgetbuddy
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.mybudgetbuddy.components.BudgetPeriod
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Calendar
-import java.util.Date
-import java.util.concurrent.CountDownLatch
 
 class BudgetViewModel : ViewModel() {
 
@@ -65,12 +56,15 @@ class BudgetViewModel : ViewModel() {
         checkLogin()
     }
 
-    fun resetPassword(email: String) {
-        Firebase.auth.sendPasswordResetEmail(email).addOnSuccessListener {
-            checkLogin()
-        }.addOnFailureListener {
-
-        }
+    fun resetPassword(email: String, onResult: (String) -> Unit) {
+        Firebase.auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onResult("") // Empty string means success, no error
+            }
+            .addOnFailureListener { exception ->
+                val errorMessage = exception.localizedMessage ?: "Reset failed. Please try again."
+                onResult(errorMessage) // Return error message
+            }
     }
 }
 
