@@ -1,15 +1,28 @@
 package com.example.mybudgetbuddy
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mybudgetbuddy.components.BudgetPeriod
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Calendar
+import java.util.Date
+import java.util.concurrent.CountDownLatch
 
 class BudgetViewModel : ViewModel() {
 
     private val _loggedIn = MutableStateFlow(false)
     val loggedIn = _loggedIn.asStateFlow()
+
+    private val _currentBudgetPeriod = MutableStateFlow<BudgetPeriod?>(null)
+    val currentBudgetPeriod = _currentBudgetPeriod.asStateFlow()
 
     init {
         checkLogin()
@@ -23,19 +36,27 @@ class BudgetViewModel : ViewModel() {
         }
     }
 
-    fun login(email: String, password: String) {
-        Firebase.auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            checkLogin()
-        }.addOnFailureListener {
-
-        }
+    fun login(email: String, password: String, onError: (String) -> Unit) {
+        Firebase.auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                checkLogin()  // Proceed if login is successful
+            }
+            .addOnFailureListener { exception ->
+                // Handle error if login fails
+                val errorMessage = exception.localizedMessage ?: "Login failed. Please try again."
+                onError(errorMessage)  // Pass error message to onError callback
+            }
     }
 
-    fun register(email: String, password: String) {
+
+    fun register(email: String, password: String, onError: (String) -> Unit) {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             checkLogin()
-        }.addOnFailureListener {
-
+        }
+        .addOnFailureListener { exception ->
+            // Handle error if login fails
+            val errorMessage = exception.localizedMessage ?: "Registration failed. Please try again."
+            onError(errorMessage)  // Pass error message to onError callback
         }
     }
 
