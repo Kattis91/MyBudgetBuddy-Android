@@ -1,7 +1,7 @@
 package com.example.mybudgetbuddy
 
 import androidx.lifecycle.ViewModel
-import com.example.mybudgetbuddy.components.BudgetPeriod
+import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
