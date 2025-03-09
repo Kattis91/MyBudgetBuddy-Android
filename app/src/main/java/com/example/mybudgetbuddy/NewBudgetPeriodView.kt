@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -55,7 +56,7 @@ fun NewBudgetPeriodView(
     var validationMessage by remember { mutableStateOf("") }
 
     // Date formatter
-    val dateFormatter = java.text.SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
     // Validation function
     fun validatePeriod(): Boolean {
@@ -133,18 +134,13 @@ fun NewBudgetPeriodView(
                     Text("Start Date", modifier = Modifier.width(100.dp))
 
                     // Use a clickable text that shows a DatePicker dialog
-                    Button(
-                        onClick = {
-                            // Here you would show a date picker dialog
-                            // For simplicity, we'll just add a week to the date in this example
-                            val calendar = Calendar.getInstance()
-                            calendar.time = startDate
-                            calendar.add(Calendar.DAY_OF_MONTH, 1)
-                            startDate = calendar.time
+                    DatePickerButton(
+                        label = "Start Date",
+                        date = startDate,
+                        onDateSelected = { newDate ->
+                            startDate = newDate
                         }
-                    ) {
-                        Text(dateFormatter.format(startDate))
-                    }
+                    )
                 }
 
                 // End date picker
@@ -156,18 +152,13 @@ fun NewBudgetPeriodView(
                 ) {
                     Text("End Date", modifier = Modifier.width(100.dp))
 
-                    Button(
-                        onClick = {
-                            // Here you would show a date picker dialog
-                            // For simplicity, we'll just add a week to the date in this example
-                            val calendar = Calendar.getInstance()
-                            calendar.time = endDate
-                            calendar.add(Calendar.DAY_OF_MONTH, 1)
-                            endDate = calendar.time
+                    DatePickerButton(
+                        label = "End Date",
+                        date = endDate,
+                        onDateSelected = { newDate ->
+                            endDate = newDate
                         }
-                    ) {
-                        Text(dateFormatter.format(endDate))
-                    }
+                    )
                 }
 
                 // Validation error
