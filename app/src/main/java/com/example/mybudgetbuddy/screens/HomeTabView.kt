@@ -1,6 +1,5 @@
 package com.example.mybudgetbuddy.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,11 +32,6 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
     val isLoading by viewModel.isLoading.observeAsState(false)
 
     var showNewPeriodDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = Unit) {
-        Log.d("HomeTabView", "LaunchedEffect triggered, loading data")
-        viewModel.loadData()
-    }
 
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
