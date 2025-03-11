@@ -68,18 +68,33 @@ data class BudgetPeriod(
     companion object {
         fun fromDict(dict: Map<String, Any>): BudgetPeriod? {
             try {
-                // Get required values
-                val startDateTimestamp = dict["startDate"] as? Double ?: return null
-                val endDateTimestamp = dict["endDate"] as? Double ?: return null
+                Log.d("BudgetPeriod", "Parsing dictionary: ${dict.keys.joinToString()}")
+
+                // Use Number to handle both Long and Double
+                val startDateRaw = dict["startDate"] as? Number
+                if (startDateRaw == null) {
+                    Log.e("BudgetPeriod", "Missing startDate")
+                    return null
+                }
+
+                val endDateRaw = dict["endDate"] as? Number
+                if (endDateRaw == null) {
+                    Log.e("BudgetPeriod", "Missing endDate")
+                    return null
+                }
+
+                // Convert to Double (seconds since epoch)
+                val startDateTimestamp = startDateRaw.toDouble()
+                val endDateTimestamp = endDateRaw.toDouble()
 
                 // Convert timestamps to Date objects
                 val startDate = Date((startDateTimestamp * 1000).toLong())
                 val endDate = Date((endDateTimestamp * 1000).toLong())
 
                 // Get historical date or use current
-                val historicalDateTimestamp = dict["becameHistoricalDate"] as? Double
-                val becameHistoricalDate = if (historicalDateTimestamp != null) {
-                    Date((historicalDateTimestamp * 1000).toLong())
+                val historicalDateRaw = dict["becameHistoricalDate"] as? Number
+                val becameHistoricalDate = if (historicalDateRaw != null) {
+                    Date((historicalDateRaw.toDouble() * 1000).toLong())
                 } else {
                     Date()
                 }
