@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mybudgetbuddy.models.BudgetPeriod
+import com.example.mybudgetbuddy.models.Expense
+import com.example.mybudgetbuddy.models.Income
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
@@ -27,48 +28,17 @@ class BudgetManager : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _incomeList = mutableListOf<Income>()
+    private val _fixedExpenseList = mutableListOf<Expense>()
+    private val _variableExpenseList = mutableListOf<Expense>()
+
+    private val _groupedIncome = MutableLiveData<Map<String, Double>>(emptyMap())
+    private val _groupedExpense = MutableLiveData<Map<String, Double>>(emptyMap())
+    private val _totalIncome = MutableLiveData(0.0)
+    private val _totalExpenses = MutableLiveData(0.0)
+
     init {
         loadData()
-    }
-
-    fun createCleanBudgetPeriod(
-        startDate: Date,
-        endDate: Date,
-        completion: (Boolean) -> Unit
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                // Create new period with empty lists
-                val newPeriod = BudgetPeriod(
-                    id = UUID.randomUUID().toString(),
-                    startDate = startDate,
-                    endDate = endDate,
-                    incomes = emptyList(),
-                    fixedExpenses = emptyList(),
-                    variableExpenses = emptyList()
-                )
-
-                // Save directly to Firebase
-                val success = repository.saveBudgetPeriod(newPeriod)
-
-                // Update UI if successful
-                if (success) {
-                    withContext(Dispatchers.Main) {
-                        _currentPeriod.value = newPeriod
-                    }
-                }
-
-                // Notify completion
-                withContext(Dispatchers.Main) {
-                    completion(success)
-                }
-            } catch (e: Exception) {
-                Log.e("BudgetManager", "Error creating clean budget period: ${e.message}")
-                withContext(Dispatchers.Main) {
-                    completion(false)
-                }
-            }
-        }
     }
 
     fun loadData() {
@@ -82,36 +52,26 @@ class BudgetManager : ViewModel() {
             try {
                 val budgetPeriod = repository.loadCurrentPeriod()
 
-                if (budgetPeriod == null) {
-                    withContext(Dispatchers.Main) {
-                        _isLoading.value = false
-                    }
-                    return@launch
-                }
-
-                // Check if period has expired
-                val calendar = Calendar.getInstance()
-                val today = calendar.apply {
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }.time
-
-                if (budgetPeriod.endDate < today) {
-                    // Save as historical and create new
-                    repository.saveHistoricalPeriod(budgetPeriod)
-                    withContext(Dispatchers.Main) {
-                        // initializeDefaultPeriod()
-                        _isLoading.value = false
-                    }
-                    return@launch
-                }
-
                 // Update the UI with loaded data
                 withContext(Dispatchers.Main) {
                     budgetPeriod.let {
                         _currentPeriod.value = it // Only assign if budgetPeriod is not null
+
+                        // Update in-memory lists
+                        _incomeList.clear()
+                        if (it != null) {
+                            _incomeList.addAll(it.incomes)
+                        }
+
+                        _fixedExpenseList.clear()
+                        if (it != null) {
+                            _fixedExpenseList.addAll(it.fixedExpenses)
+                        }
+
+                        _variableExpenseList.clear()
+                        it?.let { it1 -> _variableExpenseList.addAll(it1.variableExpenses) }
+
+                        updateGroupedData()
                     }
                     _isLoading.value = false
                 }
@@ -140,39 +100,87 @@ class BudgetManager : ViewModel() {
 
     fun startNewPeriod(
         startDate: Date,
-        endDate: Date
+        endDate: Date,
+        includeIncomes : Boolean = false,
+        includeFixedExpenses : Boolean = false,
     ) {
+
         val currentPeriod = _currentPeriod.value
 
-        // Save current period as historical first - fixed to use coroutine
+        val transferredIncomes = if (includeIncomes) {
+            _incomeList.map { income ->
+                Income(
+                    id = UUID.randomUUID().toString(),
+                    amount = income.amount,
+                    category = income.category
+                )
+            }
+        } else emptyList()
+
+        val transferredFixedExpenses = if (includeFixedExpenses) {
+            _fixedExpenseList.map { expense ->
+                Expense(
+                    id = UUID.randomUUID().toString(),
+                    amount = expense.amount,
+                    category = expense.category,
+                    isfixed = true
+                )
+            }
+        } else emptyList()
+
+        // Create new period
+        val newPeriod = BudgetPeriod(
+            id = UUID.randomUUID().toString(),
+            startDate = startDate,
+            endDate = endDate,
+            incomes = transferredIncomes,
+            fixedExpenses = transferredFixedExpenses,
+            variableExpenses = emptyList(),
+            expired = false
+        )
+
+        _currentPeriod.value = newPeriod
+
+        _incomeList.clear()
+        _incomeList.addAll(transferredIncomes)
+
+        _fixedExpenseList.clear()
+        _fixedExpenseList.addAll(transferredFixedExpenses)
+
+        _variableExpenseList.clear()
+
+        updateGroupedData()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Save current period if it exists
-                if (currentPeriod != null) {
-                    repository.saveHistoricalPeriod(currentPeriod)
-                }
-
-                // Create new period
-                val newPeriod = BudgetPeriod(
-                    id = UUID.randomUUID().toString(),
-                    startDate = startDate,
-                    endDate = endDate,
-                    incomes = emptyList(),
-                    fixedExpenses = emptyList(),
-                    variableExpenses = emptyList(),
-                    expired = false
+                // Save the new period with transfer flags
+                repository.saveBudgetPeriod(
+                    newPeriod,
+                    Pair(includeIncomes, includeFixedExpenses)
                 )
-
-                // Save the new period
-                repository.saveBudgetPeriod(newPeriod)
-
-                withContext(Dispatchers.Main) {
-                    // Update UI with new period
-                    _currentPeriod.value = newPeriod
-                }
             } catch (e: Exception) {
-                Log.e("BudgetManager", "Error in startNewPeriod: ${e.message}")
+                Log.e("BudgetManager", "Error saving new period: ${e.message}")
             }
         }
+    }
+
+    private fun updateGroupedData() {
+
+        // Update income grouping and total
+        val incomesGrouped = _incomeList.groupBy { it.category }
+            .mapValues { (_, incomes) ->
+                incomes.sumOf { it.amount }
+            }
+        _groupedIncome.value = incomesGrouped
+        _totalIncome.value = _incomeList.sumOf { it.amount }
+
+        // Update expense grouping and total
+        val allExpenses = _fixedExpenseList + _variableExpenseList
+        val expensesGrouped = allExpenses.groupBy { it.category }
+            .mapValues { (_, expenses) ->
+                expenses.sumOf { it.amount }
+            }
+        _groupedExpense.value = expensesGrouped
+        _totalExpenses.value = allExpenses.sumOf { it.amount }
     }
 }
