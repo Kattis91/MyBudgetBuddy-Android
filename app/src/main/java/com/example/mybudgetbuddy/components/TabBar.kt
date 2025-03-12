@@ -2,9 +2,13 @@ package com.example.mybudgetbuddy.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -20,8 +24,8 @@ fun TabBar(navController: NavController) {
     val items = listOf(
         TabItem("Home", Icons.Filled.Home, "home"),
         TabItem("Incomes", Icons.Filled.AddCircle, "incomes"),
-        TabItem("Expenses", Icons.Filled.ShoppingCart, "expenses"),
-        TabItem("Overview", Icons.Filled.Menu, "overview")
+        TabItem("Expenses", Icons.Filled.RemoveCircle, "expenses"),
+        TabItem("Overview", Icons.Filled.StackedBarChart, "overview")
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
