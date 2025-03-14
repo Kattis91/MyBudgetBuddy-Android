@@ -117,7 +117,10 @@ fun IncomesTabView(
         }
 
         Button(onClick = {
-
+            if (incomeAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
+                val amount = incomeAmount.toDoubleOrNull() ?: 0.0
+                viewModel.addIncome(amount, selectedCategory)
+            }
         },
             modifier = Modifier
                 .padding(top = 16.dp)
@@ -125,14 +128,8 @@ fun IncomesTabView(
                 .fillMaxWidth()
         ) {
             Text("Add Income")
-
         }
     }
-}
-
-// Function to format the date range as needed
-fun formattedDateRange(startDate: String, endDate: String): String {
-    return "$startDate - $endDate"
 }
 
 @Preview(showBackground = true)
