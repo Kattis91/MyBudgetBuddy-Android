@@ -3,6 +3,7 @@ package com.example.mybudgetbuddy
 import android.util.Log
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,7 @@ class BudgetRepository {
             Log.d("BudgetRepository", "Attempting to load current period for user: $userId")
 
             val snapshot = try {
-                withTimeout(5000) {
+                withTimeout(10000) {
                     budgetPeriodsRef.orderByChild("startDate").limitToLast(1).get().await()
                 }
             } catch (e: TimeoutCancellationException) {
@@ -229,6 +230,102 @@ class BudgetRepository {
                 Log.e("BudgetRepository", "Error creating clean budget period: ${e.message}")
                 withContext(Dispatchers.Main) {
                     completion(false)
+                }
+            }
+        }
+    }
+
+    fun saveIncomeData(amount: Double, category: String, onComplete: () -> Unit) {
+        val userId = Firebase.auth.currentUser?.uid ?: return
+        val database = Firebase.database
+        val ref = database.reference
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val budgetPeriod = loadCurrentPeriod() ?: return@launch
+                val periodId = budgetPeriod.id
+
+                Log.d("BudgetRepo", "Starting income save for period: $periodId, category: $category, amount: $amount")
+
+                // Reference to the incomes array in the current budget period
+                val incomesRef = ref.child("budgetPeriods")
+                    .child(userId)
+                    .child(periodId)
+                    .child("incomes")
+
+                // Get current incomes as an array
+                val snapshot = incomesRef.get().await()
+                val incomesList = mutableListOf<Map<String, Any>>()
+
+                // Process the snapshot data to a list
+                if (snapshot.exists()) {
+                    // Convert the data to a list
+                    val genericList = snapshot.getValue<ArrayList<HashMap<String, Any>>>()
+                    if (genericList != null) {
+                        incomesList.addAll(genericList)
+                        Log.d("BudgetRepo", "Loaded existing incomes: ${incomesList.size}")
+                    }
+                }
+
+                // Check if we already have an income with this category
+                var categoryFound = false
+                for (i in incomesList.indices) {
+                    val income = incomesList[i]
+                    if ((income["category"] as? String) == category) {
+                        // Update existing category
+                        val existingAmount = when (val amountValue = income["amount"]) {
+                            is Number -> amountValue.toDouble()
+                            else -> 0.0
+                        }
+                        val newAmount = existingAmount + amount
+
+                        // Create updated entry
+                        val updatedIncome = income.toMutableMap()
+                        updatedIncome["amount"] = newAmount
+                        incomesList[i] = updatedIncome
+
+                        categoryFound = true
+                        Log.d("BudgetRepo", "Updated category: $category from $existingAmount to $newAmount")
+                        break
+                    }
+                }
+
+                // If no matching category, add new one
+                if (!categoryFound) {
+                    val newIncome = mapOf(
+                        "id" to UUID.randomUUID().toString(),
+                        "amount" to amount,
+                        "category" to category
+                    )
+                    incomesList.add(newIncome)
+                    Log.d("BudgetRepo", "Added new category: $category with amount: $amount")
+                }
+
+                // First update the incomes list
+                incomesRef.setValue(incomesList).await()
+
+                // Calculate new total
+                val newTotal = incomesList.sumOf {
+                    when (val amountValue = it["amount"]) {
+                        is Number -> amountValue.toDouble()
+                        else -> 0.0
+                    }
+                }
+
+                // Then update the total income
+                ref.child("budgetPeriods")
+                    .child(userId)
+                    .child(periodId)
+                    .child("totalIncome")
+                    .setValue(newTotal).await()
+
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetRepo", "Error in saveIncomeData: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    onComplete()
                 }
             }
         }

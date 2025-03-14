@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
@@ -153,7 +154,6 @@ class BudgetManager : ViewModel() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Save the new period with transfer flags
                 repository.saveBudgetPeriod(
                     newPeriod,
                     Pair(includeIncomes, includeFixedExpenses)
@@ -183,4 +183,24 @@ class BudgetManager : ViewModel() {
         _groupedExpense.value = expensesGrouped
         _totalExpenses.value = allExpenses.sumOf { it.amount }
     }
+
+    fun addIncome(amount: Double, category: String) {
+        if (amount <= 0 || category.isEmpty()) {
+            return
+        }
+
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            try {
+                repository.saveIncomeData(amount, category) {
+                    // This runs when the income has been successfully saved
+                    loadCurrentBudgetPeriod()
+                }
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
 }
