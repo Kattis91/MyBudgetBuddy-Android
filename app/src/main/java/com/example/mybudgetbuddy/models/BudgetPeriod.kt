@@ -11,9 +11,9 @@ data class BudgetPeriod(
     val incomes: List<Income> = emptyList(),
     val fixedExpenses: List<Expense> = emptyList(),
     val variableExpenses: List<Expense> = emptyList(),
-    val totalIncome: Double = incomes.sumOf { it.amount },
-    val totalFixedExpenses: Double = fixedExpenses.sumOf { it.amount },
-    val totalVariableExpenses: Double = variableExpenses.sumOf { it.amount },
+    val totalIncome: Double = 0.0,
+    val totalFixedExpenses: Double = 0.0,
+    val totalVariableExpenses: Double = 0.0,
     val expired: Boolean = false,
     val becameHistoricalDate: Date = Date()
 ) {
