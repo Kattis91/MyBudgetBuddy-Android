@@ -2,7 +2,9 @@ package com.example.mybudgetbuddy
 
 import android.util.Log
 import com.example.mybudgetbuddy.models.BudgetPeriod
+import com.example.mybudgetbuddy.models.Income
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -329,6 +331,54 @@ class BudgetRepository {
                 }
             }
         }
+    }
+
+    suspend fun loadIncomeData(): Triple<List<Income>, Map<String, Double>, Double> {
+        val userId = Firebase.auth.currentUser?.uid ?: return Triple(emptyList(), emptyMap(), 0.0)
+        val database = Firebase.database
+        val ref = database.reference
+
+        val budgetPeriod = loadCurrentPeriod() ?: return Triple(emptyList(), emptyMap(), 0.0)
+
+        val incomesSnapshot = ref.child("budgetPeriods")
+            .child(userId)
+            .child(budgetPeriod.id)
+            .child("incomes")
+            .get()
+            .await()
+
+        return processIncomeData(incomesSnapshot)
+    }
+
+    private fun processIncomeData(snapshot: DataSnapshot): Triple<List<Income>, Map<String, Double>, Double> {
+        val incomeList = mutableListOf<Income>()
+        val groupedIncome = mutableMapOf<String, Double>()
+        var totalIncome = 0.0
+
+        for (incomeSnapshot in snapshot.children) {
+            val incomeDataDict = incomeSnapshot.value as? Map<*, *> ?: continue
+
+            val fetchedIncome = Income(
+                id = incomeSnapshot.key ?: "",
+                amount = when (val rawAmount = incomeDataDict["amount"]) {
+                    is Double -> rawAmount
+                    is Long -> rawAmount.toDouble()
+                    is Int -> rawAmount.toDouble()
+                    is String -> rawAmount.toString().toDoubleOrNull() ?: 0.0
+                    else -> 0.0
+                },
+                category = incomeDataDict["category"]?.toString() ?: "Unknown"
+            )
+
+            incomeList.add(fetchedIncome)
+
+            val category = fetchedIncome.category
+            groupedIncome[category] = (groupedIncome[category] ?: 0.0) + fetchedIncome.amount
+        }
+
+        totalIncome = incomeList.sumOf { it.amount }
+
+        return Triple(incomeList, groupedIncome, totalIncome)
     }
 
     suspend fun saveHistoricalPeriod(budgetPeriod: BudgetPeriod): Boolean {
