@@ -45,6 +45,9 @@ class BudgetManager : ViewModel() {
     private val _incomeItemsFlow = MutableStateFlow<List<Income>>(emptyList())
     val incomeItems: StateFlow<List<Income>> = _incomeItemsFlow.asStateFlow()
 
+    private val _totalIncomeFlow = MutableStateFlow(0.0)
+    val totalIncome: StateFlow<Double> = _totalIncomeFlow.asStateFlow()
+
     init {
         loadData()
     }
@@ -64,6 +67,7 @@ class BudgetManager : ViewModel() {
                 // Update the UI with loaded data
                 withContext(Dispatchers.Main) {
                     _incomeItemsFlow.value = incomeList
+                    _totalIncomeFlow.value = totalIncome
                     budgetPeriod.let {
                         _currentPeriod.value = it // Only assign if budgetPeriod is not null
 

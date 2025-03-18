@@ -30,10 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
 import com.example.mybudgetbuddy.components.IncomeItem
+import com.example.mybudgetbuddy.utils.formatAmount
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -41,7 +43,6 @@ import java.util.Locale
 fun IncomesTabView(
     startDate: String,
     endDate: String,
-    totalIncome: Double,
     viewModel: BudgetManager = viewModel()
 ) {
     var incomeAmount by remember { mutableStateOf("") }
@@ -56,6 +57,8 @@ fun IncomesTabView(
 
     val incomeItems by viewModel.incomeItems.collectAsState()
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
+
+    val totalIncome by viewModel.totalIncome.collectAsState()
 
     Column(
         modifier = Modifier
@@ -102,6 +105,13 @@ fun IncomesTabView(
                             )
                             Text(dateFormatter.format(period.endDate))
                         }
+
+                        Text(
+                            "Total Income:",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                        Text(formatAmount(totalIncome))
                     }
                 }
             }
@@ -158,6 +168,5 @@ fun BudgetOverviewPreview() {
     IncomesTabView(
         startDate = "2025-03-01",
         endDate = "2025-03-31",
-        totalIncome = 1234.56
     )
 }

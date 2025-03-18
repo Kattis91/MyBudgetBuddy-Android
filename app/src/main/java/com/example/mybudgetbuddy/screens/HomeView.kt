@@ -50,7 +50,7 @@ fun HomeView(budgetViewModel: BudgetViewModel) {
                 HomeTabView()
             }
             composable("incomes") {
-                IncomesTabView(startDate, endDate, totalIncome)
+                IncomesTabView(startDate, endDate)
             }
             composable("expenses") {
                 ExpensesTabView(startDate, endDate, totalExpense)
