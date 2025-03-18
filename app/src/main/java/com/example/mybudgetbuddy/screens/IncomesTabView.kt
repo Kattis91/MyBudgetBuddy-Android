@@ -1,5 +1,7 @@
 package com.example.mybudgetbuddy.screens
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,14 +10,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
+import com.example.mybudgetbuddy.models.Income
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -49,14 +56,18 @@ fun IncomesTabView(
 
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
+    val incomeItems by viewModel.incomeItems.collectAsState()
+    val isLoading by viewModel.isLoading.observeAsState(initial = false)
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(modifier = Modifier
-            .width(230.dp),
+        Column(
+            modifier = Modifier
+                .width(230.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             currentPeriod?.let { period ->
@@ -116,18 +127,52 @@ fun IncomesTabView(
             )
         }
 
-        Button(onClick = {
-            if (incomeAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
-                val amount = incomeAmount.toDoubleOrNull() ?: 0.0
-                viewModel.addIncome(amount, selectedCategory)
-            }
-        },
+        Button(
+            onClick = {
+                if (incomeAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
+                    val amount = incomeAmount.toDoubleOrNull() ?: 0.0
+                    viewModel.addIncome(amount, selectedCategory)
+                }
+            },
             modifier = Modifier
                 .padding(top = 16.dp)
                 .padding(horizontal = 50.dp)
                 .fillMaxWidth()
         ) {
             Text("Add Income")
+        }
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            LazyColumn {
+                items(incomeItems) { income ->
+                    IncomeItem(income)
+                }
+            }
+        }
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun IncomeItem(income: Income) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = income.category)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = String.format("%.2f", income.amount),
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
