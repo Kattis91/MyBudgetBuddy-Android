@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
-import com.example.mybudgetbuddy.ValidationUtils
+import com.example.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
 fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetViewModel) {

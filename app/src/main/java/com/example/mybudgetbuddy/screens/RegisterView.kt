@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
-import com.example.mybudgetbuddy.ValidationUtils
+import com.example.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
 fun RegisterScreen(budgetViewModel : BudgetViewModel) {
