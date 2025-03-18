@@ -1,7 +1,5 @@
 package com.example.mybudgetbuddy.screens
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
-import com.example.mybudgetbuddy.models.Income
+import com.example.mybudgetbuddy.components.IncomeItem
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -150,29 +148,6 @@ fun IncomesTabView(
                     IncomeItem(income)
                 }
             }
-        }
-    }
-}
-
-@SuppressLint("DefaultLocale")
-@Composable
-fun IncomeItem(income: Income) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = income.category)
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = String.format("%.2f", income.amount),
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
