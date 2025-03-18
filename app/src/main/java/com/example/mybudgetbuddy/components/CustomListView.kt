@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mybudgetbuddy.models.Income
+import com.example.mybudgetbuddy.utils.formatAmount
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -31,7 +32,7 @@ fun IncomeItem(income: Income) {
             Text(text = income.category)
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = String.format("%.2f", income.amount),
+                text = formatAmount(income.amount),
                 fontWeight = FontWeight.Bold
             )
         }
