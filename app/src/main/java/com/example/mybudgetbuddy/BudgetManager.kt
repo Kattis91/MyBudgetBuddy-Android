@@ -10,12 +10,16 @@ import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
 import java.util.UUID
 
 class BudgetManager : ViewModel() {
+
     // Repository for Firebase operations
     private val repository = BudgetRepository()
 
@@ -38,6 +42,9 @@ class BudgetManager : ViewModel() {
     private val _totalIncome = MutableLiveData(0.0)
     private val _totalExpenses = MutableLiveData(0.0)
 
+    private val _incomeItemsFlow = MutableStateFlow<List<Income>>(emptyList())
+    val incomeItems: StateFlow<List<Income>> = _incomeItemsFlow.asStateFlow()
+
     init {
         loadData()
     }
@@ -52,9 +59,11 @@ class BudgetManager : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val budgetPeriod = repository.loadCurrentPeriod()
+                val (incomeList, groupedIncome, totalIncome) = repository.loadIncomeData()
 
                 // Update the UI with loaded data
                 withContext(Dispatchers.Main) {
+                    _incomeItemsFlow.value = incomeList
                     budgetPeriod.let {
                         _currentPeriod.value = it // Only assign if budgetPeriod is not null
 
