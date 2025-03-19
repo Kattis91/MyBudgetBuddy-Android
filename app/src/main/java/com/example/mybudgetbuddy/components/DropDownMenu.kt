@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -39,7 +42,10 @@ fun CategoryMenu(
     var expanded by remember { mutableStateOf(false) }
     var newCategory by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(37.dp)) {
+    Card(modifier = Modifier
+        .padding(vertical = 15.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
         if (showNewCategoryField) {
             Row(
                 modifier = Modifier
