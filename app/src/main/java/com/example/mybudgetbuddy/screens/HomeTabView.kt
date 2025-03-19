@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.NewBudgetPeriodView
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.StatBox
 import com.example.mybudgetbuddy.components.StyledCard
-import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
@@ -87,28 +87,12 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        StyledCard {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "Total Income:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    formatAmount(totalIncome),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
-                )
-            }
-        }
+        StatBox(
+            title = "Total Income",
+            amount = totalIncome,
+            isIncome = true,
+            showNegativeAmount = false
+        )
 
         Button(
             onClick = { showNewPeriodDialog = true },
