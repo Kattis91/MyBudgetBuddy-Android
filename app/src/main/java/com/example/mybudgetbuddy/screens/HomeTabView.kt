@@ -1,14 +1,12 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,10 +17,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.mybudgetbuddy.BudgetManager
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.NewBudgetPeriodView
+import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.utils.formattedDateRange
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,7 +37,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
     var showNewPeriodDialog by remember { mutableStateOf(false) }
 
-    val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val isDarkMode = isSystemInDarkTheme()
 
     Column(
         modifier = Modifier
@@ -47,37 +51,28 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
         } else {
             // Display current period info if available
             currentPeriod?.let { period ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
+                StyledCard {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             "Current Budget Period",
-                            style = MaterialTheme.typography.titleMedium
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Row {
-                            Text(
-                                "Start: ",
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(dateFormatter.format(period.startDate))
-                        }
-
-                        Row {
-                            Text(
-                                "End: ",
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(dateFormatter.format(period.endDate))
-                        }
+                        Text(
+                            formattedDateRange(period.startDate, period.endDate),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+                        )
                     }
                 }
             } ?: run {
