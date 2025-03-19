@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
+import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.IncomeItem
 import com.example.mybudgetbuddy.components.StyledCard
 import com.example.mybudgetbuddy.utils.formatAmount
@@ -90,11 +91,14 @@ fun IncomesTabView(
 
         Spacer(modifier = Modifier.height(38.dp))
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            TextField(
+        Column(
+            modifier = Modifier.padding(horizontal = 25.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CustomTextField(
                 value = incomeAmount,
                 onValueChange = { incomeAmount = it },
-                label = { Text("Amount") }
+                label = "Amount",
             )
 
             CategoryMenu(
