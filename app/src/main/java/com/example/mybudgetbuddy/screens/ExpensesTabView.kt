@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,6 +39,7 @@ fun ExpensesTabView(
     val categories = listOf("Rent", "Water", "Heat", "Electricity", "Insurance", "WiFi")
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
+    var isfixed by remember { mutableStateOf(true) }
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
 
@@ -96,7 +96,10 @@ fun ExpensesTabView(
         CustomButton(
             buttonText = "Add Expense",
             onClick = {
-
+                if (expenseAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
+                    val amount = expenseAmount.toDoubleOrNull() ?: 0.0
+                    viewModel.addExpense(amount, selectedCategory, isfixed)
+                }
             },
             isIncome = false
         )
