@@ -2,8 +2,13 @@ package com.example.mybudgetbuddy.models
 
 import java.util.UUID
 
+interface Identifiable {
+    val id: String
+}
+
 data class Income(
-    val id: String = UUID.randomUUID().toString(),
+    override val id: String,
+    val category: String,
     val amount: Double,
-    val category: String
-)
+    // other fields
+) : Identifiable
