@@ -216,4 +216,37 @@ class BudgetManager : ViewModel() {
         }
     }
 
+    // In BudgetManager.kt
+    fun deleteIncomeItem(income: Income) {
+        // First, update local state for immediate UI feedback
+        val currentItems = _incomeItemsFlow.value.toMutableList()
+        currentItems.removeIf { it.id == income.id }
+
+        // Update UI state
+        _incomeItemsFlow.value = currentItems
+        _totalIncomeFlow.value = currentItems.sumOf { it.amount }
+
+        // Keep in-memory list in sync for existing code that uses it
+        _incomeList.clear()
+        _incomeList.addAll(currentItems)
+
+        // Update grouped data
+        updateGroupedData()
+
+        // Call repository to update Firebase
+        viewModelScope.launch {
+            try {
+                repository.deleteIncome(income.id) { success ->
+                    if (!success) {
+                        // If deletion fails, reload from server to ensure consistency
+                        loadCurrentBudgetPeriod()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error deleting income: ${e.message}")
+                // On error, reload from server
+                loadCurrentBudgetPeriod()
+            }
+        }
+    }
 }

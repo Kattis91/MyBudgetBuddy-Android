@@ -381,6 +381,55 @@ class BudgetRepository {
         return Triple(incomeList, groupedIncome, totalIncome)
     }
 
+    // In BudgetRepository.kt
+    fun deleteIncome(incomeId: String, onComplete: (Boolean) -> Unit = {}) {
+        val userId = Firebase.auth.currentUser?.uid ?: run {
+            onComplete(false)
+            return
+        }
+        val databaseRef = Firebase.database.reference
+
+        // Launch a coroutine to handle the suspend function
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val budgetPeriod = loadCurrentPeriod() ?: run {
+                    withContext(Dispatchers.Main) { onComplete(false) }
+                    return@launch
+                }
+
+                // Delete from Firebase
+                databaseRef.child("budgetPeriods")
+                    .child(userId)
+                    .child(budgetPeriod.id)
+                    .child("incomes")
+                    .child(incomeId)
+                    .removeValue()
+                    .await()
+
+                // Update the budget period's income list in memory
+                val updatedIncomes = budgetPeriod.incomes.filter { it.id != incomeId }
+
+                // Update the total income in Firebase
+                val totalIncome = updatedIncomes.sumOf { it.amount }
+                databaseRef.child("budgetPeriods")
+                    .child(userId)
+                    .child(budgetPeriod.id)
+                    .child("totalIncome")
+                    .setValue(totalIncome)
+                    .await()
+
+                withContext(Dispatchers.Main) {
+                    onComplete(true)
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetRepository", "Error deleting income: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    onComplete(false)
+                }
+            }
+        }
+    }
+
     suspend fun saveHistoricalPeriod(budgetPeriod: BudgetPeriod): Boolean {
         return try {
             val userId = Firebase.auth.currentUser?.uid ?: run {
