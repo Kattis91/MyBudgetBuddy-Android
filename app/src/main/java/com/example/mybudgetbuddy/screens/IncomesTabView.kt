@@ -3,11 +3,9 @@ package com.example.mybudgetbuddy.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
+import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.StyledCard
@@ -107,20 +106,16 @@ fun IncomesTabView(
             )
         }
 
-        Button(
+        CustomButton(
+            buttonText = "Add Income",
             onClick = {
                 if (incomeAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
                     val amount = incomeAmount.toDoubleOrNull() ?: 0.0
                     viewModel.addIncome(amount, selectedCategory)
                 }
             },
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 50.dp)
-                .fillMaxWidth()
-        ) {
-            Text("Add Income")
-        }
+            isIncome = true
+        )
 
         if (isLoading) {
             CircularProgressIndicator()

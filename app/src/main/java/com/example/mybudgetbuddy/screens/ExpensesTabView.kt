@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
+import com.example.mybudgetbuddy.components.CustomButton
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -117,17 +118,13 @@ fun ExpensesTabView(
             )
         }
 
-        Button(onClick = {
+        CustomButton(
+            buttonText = "Add Expense",
+            onClick = {
 
-        },
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 50.dp)
-                .fillMaxWidth()
-        ) {
-            Text("Add Expense")
-
-        }
+            },
+            isIncome = false
+        )
     }
 }
 
