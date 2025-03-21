@@ -24,7 +24,9 @@ import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomTextField
+import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.models.ExpenseViewType
 import com.example.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
@@ -36,10 +38,14 @@ fun ExpensesTabView(
 ) {
     var expenseAmount by remember { mutableStateOf("") }
 
-    val categories = listOf("Rent", "Water", "Heat", "Electricity", "Insurance", "WiFi")
+    val (selectedExpenseType, setSelectedExpenseType) = remember { mutableStateOf(ExpenseViewType.FIXED) }
+
+    val categories = if (
+        selectedExpenseType == ExpenseViewType.FIXED) listOf(
+        "Rent", "Water", "Heat", "Electricity", "Insurance", "WiFi") else listOf(
+        "Groceries", "Dining Out", "Shopping", "Entertainment", "Transport", "Savings")
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
-    var isfixed by remember { mutableStateOf(true) }
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
 
@@ -72,7 +78,17 @@ fun ExpensesTabView(
             }
         }
 
-        Spacer(modifier = Modifier.height(38.dp))
+        Spacer(modifier = Modifier.height(28.dp))
+
+        SegmentedButtonRow(
+            options = listOf("Fixed Expenses", "Variable Expenses"),
+            selectedIndex = if (selectedExpenseType == ExpenseViewType.FIXED) 0 else 1,
+            onSelectionChanged = { index ->
+                setSelectedExpenseType(if (index == 0) ExpenseViewType.FIXED else ExpenseViewType.VARIABLE)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
 
         Column(
             modifier = Modifier.padding(horizontal = 25.dp),
@@ -98,7 +114,9 @@ fun ExpensesTabView(
             onClick = {
                 if (expenseAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
                     val amount = expenseAmount.toDoubleOrNull() ?: 0.0
-                    viewModel.addExpense(amount, selectedCategory, isfixed)
+                    // Pass the isFixed parameter based on the selected type
+                    val isFixed = selectedExpenseType == ExpenseViewType.FIXED
+                    viewModel.addExpense(amount, selectedCategory, isFixed)
                 }
             },
             isIncome = false

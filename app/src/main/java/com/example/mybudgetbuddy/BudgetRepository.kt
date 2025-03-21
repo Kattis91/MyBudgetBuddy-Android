@@ -480,7 +480,7 @@ class BudgetRepository {
                 val expensesRef = ref.child("budgetPeriods")
                     .child(userId)
                     .child(periodId)
-                    .child("expenses")
+                    .child(if (isfixed) "fixedExpenses" else "variableExpenses")
 
                 // Get current incomes as an array
                 val snapshot = expensesRef.get().await()
@@ -546,7 +546,7 @@ class BudgetRepository {
                 ref.child("budgetPeriods")
                     .child(userId)
                     .child(periodId)
-                    .child("totalExpense")
+                    .child(if (isfixed) "totalFixedExpenses" else "totalVariableExpenses")
                     .setValue(newTotal).await()
 
                 withContext(Dispatchers.Main) {
