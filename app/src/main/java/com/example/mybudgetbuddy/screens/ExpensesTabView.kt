@@ -1,17 +1,11 @@
 package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,15 +18,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
 import com.example.mybudgetbuddy.components.CustomButton
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.mybudgetbuddy.components.CustomTextField
+import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
 fun ExpensesTabView(
@@ -49,11 +43,8 @@ fun ExpensesTabView(
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
 
-    val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-
     Column(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -62,51 +53,35 @@ fun ExpensesTabView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             currentPeriod?.let { period ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            "Current Budget Period",
-                            style = MaterialTheme.typography.titleMedium,
-                        )
+                StyledCard {
+                    Text(
+                        "Current Budget Period",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                        Row {
-                            Text(
-                                "Start: ",
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(dateFormatter.format(period.startDate))
-                        }
+                    Text(formattedDateRange(period.startDate, period.endDate))
 
-                        Row {
-                            Text(
-                                "End: ",
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(dateFormatter.format(period.endDate))
-                        }
-                    }
+                    Text(
+                        "Total Income:",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 14.dp)
+                    )
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(38.dp))
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            TextField(
+        Column(
+            modifier = Modifier.padding(horizontal = 25.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CustomTextField(
                 value = expenseAmount,
                 onValueChange = { expenseAmount = it },
-                label = { Text("Amount") }
+                label = "Amount",
             )
 
             CategoryMenu(
