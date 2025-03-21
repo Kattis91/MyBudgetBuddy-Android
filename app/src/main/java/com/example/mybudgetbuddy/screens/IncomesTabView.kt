@@ -7,13 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
+import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
-import com.example.mybudgetbuddy.components.IncomeItem
 import com.example.mybudgetbuddy.components.StyledCard
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
@@ -128,11 +125,15 @@ fun IncomesTabView(
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
-                items(incomeItems) { income ->
-                    IncomeItem(income)
-                }
-            }
+            CustomListView(
+                items = incomeItems,
+                deleteAction = { income ->
+                    viewModel.deleteIncomeItem(income)
+                },
+                itemContent = { income ->
+                    Triple(income.category, income.amount, null)
+                },
+            )
         }
     }
 }
