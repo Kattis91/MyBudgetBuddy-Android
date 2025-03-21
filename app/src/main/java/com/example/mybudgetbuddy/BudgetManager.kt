@@ -249,4 +249,23 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun addExpense(amount: Double, category: String, isfixed: Boolean) {
+        if (amount <= 0 || category.isEmpty()) {
+            return
+        }
+
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            try {
+                repository.saveExpenseData(amount, category, isfixed) {
+                    // This runs when the income has been successfully saved
+                    loadCurrentBudgetPeriod()
+                }
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 }

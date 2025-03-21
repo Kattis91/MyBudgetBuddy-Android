@@ -463,4 +463,101 @@ class BudgetRepository {
             false
         }
     }
+
+    fun saveExpenseData(amount: Double, category: String, isfixed: Boolean, onComplete: () -> Unit) {
+        val userId = Firebase.auth.currentUser?.uid ?: return
+        val database = Firebase.database
+        val ref = database.reference
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val budgetPeriod = loadCurrentPeriod() ?: return@launch
+                val periodId = budgetPeriod.id
+
+                Log.d("BudgetRepo", "Starting expense save for period: $periodId, category: $category, amount: $amount, isFixed: $isfixed")
+
+                // Reference to the incomes array in the current budget period
+                val expensesRef = ref.child("budgetPeriods")
+                    .child(userId)
+                    .child(periodId)
+                    .child("expenses")
+
+                // Get current incomes as an array
+                val snapshot = expensesRef.get().await()
+                val expensesList = mutableListOf<Map<String, Any>>()
+
+                // Process the snapshot data to a list
+                if (snapshot.exists()) {
+                    // Convert the data to a list
+                    val genericList = snapshot.getValue<ArrayList<HashMap<String, Any>>>()
+                    if (genericList != null) {
+                        expensesList.addAll(genericList)
+                        Log.d("BudgetRepo", "Loaded existing incomes: ${expensesList.size}")
+                    }
+                }
+
+                // Check if we already have an expense with this category
+                var categoryFound = false
+                for (i in expensesList.indices) {
+                    val expense = expensesList[i]
+                    if ((expense["category"] as? String) == category) {
+                        // Update existing category
+                        val existingAmount = when (val amountValue = expense["amount"]) {
+                            is Number -> amountValue.toDouble()
+                            else -> 0.0
+                        }
+                        val newAmount = existingAmount + amount
+
+                        // Create updated entry
+                        val updatedExpense = expense.toMutableMap()
+                        updatedExpense["amount"] = newAmount
+                        expensesList[i] = updatedExpense
+
+                        categoryFound = true
+                        Log.d("BudgetRepo", "Updated category: $category from $existingAmount to $newAmount")
+                        break
+                    }
+                }
+
+                // If no matching category, add new one
+                if (!categoryFound) {
+                    val newIncome = mapOf(
+                        "id" to UUID.randomUUID().toString(),
+                        "amount" to amount,
+                        "category" to category,
+                        "isfixed" to isfixed
+                    )
+                    expensesList.add(newIncome)
+                    Log.d("BudgetRepo", "Added new category: $category with amount: $amount")
+                }
+
+                // First update the expenses list
+                expensesRef.setValue(expensesList).await()
+
+                // Calculate new total
+                val newTotal = expensesList.sumOf {
+                    when (val amountValue = it["amount"]) {
+                        is Number -> amountValue.toDouble()
+                        else -> 0.0
+                    }
+                }
+
+                // Then update the total expense
+                ref.child("budgetPeriods")
+                    .child(userId)
+                    .child(periodId)
+                    .child("totalExpense")
+                    .setValue(newTotal).await()
+
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetRepo", "Error in saveExpenseData: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                }
+            }
+        }
+    }
 }
