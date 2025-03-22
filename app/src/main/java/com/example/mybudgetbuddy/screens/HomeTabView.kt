@@ -2,11 +2,15 @@ package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +42,8 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
     val totalIncome by viewModel.totalIncome.collectAsState()
 
+    val totalExpenses by viewModel.totalExpenses.collectAsState()
+
     val isDarkMode = isSystemInDarkTheme()
 
     Column(
@@ -48,9 +54,12 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
         verticalArrangement = Arrangement.Center
     ) {
         if (isLoading) {
-            CircularProgressIndicator()
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         } else {
-            // Display current period info if available
+            Spacer(modifier = Modifier.weight(1f))
+
             currentPeriod?.let { period ->
                 StyledCard {
                     Column(
@@ -62,8 +71,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
-                            modifier = Modifier
-                                .padding(bottom = 10.dp)
+                            modifier = Modifier.padding(bottom = 10.dp)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -83,22 +91,43 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        StatBox(
-            title = "Total Income",
-            amount = totalIncome,
-            isIncome = true,
-            showNegativeAmount = false
-        )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
 
-        Button(
-            onClick = { showNewPeriodDialog = true },
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text("Start New Period")
+                Box(modifier = Modifier.weight(1f)) {
+                    StatBox(
+                        title = "Total Income",
+                        amount = totalIncome,
+                        isIncome = true,
+                        showNegativeAmount = false
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Box(modifier = Modifier.weight(1f)) {
+                    StatBox(
+                        title = "Total Expense",
+                        amount = totalExpenses,
+                        isIncome = false,
+                        showNegativeAmount = true
+                    )
+                }
+            }
+
+            Button(
+                onClick = { showNewPeriodDialog = true },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Start New Period")
+            }
+
+            Spacer(modifier = Modifier.weight(1f)) // Additional space at bottom
         }
 
         // Show New Budget Period Dialog when button is clicked

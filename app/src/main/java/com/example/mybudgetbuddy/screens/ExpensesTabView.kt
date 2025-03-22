@@ -30,6 +30,7 @@ import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.components.StyledCard
 import com.example.mybudgetbuddy.models.ExpenseViewType
+import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
@@ -56,6 +57,8 @@ fun ExpensesTabView(
     val fixedExpenseItems by viewModel.fixedExpenseItems.collectAsState()
     val variableExpenseItems by viewModel.variableExpenseItems.collectAsState()
 
+    val totalExpenses by viewModel.totalExpenses.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -78,10 +81,14 @@ fun ExpensesTabView(
                     Text(formattedDateRange(period.startDate, period.endDate))
 
                     Text(
-                        "Total Income:",
+                        "Total Expenses:",
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 14.dp)
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(formatAmount(totalExpenses))
                 }
             }
         }
