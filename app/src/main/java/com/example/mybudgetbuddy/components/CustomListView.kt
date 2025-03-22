@@ -29,7 +29,8 @@ import java.util.Locale
 fun <T : Identifiable> CustomListView(
     items: List<T>,
     deleteAction: (T) -> Unit,
-    itemContent: (T) -> Triple<String, Double?, Date?>
+    itemContent: (T) -> Triple<String, Double?, Date?>,
+    showNegativeAmount: Boolean
 ) {
     LazyColumn {
         items(
@@ -75,12 +76,15 @@ fun <T : Identifiable> CustomListView(
                             Spacer(modifier = Modifier.weight(1f))
 
                             if (date != null) {
-                                Text(formatAmount(amount),
+                                Text(
+                                    text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
                                 fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(dateFormatter.format(date))
                             } else {
-                                Text(formatAmount(amount), fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
+                                    fontWeight = FontWeight.Bold)
                             }
                         }
                     }

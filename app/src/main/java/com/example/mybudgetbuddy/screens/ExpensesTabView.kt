@@ -140,7 +140,8 @@ fun ExpensesTabView(
                 },
                 itemContent = { expense ->
                     Triple(expense.category, expense.amount, null)
-                }
+                },
+                showNegativeAmount = true
             )
         } else {
             CustomListView(
@@ -149,7 +150,8 @@ fun ExpensesTabView(
                 },
                 itemContent = { expense ->
                     Triple(expense.category, expense.amount, null)
-                }
+                },
+                showNegativeAmount = true
             )
         }
     }
