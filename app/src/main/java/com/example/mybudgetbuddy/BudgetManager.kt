@@ -48,6 +48,15 @@ class BudgetManager : ViewModel() {
     private val _totalIncomeFlow = MutableStateFlow(0.0)
     val totalIncome: StateFlow<Double> = _totalIncomeFlow.asStateFlow()
 
+    private val _fixedExpensesItemsFlow = MutableStateFlow<List<Expense>>(emptyList())
+    val fixedExpenseItems: StateFlow<List<Expense>> = _fixedExpensesItemsFlow.asStateFlow()
+
+    private val _variableExpensesItemsFlow = MutableStateFlow<List<Expense>>(emptyList())
+    val variableExpenseItems: StateFlow<List<Expense>> = _variableExpensesItemsFlow.asStateFlow()
+
+    private val _totalExpensesFlow = MutableStateFlow(0.0)
+    val totalExpenses: StateFlow<Double> = _totalExpensesFlow.asStateFlow()
+
     init {
         loadData()
     }
@@ -63,11 +72,18 @@ class BudgetManager : ViewModel() {
             try {
                 val budgetPeriod = repository.loadCurrentPeriod()
                 val (incomeList, groupedIncome, totalIncome) = repository.loadIncomeData()
+                val (fixedExpenseList, totalFixedExpenses) = repository.loadFixedExpenseData()
+                val (variableExpenseList, totalVariableExpense) = repository.loadVariableExpenseData()
 
                 // Update the UI with loaded data
                 withContext(Dispatchers.Main) {
                     _incomeItemsFlow.value = incomeList
                     _totalIncomeFlow.value = totalIncome
+
+                    _fixedExpensesItemsFlow.value = fixedExpenseList
+                    _variableExpensesItemsFlow.value = variableExpenseList
+                    _totalExpensesFlow.value = totalFixedExpenses + totalVariableExpense
+
                     budgetPeriod.let {
                         _currentPeriod.value = it // Only assign if budgetPeriod is not null
 

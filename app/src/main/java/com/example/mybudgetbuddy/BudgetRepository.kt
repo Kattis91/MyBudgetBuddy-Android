@@ -1,7 +1,9 @@
 package com.example.mybudgetbuddy
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.mybudgetbuddy.models.BudgetPeriod
+import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -559,5 +561,60 @@ class BudgetRepository {
                 }
             }
         }
+    }
+
+    // Load fixed expenses
+    suspend fun loadFixedExpenseData(): Pair<List<Expense>, Double> {
+        return loadExpenseData(isfixed = true)
+    }
+
+    // Load variable expenses
+    suspend fun loadVariableExpenseData(): Pair<List<Expense>, Double> {
+        return loadExpenseData(isfixed = false)
+    }
+
+    private suspend fun loadExpenseData(isfixed: Boolean): Pair<List<Expense>, Double> {
+        val userId = Firebase.auth.currentUser?.uid ?: return Pair(emptyList(), 0.0)
+        val database = Firebase.database
+        val ref = database.reference
+
+        val budgetPeriod = loadCurrentPeriod() ?: return Pair(emptyList(), 0.0)
+
+        val expensesSnapshot = ref.child("budgetPeriods")
+            .child(userId)
+            .child(budgetPeriod.id)
+            .child(if (isfixed) "fixedExpenses" else "variableExpenses")
+            .get()
+            .await()
+
+        return processExpenseData(expensesSnapshot, isfixed)
+    }
+
+    private fun processExpenseData(snapshot: DataSnapshot, isfixed: Boolean): Pair<List<Expense>, Double>  {
+        val expenseList = mutableListOf<Expense>()
+        var totalExpenses = 0.0
+
+        for (expensesSnapshot in snapshot.children) {
+            val expenseDataDict = expensesSnapshot.value as? Map<*, *> ?: continue
+
+            val fetchedExpense = Expense(
+                id = expensesSnapshot.key ?: "",
+                amount = when (val rawAmount = expenseDataDict["amount"]) {
+                    is Double -> rawAmount
+                    is Long -> rawAmount.toDouble()
+                    is Int -> rawAmount.toDouble()
+                    is String -> rawAmount.toString().toDoubleOrNull() ?: 0.0
+                    else -> 0.0
+                },
+                category = expenseDataDict["category"]?.toString() ?: "Unknown",
+                isfixed = expenseDataDict["isfixed"] as? Boolean ?: false
+            )
+
+            expenseList.add(fetchedExpense)
+        }
+
+        totalExpenses = expenseList.sumOf { it.amount }
+        return Pair(expenseList, totalExpenses)
+
     }
 }
