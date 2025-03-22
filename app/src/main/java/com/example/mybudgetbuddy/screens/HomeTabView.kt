@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.NewBudgetPeriodView
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.OutcomeBox
 import com.example.mybudgetbuddy.components.StatBox
 import com.example.mybudgetbuddy.components.StyledCard
 import com.example.mybudgetbuddy.utils.formattedDateRange
@@ -119,6 +120,13 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutcomeBox(
+                income = totalIncome,
+                expense = totalExpenses
+            )
 
             Button(
                 onClick = { showNewPeriodDialog = true },
