@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetManager
 import com.example.mybudgetbuddy.components.CategoryMenu
 import com.example.mybudgetbuddy.components.CustomButton
+import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.components.StyledCard
@@ -48,14 +51,19 @@ fun ExpensesTabView(
     var showNewCategoryField by remember { mutableStateOf(false) }
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
+    val isLoading by viewModel.isLoading.observeAsState(initial = false)
+
+    val fixedExpenseItems by viewModel.fixedExpenseItems.collectAsState()
+    val variableExpenseItems by viewModel.variableExpenseItems.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(modifier = Modifier
-            .width(230.dp),
+        Column(
+            modifier = Modifier
+                .width(230.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             currentPeriod?.let { period ->
@@ -121,6 +129,29 @@ fun ExpensesTabView(
             },
             isIncome = false
         )
+
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else if (selectedExpenseType == ExpenseViewType.FIXED) {
+            CustomListView(
+                items = fixedExpenseItems,
+                deleteAction = {
+                },
+                itemContent = { expense ->
+                    Triple(expense.category, expense.amount, null)
+                }
+            )
+        } else {
+            CustomListView(
+                items = variableExpenseItems,
+                deleteAction = {
+                },
+                itemContent = { expense ->
+                    Triple(expense.category, expense.amount, null)
+                }
+            )
+        }
     }
 }
 
