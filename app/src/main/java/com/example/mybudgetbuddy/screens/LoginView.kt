@@ -15,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
@@ -63,11 +63,13 @@ fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel)
 
         Spacer(modifier = Modifier.height(70.dp))
 
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
+        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+            CustomTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = "Email"
+            )
+        }
 
         Box(modifier = Modifier.heightIn(min = 30.dp)) {
             if (emailErrorMessage.isNotEmpty()) {
@@ -76,11 +78,13 @@ fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel)
             }
         }
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") }
-        )
+        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+            CustomTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Password"
+            )
+        }
 
         Box(modifier = Modifier.heightIn(min = 30.dp)) {
             if (passwordErrorMessage.isNotEmpty()) {

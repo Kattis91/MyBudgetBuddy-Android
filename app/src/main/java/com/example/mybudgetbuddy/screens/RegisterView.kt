@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
@@ -60,11 +60,13 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
 
         Spacer(modifier = Modifier.height(70.dp))
 
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
+        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+            CustomTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = "Email"
+            )
+        }
 
         Box(modifier = Modifier.heightIn(min = 30.dp)) {
             if (emailErrorMessage.isNotEmpty()) {
@@ -74,11 +76,13 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             }
         }
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") }
-        )
+        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+            CustomTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Password"
+            )
+        }
 
         Box(modifier = Modifier.heightIn(min = 30.dp)) {
             if (passwordErrorMessage.isNotEmpty()) {
@@ -87,11 +91,13 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             }
         }
 
-        TextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") }
-        )
+        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+            CustomTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = "Confirm Password"
+            )
+        }
 
         Box(modifier = Modifier.heightIn(min = 30.dp)) {
             if (confirmPasswordErrorMessage.isNotEmpty()) {
