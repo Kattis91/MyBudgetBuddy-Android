@@ -11,4 +11,7 @@
     <color name="text_color">#003366</color>
     <color name="error_message_color">#C95E7B</color>
     <color name="success_message_color">#78B6A8</color>
+
+    <color name="income_color">#338F85</color>
+    <color name="expense_color">#AE2972</color>
 </resources>

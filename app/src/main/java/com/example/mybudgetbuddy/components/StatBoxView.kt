@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleDown
+import androidx.compose.material.icons.filled.ArrowCircleUp
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Icon
@@ -37,9 +39,9 @@ fun StatBox(
 
         Row {
             Icon(
-                imageVector = if (isIncome) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                imageVector = if (isIncome) Icons.Default.ArrowCircleUp else Icons.Default.ArrowCircleDown,
                 contentDescription = "Transaction Type",
-                tint = if (isIncome) Color.Green else Color.Red
+                tint = if (isIncome) colorResource(id = R.color.income_color) else colorResource(id = R.color.expense_color)
             )
 
             Text(title,
@@ -52,7 +54,7 @@ fun StatBox(
         }
 
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(vertical = 5.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

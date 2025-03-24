@@ -55,7 +55,7 @@ fun OutcomeBox(
             Icon(
                 imageVector = if (isNegative) Icons.Default.Warning else Icons.Default.CheckCircle,
                 contentDescription = "Outcome",
-                tint = if (isNegative) Color.Red else Color.Green
+                tint = if (isNegative) colorResource(id = R.color.expense_color)else colorResource(id = R.color.income_color)
             )
 
             Text(
@@ -69,7 +69,7 @@ fun OutcomeBox(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "${String.format("%.2f", percentage)}%",
+                text = "${String.format("%.2f", percentage.toDouble())}%",
                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                 fontWeight = FontWeight.Bold
             )
@@ -98,7 +98,7 @@ fun OutcomeBox(
                     )
                     .height(8.dp)
                     .background(
-                        if (isNegative) Color.Red else Color.Green,
+                        if (isNegative) colorResource(id = R.color.expense_color) else colorResource(id = R.color.income_color),
                         RoundedCornerShape(4.dp)
                     )
             )
