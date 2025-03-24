@@ -114,7 +114,10 @@ fun IncomesTabView(
                     viewModel.addIncome(amount, selectedCategory)
                 }
             },
-            isIncome = true
+            isIncome = true,
+            isExpense = false,
+            isThirdButton = false,
+            width = 0
         )
 
         if (isLoading) {

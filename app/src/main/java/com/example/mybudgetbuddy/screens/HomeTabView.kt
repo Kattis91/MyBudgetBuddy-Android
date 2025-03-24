@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.NewBudgetPeriodView
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomButton
+import com.example.mybudgetbuddy.components.CustomButtonPreview
 import com.example.mybudgetbuddy.components.OutcomeBox
 import com.example.mybudgetbuddy.components.StatBox
 import com.example.mybudgetbuddy.components.StyledCard
@@ -128,12 +130,16 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                 expense = totalExpenses
             )
 
-            Button(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CustomButton(
                 onClick = { showNewPeriodDialog = true },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text("Start New Period")
-            }
+                buttonText = "Start New Period",
+                isIncome = false,
+                isExpense = false,
+                isThirdButton = true,
+                width = 215
+            )
 
             Spacer(modifier = Modifier.weight(1f)) // Additional space at bottom
         }

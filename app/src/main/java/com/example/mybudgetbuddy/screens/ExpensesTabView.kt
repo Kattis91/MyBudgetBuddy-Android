@@ -134,7 +134,10 @@ fun ExpensesTabView(
                     viewModel.addExpense(amount, selectedCategory, isFixed)
                 }
             },
-            isIncome = false
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 0
         )
 
 
