@@ -1,7 +1,6 @@
 package com.example.mybudgetbuddy
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
@@ -349,6 +348,11 @@ class BudgetRepository {
             .get()
             .await()
 
+        // If snapshot doesn't exist or has no children, return empty data
+        if (!incomesSnapshot.exists() || !incomesSnapshot.hasChildren()) {
+            return Triple(emptyList(), emptyMap(), 0.0)
+        }
+
         return processIncomeData(incomesSnapshot)
     }
 
@@ -586,6 +590,10 @@ class BudgetRepository {
             .child(if (isfixed) "fixedExpenses" else "variableExpenses")
             .get()
             .await()
+
+        if (!expensesSnapshot.exists() || !expensesSnapshot.hasChildren()) {
+            return Pair(emptyList(), 0.0)
+        }
 
         return processExpenseData(expensesSnapshot, isfixed)
     }
