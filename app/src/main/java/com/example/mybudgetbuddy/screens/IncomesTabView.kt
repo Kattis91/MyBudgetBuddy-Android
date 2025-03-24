@@ -111,6 +111,8 @@ fun IncomesTabView(
                     val amount = incomeAmount.toDoubleOrNull() ?: 0.0
                     viewModel.addIncome(amount, selectedCategory)
                 }
+                incomeAmount = ""
+                selectedCategory = ""
             },
             isIncome = true,
             isExpense = false,

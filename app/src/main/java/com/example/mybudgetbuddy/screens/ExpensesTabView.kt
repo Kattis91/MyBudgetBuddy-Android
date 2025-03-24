@@ -97,6 +97,7 @@ fun ExpensesTabView(
             selectedIndex = if (selectedExpenseType == ExpenseViewType.FIXED) 0 else 1,
             onSelectionChanged = { index ->
                 setSelectedExpenseType(if (index == 0) ExpenseViewType.FIXED else ExpenseViewType.VARIABLE)
+                selectedCategory = ""
             }
         )
 
@@ -130,6 +131,8 @@ fun ExpensesTabView(
                     val isFixed = selectedExpenseType == ExpenseViewType.FIXED
                     viewModel.addExpense(amount, selectedCategory, isFixed)
                 }
+                expenseAmount = ""
+                selectedCategory = ""
             },
             isIncome = false,
             isExpense = true,
