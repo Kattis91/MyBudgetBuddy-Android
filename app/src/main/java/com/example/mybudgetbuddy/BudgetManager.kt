@@ -342,4 +342,42 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun deleteExpenseItem(expense: Expense, isfixed: Boolean) {
+        // First, update local state for immediate UI feedback
+        if (isfixed) {
+            val currentFixedItems = _fixedExpensesItemsFlow.value.toMutableList()
+            currentFixedItems.removeIf { it.id == expense.id }
+            _fixedExpensesItemsFlow.value = currentFixedItems
+            _fixedExpenseList.clear()
+            _fixedExpenseList.addAll(currentFixedItems)
+        } else {
+            val currentVariableItems = _variableExpensesItemsFlow.value.toMutableList()
+            currentVariableItems.removeIf { it.id == expense.id }
+            _variableExpensesItemsFlow.value = currentVariableItems
+            _variableExpenseList.clear()
+            _variableExpenseList.addAll(currentVariableItems)
+        }
+
+        _totalExpensesFlow.value = _fixedExpensesItemsFlow.value.sumOf { it.amount } + _variableExpensesItemsFlow.value.sumOf { it.amount }
+        updateGroupedData()
+
+        // Call repository to update Firebase
+        viewModelScope.launch {
+            try {
+                repository.deleteExpense(expense.id, isfixed = expense.isfixed) { success ->
+                    if (!success) {
+                        // If deletion fails, reload from server to ensure consistency
+                        loadCurrentBudgetPeriod()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error deleting expense: ${e.message}")
+                // On error, reload from server
+                loadCurrentBudgetPeriod()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 }

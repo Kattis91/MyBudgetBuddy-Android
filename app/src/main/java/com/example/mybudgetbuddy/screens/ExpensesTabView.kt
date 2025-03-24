@@ -143,7 +143,11 @@ fun ExpensesTabView(
         } else if (selectedExpenseType == ExpenseViewType.FIXED) {
             CustomListView(
                 items = fixedExpenseItems,
-                deleteAction = {
+                deleteAction = { expense->
+                    viewModel.deleteExpenseItem(
+                        expense,
+                        isfixed = true
+                    )
                 },
                 itemContent = { expense ->
                     Triple(expense.category, expense.amount, null)
@@ -153,7 +157,11 @@ fun ExpensesTabView(
         } else {
             CustomListView(
                 items = variableExpenseItems,
-                deleteAction = {
+                deleteAction = { expense->
+                    viewModel.deleteExpenseItem(
+                        expense,
+                        isfixed = false
+                    )
                 },
                 itemContent = { expense ->
                     Triple(expense.category, expense.amount, null)

@@ -625,4 +625,54 @@ class BudgetRepository {
         return Pair(expenseList, totalExpenses)
 
     }
+
+    fun deleteExpense(expenseId: String, isfixed: Boolean, onComplete: (Boolean) -> Unit = {}) {
+        val userId = Firebase.auth.currentUser?.uid ?: run {
+            onComplete(false)
+            return
+        }
+        val databaseRef = Firebase.database.reference
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val budgetPeriod = loadCurrentPeriod() ?: run {
+                    withContext(Dispatchers.Main) { onComplete(false) }
+                    return@launch
+                }
+
+                // Delete from Firebase
+                databaseRef.child("budgetPeriods")
+                    .child(userId)
+                    .child(budgetPeriod.id)
+                    .child(if (isfixed) "fixedExpenses" else "variableExpenses")
+                    .child(expenseId)
+                    .removeValue()
+                    .await()
+
+                // Update totals
+                val updatedExpensesList = if (isfixed) {
+                    budgetPeriod.fixedExpenses.filter { it.id != expenseId }
+                } else {
+                    budgetPeriod.variableExpenses.filter { it.id != expenseId }
+                }
+
+                val totalExpenses = updatedExpensesList.sumOf { it.amount }
+                databaseRef.child("budgetPeriods")
+                    .child(userId)
+                    .child(budgetPeriod.id)
+                    .child(if (isfixed) "totalFixedExpenses" else "totalVariableExpenses")
+                    .setValue(totalExpenses)
+                    .await()
+
+                withContext(Dispatchers.Main) {
+                    onComplete(true)
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetRepository", "Error deleting income: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    onComplete(false)
+                }
+            }
+        }
+    }
 }
