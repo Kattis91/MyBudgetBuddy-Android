@@ -1,7 +1,5 @@
 package com.example.mybudgetbuddy.models
 
-import java.util.UUID
-
 interface Identifiable {
     val id: String
 }

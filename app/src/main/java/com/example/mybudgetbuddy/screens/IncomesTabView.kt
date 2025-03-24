@@ -33,8 +33,6 @@ import com.example.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
 fun IncomesTabView(
-    startDate: String,
-    endDate: String,
     viewModel: BudgetManager = viewModel()
 ) {
     var incomeAmount by remember { mutableStateOf("") }
@@ -140,8 +138,5 @@ fun IncomesTabView(
 @Preview(showBackground = true)
 @Composable
 fun BudgetOverviewPreview() {
-    IncomesTabView(
-        startDate = "2025-03-01",
-        endDate = "2025-03-31",
-    )
+    IncomesTabView()
 }

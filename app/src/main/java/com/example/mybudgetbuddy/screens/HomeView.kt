@@ -18,11 +18,6 @@ import com.example.mybudgetbuddy.components.TabBar
 fun HomeView(budgetViewModel: BudgetViewModel) {
     val navController = rememberNavController()
 
-    val startDate = "2023-01-01"
-    val endDate = "2023-12-31"
-    val totalIncome = 10000.0
-    val totalExpense = 5000.0
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,10 +45,10 @@ fun HomeView(budgetViewModel: BudgetViewModel) {
                 HomeTabView()
             }
             composable("incomes") {
-                IncomesTabView(startDate, endDate)
+                IncomesTabView()
             }
             composable("expenses") {
-                ExpensesTabView(startDate, endDate, totalExpense)
+                ExpensesTabView()
             }
             composable("overview") {
                 OverviewTabView()
