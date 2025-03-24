@@ -69,7 +69,7 @@ fun OutcomeBox(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = String.format("%.1f%%", percentage),
+                text = "${String.format("%.2f", percentage)}%",
                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                 fontWeight = FontWeight.Bold
             )
