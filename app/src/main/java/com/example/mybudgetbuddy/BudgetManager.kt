@@ -70,12 +70,61 @@ class BudgetManager : ViewModel() {
     private fun loadCurrentBudgetPeriod() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val budgetPeriod = repository.loadCurrentPeriod()
-                val (incomeList, groupedIncome, totalIncome) = repository.loadIncomeData()
-                val (fixedExpenseList, totalFixedExpenses) = repository.loadFixedExpenseData()
-                val (variableExpenseList, totalVariableExpense) = repository.loadVariableExpenseData()
+                // Initialize with default empty values
+                var budgetPeriod: BudgetPeriod? = null
+                var incomeList = emptyList<Income>()
+                var groupedIncome = emptyMap<String, Double>()
+                var totalIncome = 0.0
 
-                // Update the UI with loaded data
+                var fixedExpenseList = emptyList<Expense>()
+                var totalFixedExpenses = 0.0
+
+                var variableExpenseList = emptyList<Expense>()
+                var totalVariableExpense = 0.0
+
+                // Load the current budget period
+                try {
+                    budgetPeriod = repository.loadCurrentPeriod()
+                } catch (e: Exception) {
+                    Log.e("BudgetManager", "Error loading budget period: ${e.message}")
+                    // Continue with null budgetPeriod
+                }
+
+                // Only try to load data if we have a valid budget period
+                if (budgetPeriod != null) {
+                    // Load income data
+                    try {
+                        val incomeData = repository.loadIncomeData()
+                        incomeList = incomeData.first
+                        groupedIncome = incomeData.second
+                        totalIncome = incomeData.third
+                    } catch (e: Exception) {
+                        Log.e("BudgetManager", "Error loading income data: ${e.message}")
+                        // Continue with empty defaults
+                    }
+
+                    // Load fixed expense data
+                    try {
+                        val fixedExpenseData = repository.loadFixedExpenseData()
+                        fixedExpenseList = fixedExpenseData.first
+                        totalFixedExpenses = fixedExpenseData.second
+                    } catch (e: Exception) {
+                        Log.e("BudgetManager", "Error loading fixed expense data: ${e.message}")
+                        // Continue with empty defaults
+                    }
+
+                    // Load variable expense data
+                    try {
+                        val variableExpenseData = repository.loadVariableExpenseData()
+                        variableExpenseList = variableExpenseData.first
+                        totalVariableExpense = variableExpenseData.second
+                    } catch (e: Exception) {
+                        Log.e("BudgetManager", "Error loading variable expense data: ${e.message}")
+                        // Continue with empty defaults
+                    }
+                }
+
+                // Update the UI with loaded data (or empty defaults)
                 withContext(Dispatchers.Main) {
                     _incomeItemsFlow.value = incomeList
                     _totalIncomeFlow.value = totalIncome
@@ -84,30 +133,34 @@ class BudgetManager : ViewModel() {
                     _variableExpensesItemsFlow.value = variableExpenseList
                     _totalExpensesFlow.value = totalFixedExpenses + totalVariableExpense
 
-                    budgetPeriod.let {
-                        _currentPeriod.value = it // Only assign if budgetPeriod is not null
+                    // Only set currentPeriod if we have a valid one
+                    budgetPeriod?.let {
+                        _currentPeriod.value = it
 
                         // Update in-memory lists
                         _incomeList.clear()
-                        if (it != null) {
-                            _incomeList.addAll(it.incomes)
-                        }
+                        _incomeList.addAll(it.incomes)
 
                         _fixedExpenseList.clear()
-                        if (it != null) {
-                            _fixedExpenseList.addAll(it.fixedExpenses)
-                        }
+                        _fixedExpenseList.addAll(it.fixedExpenses)
 
                         _variableExpenseList.clear()
-                        it?.let { it1 -> _variableExpenseList.addAll(it1.variableExpenses) }
+                        _variableExpenseList.addAll(it.variableExpenses)
 
                         updateGroupedData()
                     }
                     _isLoading.value = false
                 }
             } catch (e: Exception) {
-                Log.e("BudgetManager", "Error loading budget period: ${e.message}")
+                Log.e("BudgetManager", "Unexpected error in loadCurrentBudgetPeriod: ${e.message}", e)
                 withContext(Dispatchers.Main) {
+                    // Ensure UI is updated even in case of critical failure
+                    _incomeItemsFlow.value = emptyList()
+                    _totalIncomeFlow.value = 0.0
+                    _fixedExpensesItemsFlow.value = emptyList()
+                    _variableExpensesItemsFlow.value = emptyList()
+                    _totalExpensesFlow.value = 0.0
+
                     _isLoading.value = false
                 }
             }
@@ -134,9 +187,6 @@ class BudgetManager : ViewModel() {
         includeIncomes : Boolean = false,
         includeFixedExpenses : Boolean = false,
     ) {
-
-        val currentPeriod = _currentPeriod.value
-
         val transferredIncomes = if (includeIncomes) {
             _incomeList.map { income ->
                 Income(
@@ -226,7 +276,9 @@ class BudgetManager : ViewModel() {
                     // This runs when the income has been successfully saved
                     loadCurrentBudgetPeriod()
                 }
-            } finally {
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error saving income data: ${e.message}")
+                // Still need to update UI state
                 _isLoading.value = false
             }
         }
@@ -262,6 +314,8 @@ class BudgetManager : ViewModel() {
                 Log.e("BudgetManager", "Error deleting income: ${e.message}")
                 // On error, reload from server
                 loadCurrentBudgetPeriod()
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -279,6 +333,10 @@ class BudgetManager : ViewModel() {
                     // This runs when the income has been successfully saved
                     loadCurrentBudgetPeriod()
                 }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error saving expense data: ${e.message}")
+                // Still need to update UI state
+                _isLoading.value = false
             } finally {
                 _isLoading.value = false
             }
