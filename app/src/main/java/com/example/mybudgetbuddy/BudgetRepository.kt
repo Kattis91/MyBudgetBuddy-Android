@@ -12,6 +12,8 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -21,6 +23,31 @@ import java.util.Date
 import java.util.UUID
 
 class BudgetRepository {
+
+    suspend fun checkForAnyBudgetPeriod(): Boolean {
+        val userId = Firebase.auth.currentUser?.uid ?: return false
+
+        val database = Firebase.database
+        val ref = database.reference
+        val budgetPeriodsRef = ref.child("budgetPeriods").child(userId)
+        val historicalPeriodsRef = ref.child("historicalPeriods").child(userId)
+
+        // Check both current and historical periods in parallel
+        return coroutineScope {
+            val hasCurrentPeriods = async {
+                val snapshot = budgetPeriodsRef.get().await()
+                snapshot.exists() && snapshot.hasChildren()
+            }
+
+            val hasHistoricalPeriods = async {
+                val snapshot = historicalPeriodsRef.get().await()
+                snapshot.exists() && snapshot.hasChildren()
+            }
+
+            // Wait for both checks and return the combined result
+            hasCurrentPeriods.await() || hasHistoricalPeriods.await()
+        }
+    }
 
     suspend fun loadCurrentPeriod(): BudgetPeriod? {
         val userId = Firebase.auth.currentUser?.uid ?: run {
