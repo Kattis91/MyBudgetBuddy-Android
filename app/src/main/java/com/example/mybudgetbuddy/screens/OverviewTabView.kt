@@ -1,28 +1,28 @@
 package com.example.mybudgetbuddy.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.mybudgetbuddy.components.SummaryBox
+import com.example.mybudgetbuddy.models.BudgetPeriod
+import java.util.Date
 
 @Composable
-fun OverviewTabView() {
-
+fun OverviewTabView(
+    period: BudgetPeriod
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.padding(horizontal = 26.dp)
     ) {
-        Text(text = "OVERVIEW")
+        SummaryBox(period = period)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun OverviewTabViewPreview() {
-    OverviewTabView()
+    OverviewTabView(period = BudgetPeriod(startDate = Date(), endDate = Date()))
 }

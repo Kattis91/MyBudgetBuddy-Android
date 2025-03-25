@@ -74,7 +74,11 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                             composable("home") { HomeTabView() }
                             composable("incomes") { IncomesTabView() }
                             composable("expenses") { ExpensesTabView() }
-                            composable("overview") { OverviewTabView() }
+                            composable("overview") {
+                                currentPeriod?.let { period ->
+                                    OverviewTabView(period = period)
+                                }
+                            }
                         }
                     } else {
                         // Show no current period view
