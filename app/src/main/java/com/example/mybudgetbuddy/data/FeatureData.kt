@@ -8,11 +8,16 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.mybudgetbuddy.components.CreditsText
 
 data class FeatureItem(
     val icon: ImageVector,
-    val text: String
+    val text: String? = null,
+    val content: (@Composable () -> Unit)? = null
 )
 
 val features = listOf(
@@ -28,5 +33,9 @@ val extraFeatures = listOf(
 )
 
 val aboutTheDeveloper = listOf(
-    FeatureItem(Icons.Default.Computer, "I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch.")
+    FeatureItem(Icons.Default.Computer, "I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch."),
+    FeatureItem(Icons.Default.Star, content = {
+        Text("The icon is taken from ")
+        CreditsText()
+    })
 )

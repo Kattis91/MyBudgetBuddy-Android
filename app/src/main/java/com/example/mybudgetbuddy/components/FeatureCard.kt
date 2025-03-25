@@ -1,9 +1,12 @@
 package com.example.mybudgetbuddy.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -38,11 +41,15 @@ fun FeatureCard(feature: FeatureItem) {
                 contentDescription = "",
                 tint = colorResource(id = R.color.expense_color)
             )
-            Text(
-                text = feature.text,
-                modifier = Modifier.padding(16.dp),
-                color = textColor
-            )
+            if (feature.text != null) {
+                Text(
+                    text = feature.text,
+                    modifier = Modifier.padding(16.dp),
+                    color = textColor
+                )
+            } else if (feature.content != null) {
+                feature.content.invoke()
+            }
         }
     }
 }
