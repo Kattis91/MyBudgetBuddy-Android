@@ -34,6 +34,10 @@ fun OverviewTabView(
 
     val historicalPeriods by viewModel.historicalPeriods.collectAsState()
 
+    val nonEmptyPeriods = historicalPeriods.filter {
+        it.incomes.isNotEmpty() || it.fixedExpenses.isNotEmpty() || it.variableExpenses.isNotEmpty()
+    }
+
     Column(
         modifier = Modifier.padding(horizontal = 26.dp)
     ) {
@@ -46,7 +50,7 @@ fun OverviewTabView(
         )
 
         LazyColumn {
-            items(historicalPeriods) { period ->
+            items(nonEmptyPeriods) { period ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
