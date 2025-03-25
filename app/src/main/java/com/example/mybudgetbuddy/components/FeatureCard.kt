@@ -40,7 +40,8 @@ fun FeatureCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = ""
+                contentDescription = "",
+                tint = colorResource(id = R.color.expense_color)
             )
             Text(
                 text = text,
