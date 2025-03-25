@@ -27,6 +27,12 @@ class BudgetManager : ViewModel() {
     private val _currentPeriod = MutableLiveData<BudgetPeriod>()
     val currentPeriod: LiveData<BudgetPeriod> get() = _currentPeriod
 
+    private val _hasExistingPeriods = MutableLiveData<Boolean>()
+    val hasExistingPeriods: LiveData<Boolean> = _hasExistingPeriods
+
+    private val _isCheckingPeriods = MutableLiveData<Boolean>()
+    val isCheckingPeriods: LiveData<Boolean> = _isCheckingPeriods
+
     private val _historicalPeriods = MutableLiveData<List<BudgetPeriod>>(emptyList())
     val historicalPeriods: LiveData<List<BudgetPeriod>> get() = _historicalPeriods
 
@@ -59,12 +65,28 @@ class BudgetManager : ViewModel() {
 
     init {
         loadData()
+        checkInitialState()
     }
 
     fun loadData() {
         _isLoading.value = true
         loadCurrentBudgetPeriod()
         loadHistoricalPeriods()
+    }
+
+    fun checkInitialState() {
+        _isCheckingPeriods.value = true
+
+        viewModelScope.launch {
+            val exists = repository.checkForAnyBudgetPeriod()
+            _hasExistingPeriods.value = exists
+
+            if (exists) {
+                loadCurrentBudgetPeriod()
+            }
+
+            _isCheckingPeriods.value = false
+        }
     }
 
     private fun loadCurrentBudgetPeriod() {
