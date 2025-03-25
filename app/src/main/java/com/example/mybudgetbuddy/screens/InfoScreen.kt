@@ -8,14 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Computer
-import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.components.FeatureCard
+import com.example.mybudgetbuddy.components.SectionHeader
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
+import com.example.mybudgetbuddy.data.aboutTheDeveloper
+import com.example.mybudgetbuddy.data.extraFeatures
+import com.example.mybudgetbuddy.data.features
 
 @Composable
 fun InfoScreen() {
@@ -75,60 +71,15 @@ fun InfoScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         if (selectedTabIndex == 0) {
-            Text(
-                "How it works:",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 10.dp),
-                color = textColor
-            )
+            SectionHeader(title = "How it works", textColor = textColor)
+            features.forEach { FeatureCard(it) }
 
-            FeatureCard(
-                icon = Icons.Default.FormatListNumbered,
-                text = "Add your income and expenses, with expenses categorized as fixed or variable."
-            )
+            SectionHeader(title = "Coming Soon:", textColor = textColor)
+            extraFeatures.forEach { FeatureCard(it) }
 
-            FeatureCard(
-                icon = Icons.Default.Category,
-                text = "Organize your finances better by adding your own categories, or stick with the default ones."
-            )
-
-            FeatureCard(
-                icon = Icons.Default.CalendarMonth,
-                text = "Customize your own budget periods: choose from monthly, weekly, or even 5-day periods to match your needs."
-            )
-
-            FeatureCard(
-                icon = Icons.Default.BarChart,
-                text = "Keep track of your entire budget history, so you can see exactly where your money goes."
-            )
-
-            Text(
-                "Coming Soon:",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 10.dp)
-            )
-
-            FeatureCard(
-                icon = Icons.Default.AccessTime,
-                text = "Stay in Control – Get timely reminders when your budget period is ending, so you can plan ahead with confidence."
-            )
-
-            FeatureCard(
-                icon = Icons.Default.Alarm,
-                text = "Never Miss a Payment – Invoice reminders ensure you stay on track and stress-free when it comes to due dates."
-            )
         } else if (selectedTabIndex == 1) {
-            Text(
-                "The Developer:",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 10.dp),
-                color = textColor
-            )
-
-            FeatureCard(
-                icon = Icons.Default.Computer,
-                text = "I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch."
-            )
+            SectionHeader(title = "The Developer", textColor = textColor)
+            aboutTheDeveloper.forEach { FeatureCard(it) }
         }
     }
 }
