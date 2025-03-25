@@ -33,8 +33,8 @@ class BudgetManager : ViewModel() {
     private val _isCheckingPeriods = MutableLiveData<Boolean>()
     val isCheckingPeriods: LiveData<Boolean> = _isCheckingPeriods
 
-    private val _historicalPeriods = MutableLiveData<List<BudgetPeriod>>(emptyList())
-    val historicalPeriods: LiveData<List<BudgetPeriod>> get() = _historicalPeriods
+    private val _historicalPeriods = MutableStateFlow<List<BudgetPeriod>>(emptyList())
+    val historicalPeriods: StateFlow<List<BudgetPeriod>> get() = _historicalPeriods
 
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
