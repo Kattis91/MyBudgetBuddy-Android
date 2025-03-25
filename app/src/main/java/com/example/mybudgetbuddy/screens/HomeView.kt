@@ -9,6 +9,9 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,12 +31,14 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
     val hasExistingPeriods by viewModel.hasExistingPeriods.observeAsState(false)
     val isCheckingPeriods by viewModel.isCheckingPeriods.observeAsState(true)
 
+    var showInfoSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("MyBudgetBuddy") },
                 actions = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { showInfoSheet = true }) {
                         Icon(Icons.Filled.Info, contentDescription = "Info")
                     }
                     IconButton(onClick = { budgetViewModel.logout() }) {
@@ -97,6 +102,13 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         }
                     )
                 }
+            }
+        }
+        if (showInfoSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showInfoSheet = false }
+            ) {
+                InfoScreen()
             }
         }
     }
