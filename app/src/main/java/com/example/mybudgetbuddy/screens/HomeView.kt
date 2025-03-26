@@ -9,7 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
@@ -42,23 +44,55 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
 
     var isVisible by remember { mutableStateOf(false) }
 
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination?.route
+
     LaunchedEffect(Unit) {
         isVisible = true
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("MyBudgetBuddy") },
-                actions = {
-                    IconButton(onClick = { showInfoSheet = true }) {
-                        Icon(Icons.Filled.Info, contentDescription = "Info")
-                    }
-                    IconButton(onClick = { budgetViewModel.logout() }) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sign Out")
-                    }
+            when (currentDestination) {
+                "home" -> {
+                    TopAppBar(
+                        title = { },
+                        navigationIcon = {
+                            IconButton(onClick = { budgetViewModel.logout() }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ExitToApp,
+                                    contentDescription = "Sign Out"
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { showInfoSheet = true }) {
+                                Icon(Icons.Outlined.Info, contentDescription = "Info")
+                            }
+                        }
+                    )
                 }
-            )
+                "incomes" -> {
+                    TopAppBar(
+                        title = { },
+                        actions = {
+                            IconButton(onClick = { }) {
+                                Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                            }
+                        }
+                    )
+                }
+                "expenses" -> {
+                    TopAppBar(
+                        title = { },
+                        actions = {
+                            IconButton(onClick = { }) {
+                                Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                            }
+                        }
+                    )
+                }
+            }
         },
         bottomBar = {
             if (!isCheckingPeriods && currentPeriod != null) {
