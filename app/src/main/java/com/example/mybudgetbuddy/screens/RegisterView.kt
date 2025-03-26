@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mybudgetbuddy.BudgetViewModel
+import com.example.mybudgetbuddy.budget.BudgetViewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomTextField

@@ -18,8 +18,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mybudgetbuddy.BudgetManager
-import com.example.mybudgetbuddy.BudgetViewModel
+import com.example.mybudgetbuddy.budget.BudgetManager
+import com.example.mybudgetbuddy.budget.BudgetViewModel
 import com.example.mybudgetbuddy.components.TabBar
 
 @OptIn(ExperimentalMaterial3Api::class)

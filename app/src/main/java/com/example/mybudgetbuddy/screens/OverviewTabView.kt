@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mybudgetbuddy.BudgetManager
+import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.SummaryBox
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.utils.formatAmount
@@ -41,7 +41,7 @@ fun OverviewTabView(
     Column(
         modifier = Modifier.padding(horizontal = 26.dp)
     ) {
-        SummaryBox(period = period)
+        SummaryBox(period = period, isCurrent = true)
 
         Spacer(modifier = Modifier.height(26.dp))
 

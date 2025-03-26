@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mybudgetbuddy.BudgetManager
+import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
@@ -22,14 +22,15 @@ import com.example.mybudgetbuddy.utils.formattedDateRange
 @Composable
 fun SummaryBox(
     period: BudgetPeriod,
-    viewModel: BudgetManager = viewModel()
+    viewModel: BudgetManager = viewModel(),
+    isCurrent: Boolean
 ) {
     val totalIncome by viewModel.totalIncome.collectAsState()
     val totalExpenses by viewModel.totalExpenses.collectAsState()
 
     StyledCard {
         Text(
-            "Current Period",
+            if (isCurrent) "Current Period" else "",
             style = MaterialTheme.typography.titleMedium,
         )
 

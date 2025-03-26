@@ -1,4 +1,4 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.DatePicker

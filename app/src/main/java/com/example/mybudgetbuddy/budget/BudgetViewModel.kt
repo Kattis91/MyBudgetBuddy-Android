@@ -1,4 +1,4 @@
-package com.example.mybudgetbuddy
+package com.example.mybudgetbuddy.budget
 
 import androidx.lifecycle.ViewModel
 import com.example.mybudgetbuddy.models.BudgetPeriod
