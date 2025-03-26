@@ -61,7 +61,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
             )
         },
         bottomBar = {
-            if (currentPeriod != null) {
+            if (!isCheckingPeriods && currentPeriod != null) {
                 TabBar(navController = navController)
             }
         }
@@ -108,22 +108,12 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     }
                 }
                 hasExistingPeriods -> {
-                    // Wait for currentPeriod to be set
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.savings),
-                            contentDescription = "App Icon",
-                            modifier = Modifier.size(125.dp)
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = "Loading your budget period...")
-                    }
+                    // Show no current period view
+                    NoCurrentPeriodScreen(
+                        onPeriodCreated = {
+                            viewModel.checkInitialState()
+                        }
+                    )
                 }
                 else -> {
                     // Show screen for creating a new period
