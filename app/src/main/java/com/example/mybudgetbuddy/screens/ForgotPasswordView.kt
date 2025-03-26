@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -32,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
@@ -104,7 +103,8 @@ fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetV
                 }
             }
 
-            Button(
+            CustomButton(
+                buttonText = "Send Reset Link",
                 onClick = {
                     val validationError = ValidationUtils.validateReset(email)
                     if (validationError != null) {
@@ -123,10 +123,11 @@ fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetV
                         }
                     }
                 },
-                modifier = Modifier.width(150.dp)
-            ) {
-                Text("Send Reset Link")
-            }
+                isIncome = false,
+                isExpense = true,
+                isThirdButton = false,
+                width = 200
+            )
         }
     }
 }

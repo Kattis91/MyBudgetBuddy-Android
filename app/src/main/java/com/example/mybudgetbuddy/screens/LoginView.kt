@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,6 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.utils.ValidationUtils
 
@@ -117,22 +117,26 @@ fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel)
             }
         }
 
-        Button(onClick = {
-            emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
-            passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
+        CustomButton(
+            buttonText = "Sign In",
+            onClick = {
+                emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
+                passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
 
-            // Check if there are any validation errors
-            if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty()) {
-                // Proceed with the register or login process
-                budgetViewModel.login(email, password) { firebaseError ->
-                    generalErrorMessage = firebaseError ?: ""
+                // Check if there are any validation errors
+                if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty()) {
+                    // Proceed with the register or login process
+                    budgetViewModel.login(email, password) { firebaseError ->
+                        generalErrorMessage = firebaseError ?: ""
+                    }
                 }
-            }
-        },
-            modifier = Modifier.width(150.dp)
-        ) {
-            Text("Sign In")
-        }
+            },
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 200
+        )
+
 
     }
 }

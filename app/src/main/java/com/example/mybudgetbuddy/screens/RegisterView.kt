@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.BudgetViewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.utils.ValidationUtils
 
@@ -113,23 +113,26 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             }
         }
 
-        Button(onClick = {
-            emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
-            passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
-            confirmPasswordErrorMessage = ValidationUtils.validateConfirmPassword(password, confirmPassword) ?: ""
+        CustomButton(
+            buttonText = "Sign Up",
+            onClick = {
+                emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
+                passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
+                confirmPasswordErrorMessage = ValidationUtils.validateConfirmPassword(password, confirmPassword) ?: ""
 
-            // Check if there are any validation errors
-            if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty() && confirmPasswordErrorMessage.isEmpty()) {
-                // Proceed with the register or login process
-                budgetViewModel.register(email, password) { firebaseError ->
-                    generalErrorMessage = firebaseError ?: ""
+                // Check if there are any validation errors
+                if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty() && confirmPasswordErrorMessage.isEmpty()) {
+                    // Proceed with the register or login process
+                    budgetViewModel.register(email, password) { firebaseError ->
+                        generalErrorMessage = firebaseError ?: ""
+                    }
                 }
-            }
-        },
-            modifier = Modifier.width(150.dp)
-        ) {
-            Text("Sign Up")
-        }
+            },
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 200
+        )
 
     }
 

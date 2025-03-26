@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.components.CustomButton
 
 @Composable
 fun UnloggedScreen(navController: NavController) {
@@ -64,26 +64,27 @@ fun UnloggedScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(70.dp))
 
-
-        Button(
+        CustomButton(
+            buttonText = "Sign In",
             onClick = {
                 navController.navigate("login")
             },
-            modifier = Modifier
-                .width(180.dp)
-                .padding(bottom = 5.dp)
-        ) {
-            Text("Sign In")
-        }
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 200,
+        )
 
-        Button(
+        CustomButton(
+            buttonText = "Create account",
             onClick = {
                 navController.navigate("register")
             },
-            modifier = Modifier.width(180.dp)
-        ) {
-            Text("Create account")
-        }
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 200,
+        )
     }
 }
 
