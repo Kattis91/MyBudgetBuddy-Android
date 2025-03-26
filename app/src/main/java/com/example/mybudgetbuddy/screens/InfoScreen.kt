@@ -70,17 +70,21 @@ fun InfoScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if (selectedTabIndex == 0) {
-            SectionHeader(title = "How it works", textColor = textColor)
-            features.forEach { FeatureCard(it) }
+        when (selectedTabIndex) {
+            0 -> {
+                SectionHeader(title = "How it works", textColor = textColor)
+                features.forEach { FeatureCard(it) }
 
-        } else if (selectedTabIndex == 1) {
-            SectionHeader(title = "Coming Soon:", textColor = textColor)
-            extraFeatures.forEach { FeatureCard(it) }
+            }
+            1 -> {
+                SectionHeader(title = "Coming Soon:", textColor = textColor)
+                extraFeatures.forEach { FeatureCard(it) }
 
-        } else if (selectedTabIndex == 2) {
-            SectionHeader(title = "The Developer", textColor = textColor)
-            aboutTheDeveloper.forEach { FeatureCard(it) }
+            }
+            2 -> {
+                SectionHeader(title = "The Developer", textColor = textColor)
+                aboutTheDeveloper.forEach { FeatureCard(it) }
+            }
         }
     }
 }
