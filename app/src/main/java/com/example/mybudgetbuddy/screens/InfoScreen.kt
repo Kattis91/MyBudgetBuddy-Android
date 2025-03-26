@@ -2,16 +2,12 @@ package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -65,7 +61,7 @@ fun InfoScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         SegmentedButtonRow(
-            options = listOf("About The App", "Development"),
+            options = listOf("About", "Next", "Development"),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
                 selectedTabIndex = index
@@ -78,10 +74,11 @@ fun InfoScreen() {
             SectionHeader(title = "How it works", textColor = textColor)
             features.forEach { FeatureCard(it) }
 
+        } else if (selectedTabIndex == 1) {
             SectionHeader(title = "Coming Soon:", textColor = textColor)
             extraFeatures.forEach { FeatureCard(it) }
 
-        } else if (selectedTabIndex == 1) {
+        } else if (selectedTabIndex == 2) {
             SectionHeader(title = "The Developer", textColor = textColor)
             aboutTheDeveloper.forEach { FeatureCard(it) }
         }
