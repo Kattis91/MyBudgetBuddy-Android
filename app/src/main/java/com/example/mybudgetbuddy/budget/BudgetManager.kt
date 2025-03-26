@@ -24,8 +24,8 @@ class BudgetManager : ViewModel() {
     private val repository = BudgetRepository()
 
     // LiveData for UI
-    private val _currentPeriod = MutableLiveData<BudgetPeriod>()
-    val currentPeriod: LiveData<BudgetPeriod> get() = _currentPeriod
+    private val _currentPeriod = MutableLiveData<BudgetPeriod?>()
+    val currentPeriod: MutableLiveData<BudgetPeriod?> get() = _currentPeriod
 
     private val _hasExistingPeriods = MutableLiveData<Boolean>()
     val hasExistingPeriods: LiveData<Boolean> = _hasExistingPeriods
@@ -82,7 +82,8 @@ class BudgetManager : ViewModel() {
             _hasExistingPeriods.value = exists
 
             if (exists) {
-                loadCurrentBudgetPeriod()
+                val currentPeriod = repository.loadCurrentPeriod()
+                _currentPeriod.value = currentPeriod
             }
 
             _isCheckingPeriods.value = false
