@@ -40,7 +40,8 @@ fun IncomesTabView(
 ) {
     var incomeAmount by remember { mutableStateOf("") }
 
-    val categories = remember { CategoryType.INCOME.defaultCategories }
+    val incomeCategories by viewModel.incomeCategories.collectAsState()
+    val categories = incomeCategories.ifEmpty { CategoryType.INCOME.defaultCategories }
 
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }

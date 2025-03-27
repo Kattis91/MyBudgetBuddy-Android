@@ -64,6 +64,15 @@ class BudgetManager : ViewModel() {
     private val _totalExpensesFlow = MutableStateFlow(0.0)
     val totalExpenses: StateFlow<Double> = _totalExpensesFlow.asStateFlow()
 
+    private val _incomeCategories = MutableStateFlow<List<String>>(emptyList())
+    val incomeCategories: StateFlow<List<String>> = _incomeCategories
+
+    private val _fixedExpenseCategories = MutableStateFlow<List<String>>(emptyList())
+    val fixedExpenseCategories: StateFlow<List<String>> = _fixedExpenseCategories
+
+    private val _variableExpenseCategories = MutableStateFlow<List<String>>(emptyList())
+    val variableExpenseCategories: StateFlow<List<String>> = _variableExpenseCategories
+
     init {
         loadData()
         checkInitialState()
@@ -408,24 +417,21 @@ class BudgetManager : ViewModel() {
     fun loadIncomeCategories() {
         viewModelScope.launch {
             val categories = repository.loadCategories(CategoryType.INCOME)
-            // Process the categories (e.g., update a StateFlow)
-            println("Loaded income categories: $categories")
+            _incomeCategories.value = categories
         }
     }
 
     fun loadFixedExpenseCategories() {
         viewModelScope.launch {
             val categories = repository.loadCategories(CategoryType.FIXED_EXPENSE)
-            // Process the categories (e.g., update a StateFlow)
-            println("Loaded fixed expense categories: $categories")
+            _fixedExpenseCategories.value = categories
         }
     }
 
     fun loadVariableExpenseCategories() {
         viewModelScope.launch {
             val categories = repository.loadCategories(CategoryType.VARIABLE_EXPENSE)
-            // Process the categories (e.g., update a StateFlow)
-            println("Loaded variable expense categories: $categories")
+            _variableExpenseCategories.value = categories
         }
     }
 }

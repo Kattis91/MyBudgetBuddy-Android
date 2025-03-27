@@ -44,8 +44,13 @@ fun ExpensesTabView(
 
     val (selectedExpenseType, setSelectedExpenseType) = remember { mutableStateOf(ExpenseViewType.FIXED) }
 
-    val categories = if (
-        selectedExpenseType == ExpenseViewType.FIXED) remember { CategoryType.FIXED_EXPENSE.defaultCategories} else remember { CategoryType.VARIABLE_EXPENSE.defaultCategories }
+    val fixedExpenseCategories by viewModel.fixedExpenseCategories.collectAsState()
+    val variableExpenseCategories by viewModel.variableExpenseCategories.collectAsState()
+
+    val categories = if (selectedExpenseType == ExpenseViewType.FIXED)
+        fixedExpenseCategories.ifEmpty { CategoryType.FIXED_EXPENSE.defaultCategories }
+    else
+        variableExpenseCategories.ifEmpty { CategoryType.VARIABLE_EXPENSE.defaultCategories }
 
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
