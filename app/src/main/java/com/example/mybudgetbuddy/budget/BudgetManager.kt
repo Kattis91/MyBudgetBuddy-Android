@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mybudgetbuddy.models.BudgetPeriod
+import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
 import kotlinx.coroutines.CoroutineScope
@@ -401,6 +402,30 @@ class BudgetManager : ViewModel() {
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    fun loadIncomeCategories() {
+        viewModelScope.launch {
+            val categories = repository.loadCategories(CategoryType.INCOME)
+            // Process the categories (e.g., update a StateFlow)
+            println("Loaded income categories: $categories")
+        }
+    }
+
+    fun loadFixedExpenseCategories() {
+        viewModelScope.launch {
+            val categories = repository.loadCategories(CategoryType.FIXED_EXPENSE)
+            // Process the categories (e.g., update a StateFlow)
+            println("Loaded fixed expense categories: $categories")
+        }
+    }
+
+    fun loadVariableExpenseCategories() {
+        viewModelScope.launch {
+            val categories = repository.loadCategories(CategoryType.VARIABLE_EXPENSE)
+            // Process the categories (e.g., update a StateFlow)
+            println("Loaded variable expense categories: $categories")
         }
     }
 }
