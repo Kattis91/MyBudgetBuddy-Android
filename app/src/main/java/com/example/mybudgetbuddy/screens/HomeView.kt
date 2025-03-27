@@ -41,6 +41,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
     val isCheckingPeriods by viewModel.isCheckingPeriods.observeAsState(true)
 
     var showInfoSheet by remember { mutableStateOf(false) }
+    var showCategorySheet by remember { mutableStateOf(false) }
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -76,7 +77,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     TopAppBar(
                         title = { },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { showCategorySheet = true }) {
                                 Icon(Icons.Filled.Settings, contentDescription = "Settings")
                             }
                         }
@@ -86,7 +87,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     TopAppBar(
                         title = { },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { showCategorySheet = true }) {
                                 Icon(Icons.Filled.Settings, contentDescription = "Settings")
                             }
                         }
@@ -164,6 +165,14 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 onDismissRequest = { showInfoSheet = false }
             ) {
                 InfoScreen()
+            }
+        }
+
+        if (showCategorySheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showCategorySheet = false }
+            ) {
+                CategoryManagement()
             }
         }
     }
