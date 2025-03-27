@@ -2,8 +2,11 @@ package com.example.mybudgetbuddy.budget
 
 import android.util.Log
 import com.example.mybudgetbuddy.models.BudgetPeriod
+import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
+import com.example.mybudgetbuddy.models.defaultCategories
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.getValue
@@ -700,6 +703,31 @@ class BudgetRepository {
                     onComplete(false)
                 }
             }
+        }
+    }
+
+    suspend fun loadCategories(type: CategoryType): List<String> {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return emptyList()
+
+        val ref = Firebase.database.reference
+            .child("categories")
+            .child(userId)
+            .child(type.value)
+
+        return try {
+            val snapshot = ref.get().await()
+            if (snapshot.exists()) {
+                snapshot.getValue<List<String>>() ?: emptyList()
+            } else {
+                // If no categories exist, create default ones
+                val defaults = type.defaultCategories
+                ref.setValue(defaults).await()
+                defaults
+            }
+        } catch (e: Exception) {
+            // Handle potential errors (e.g., network issues)
+            println("Error loading categories: ${e.message}")
+            emptyList()
         }
     }
 }
