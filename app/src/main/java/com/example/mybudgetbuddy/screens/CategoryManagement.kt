@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.budget.BudgetManager
+import com.example.mybudgetbuddy.components.CategoryList
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 
 @Composable
@@ -65,25 +64,13 @@ fun CategoryManagement(
 
         when (selectedTabIndex) {
             0 -> {
-                LazyColumn {
-                    items(incomeCategories) { category ->
-                        Text(category)
-                    }
-                }
+                CategoryList(categories = incomeCategories)
             }
             1 -> {
-                LazyColumn {
-                    items(fixedExpenseCategories) { category ->
-                        Text(category)
-                    }
-                }
+                CategoryList(categories = fixedExpenseCategories)
             }
             2 -> {
-                LazyColumn {
-                    items(variableExpenseCategories) { category ->
-                        Text(category)
-                    }
-                }
+                CategoryList(categories = variableExpenseCategories)
             }
         }
     }
