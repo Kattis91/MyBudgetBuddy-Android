@@ -10,6 +10,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -56,6 +57,15 @@ fun ExpensesTabView(
     val variableExpenseItems by viewModel.variableExpenseItems.collectAsState()
 
     val totalExpenses by viewModel.totalExpenses.collectAsState()
+
+    LaunchedEffect(selectedExpenseType) {
+        println("Selected Expense Type: $selectedExpenseType")
+        if (selectedExpenseType == ExpenseViewType.FIXED) {
+            viewModel.loadFixedExpenseCategories()
+        } else if (selectedExpenseType == ExpenseViewType.VARIABLE) {
+            viewModel.loadVariableExpenseCategories()
+        }
+    }
 
     Column(
         modifier = Modifier
