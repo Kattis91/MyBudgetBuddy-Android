@@ -28,6 +28,8 @@ import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.models.CategoryType
+import com.example.mybudgetbuddy.models.defaultCategories
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
 
@@ -37,7 +39,8 @@ fun IncomesTabView(
 ) {
     var incomeAmount by remember { mutableStateOf("") }
 
-    val categories = listOf("Salary", "Study grant", "Child benefit", "Housing insurance", "Sickness insurance", "Business")
+    val categories = remember { CategoryType.INCOME.defaultCategories }
+
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
 

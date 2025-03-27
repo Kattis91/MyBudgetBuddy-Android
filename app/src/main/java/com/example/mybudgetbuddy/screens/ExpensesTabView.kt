@@ -29,7 +29,9 @@ import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.ExpenseViewType
+import com.example.mybudgetbuddy.models.defaultCategories
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
 
@@ -42,9 +44,8 @@ fun ExpensesTabView(
     val (selectedExpenseType, setSelectedExpenseType) = remember { mutableStateOf(ExpenseViewType.FIXED) }
 
     val categories = if (
-        selectedExpenseType == ExpenseViewType.FIXED) listOf(
-        "Rent", "Water", "Heat", "Electricity", "Insurance", "WiFi") else listOf(
-        "Groceries", "Dining Out", "Shopping", "Entertainment", "Transport", "Savings")
+        selectedExpenseType == ExpenseViewType.FIXED) remember { CategoryType.FIXED_EXPENSE.defaultCategories} else remember { CategoryType.VARIABLE_EXPENSE.defaultCategories }
+
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
 
