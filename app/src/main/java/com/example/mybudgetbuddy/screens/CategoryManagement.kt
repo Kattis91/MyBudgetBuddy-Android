@@ -20,18 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.budget.BudgetManager
+import com.example.mybudgetbuddy.components.AddCategoryDialog
 import com.example.mybudgetbuddy.components.CategoryList
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
+import com.example.mybudgetbuddy.models.CategoryType
 
 @Composable
 fun CategoryManagement(
-    viewModel: BudgetManager = viewModel()
+    viewModel: BudgetManager = viewModel(),
 ) {
-
     var selectedTabIndex by remember { mutableStateOf(0) }
     val incomeCategories by viewModel.incomeCategories.collectAsState()
     val fixedExpenseCategories by viewModel.fixedExpenseCategories.collectAsState()
     val variableExpenseCategories by viewModel.variableExpenseCategories.collectAsState()
+
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.loadIncomeCategories()
@@ -64,14 +67,32 @@ fun CategoryManagement(
 
         when (selectedTabIndex) {
             0 -> {
-                CategoryList(categories = incomeCategories)
+                CategoryList(
+                    categories = incomeCategories,
+                    onAddCategoryClick = { showDialog = true }
+                )
             }
             1 -> {
-                CategoryList(categories = fixedExpenseCategories)
+                CategoryList(
+                    categories = fixedExpenseCategories,
+                    onAddCategoryClick = { showDialog = true }
+                )
             }
             2 -> {
-                CategoryList(categories = variableExpenseCategories)
+                CategoryList(
+                    categories = variableExpenseCategories,
+                    onAddCategoryClick = { showDialog = true }
+                )
             }
+        }
+        if (showDialog) {
+            AddCategoryDialog(
+                onDismiss = { showDialog = false },
+                onSaveCategory = { categoryName ->
+                    viewModel.addCategory(categoryName, CategoryType.entries[selectedTabIndex]) // Save the category
+                    showDialog = false // Close the dialog after saving
+                }
+            )
         }
     }
 }

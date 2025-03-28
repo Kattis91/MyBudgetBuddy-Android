@@ -30,6 +30,7 @@ import com.example.mybudgetbuddy.R
 @Composable
 fun CategoryList(
     categories: List<String>,
+    onAddCategoryClick: () -> Unit
 ) {
     val isDarkMode = isSystemInDarkTheme()
 
@@ -80,7 +81,7 @@ fun CategoryList(
             .padding(start = 12.dp)
     ) {
         FloatingActionButton(
-            onClick = { },
+            onClick = onAddCategoryClick,
             modifier = Modifier.align(Alignment.BottomStart),
             containerColor = if (isDarkMode) Color.DarkGray else colorResource(id = R.color.background_tint_dark),
             contentColor = Color.White
