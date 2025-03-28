@@ -437,4 +437,22 @@ class BudgetManager : ViewModel() {
             _variableExpenseCategories.value = categories
         }
     }
+
+    fun addCategory(category: String, type: CategoryType) {
+        if (category.isBlank()) return
+
+        viewModelScope.launch {
+            try {
+                repository.addCategory(category, type)
+
+                when (type) {
+                    CategoryType.INCOME -> _incomeCategories.value += category
+                    CategoryType.FIXED_EXPENSE -> _fixedExpenseCategories.value += category
+                    CategoryType.VARIABLE_EXPENSE -> _variableExpenseCategories.value += category
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error adding category: ${e.message}")
+            }
+        }
+    }
 }
