@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +13,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.utils.formatAmount
@@ -25,12 +29,21 @@ fun SummaryBox(
     viewModel: BudgetManager = viewModel(),
     isCurrent: Boolean
 ) {
-    val totalIncome by viewModel.totalIncome.collectAsState()
-    val totalExpenses by viewModel.totalExpenses.collectAsState()
+    val totalIncome = if (isCurrent) {
+        viewModel.totalIncome.collectAsState().value
+    } else {
+        viewModel.getPeriodById(period.id)?.totalIncome ?: 0.0
+    }
+
+    val totalExpenses = if (isCurrent) {
+        viewModel.totalExpenses.collectAsState().value
+    } else {
+        viewModel.getPeriodById(period.id)?.let { it.totalFixedExpenses + it.totalVariableExpenses } ?: 0.0
+    }
 
     StyledCard {
         Text(
-            if (isCurrent) "Current Period" else "",
+            if (isCurrent) "Current Period" else "Budget Period",
             style = MaterialTheme.typography.titleMedium,
         )
 
