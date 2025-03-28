@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,8 +28,13 @@ fun PeriodDetailView(
 
     Column(modifier = Modifier
         .fillMaxHeight()
-        .padding(horizontal = 26.dp)) {
-        SummaryBox(period = period, isCurrent = false)
+    ) {
+        Box(modifier = Modifier
+            .padding(vertical = 10.dp)
+            .padding(horizontal = 18.dp)
+        ) {
+            SummaryBox(period = period, isCurrent = false)
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -39,6 +45,8 @@ fun PeriodDetailView(
                 selectedTabIndex = index
             }
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         when (selectedTabIndex) {
             0 -> {
