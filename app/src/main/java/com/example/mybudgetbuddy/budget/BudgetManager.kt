@@ -73,6 +73,10 @@ class BudgetManager : ViewModel() {
     private val _variableExpenseCategories = MutableStateFlow<List<String>>(emptyList())
     val variableExpenseCategories: StateFlow<List<String>> = _variableExpenseCategories
 
+    fun getPeriodById(periodId: String?): BudgetPeriod? {
+        return historicalPeriods.value.find { it.id == periodId } // Assuming periodList is a LiveData or StateFlow
+    }
+
     init {
         loadData()
         checkInitialState()
@@ -311,7 +315,6 @@ class BudgetManager : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("BudgetManager", "Error saving income data: ${e.message}")
-                // Still need to update UI state
                 _isLoading.value = false
             }
         }
