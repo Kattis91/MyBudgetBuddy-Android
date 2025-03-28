@@ -146,7 +146,17 @@ class BudgetRepository {
 
             for (periodSnapshot in snapshot.children) {
                 val dict = periodSnapshot.value as? Map<String, Any> ?: continue
-                val period = BudgetPeriod.fromDict(dict)?.copy(id = periodSnapshot.key ?: "")
+
+                // Ensure proper type conversion
+                val formattedDict = dict.mapValues {
+                    when (it.value) {
+                        is Long -> (it.value as Long).toInt() // Convert Long to Int
+                        is Double -> (it.value as Double).toInt() // Convert Double to Int
+                        else -> it.value
+                    }
+                }
+
+                val period = BudgetPeriod.fromDict(formattedDict)?.copy(id = periodSnapshot.key ?: "")
                 if (period != null) {
                     periods.add(period)
                 }
@@ -728,6 +738,31 @@ class BudgetRepository {
             // Handle potential errors (e.g., network issues)
             println("Error loading categories: ${e.message}")
             emptyList()
+        }
+    }
+
+    suspend fun addCategory(name: String, type: CategoryType): Boolean {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return false
+
+        val ref = Firebase.database.reference
+            .child("categories")
+            .child(userId)
+            .child(type.value)
+
+        return try {
+            val snapshot = ref.get().await()
+            val categories = snapshot.getValue<List<String>>()?.toMutableList() ?: mutableListOf()
+
+            if (name in categories) {
+                return false
+            }
+
+            categories.add(name)
+            ref.setValue(categories).await()
+            true
+        } catch (e: Exception) {
+            println("Error adding category: ${e.message}")
+            false
         }
     }
 }
