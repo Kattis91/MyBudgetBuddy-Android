@@ -34,59 +34,59 @@ fun CategoryList(
 ) {
     val isDarkMode = isSystemInDarkTheme()
 
-    LazyColumn {
-        items(categories) { category ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp)
-                    .padding(vertical = 8.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Row(
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(categories) { category ->
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(horizontal = 26.dp)
+                        .padding(vertical = 8.dp),
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
-                    Text(text = category)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = category)
 
-                    Row {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit",
-                                tint = if(isDarkMode) Color.White else Color.Blue
-                            )
-                        }
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete",
-                                tint = colorResource(id = R.color.error_message_color)
-                            )
+                        Row {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit",
+                                    tint = if (isDarkMode) Color.White else Color.Blue
+                                )
+                            }
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete",
+                                    tint = colorResource(id = R.color.error_message_color)
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .padding(start = 12.dp)
-    ) {
+        // Position the FloatingActionButton at the bottom center of the screen
         FloatingActionButton(
             onClick = onAddCategoryClick,
-            modifier = Modifier.align(Alignment.BottomStart),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(26.dp),
             containerColor = if (isDarkMode) Color.DarkGray else colorResource(id = R.color.background_tint_dark),
             contentColor = Color.White
         ) {
-            Icon(Icons.Filled.Add, "Floating action button.")
+            Icon(Icons.Filled.Add, "Add Category")
         }
     }
 }
