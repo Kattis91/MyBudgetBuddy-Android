@@ -137,9 +137,22 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         composable("expenses") { ExpensesTabView() }
                         composable("overview") {
                             currentPeriod?.let { period ->
-                                OverviewTabView(period = period)
+                                OverviewTabView(period = period, navController = navController)
                             }
                         }
+                        composable("periodDetail/{periodId}") { backStackEntry ->
+                            val periodId = backStackEntry.arguments?.getString("periodId")
+
+                            // Fetch the period based on the periodId
+                            val period = viewModel.getPeriodById(periodId)
+
+                            period?.let {
+                                PeriodDetailView(period = it)
+                            } ?: run {
+                                Text("Period not found") // Handle the case where period is null
+                            }
+                        }
+
                     }
                 }
                 hasExistingPeriods -> {

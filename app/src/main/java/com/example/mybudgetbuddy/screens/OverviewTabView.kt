@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.SummaryBox
 import com.example.mybudgetbuddy.models.BudgetPeriod
@@ -29,7 +32,8 @@ import java.util.Date
 @Composable
 fun OverviewTabView(
     period: BudgetPeriod,
-    viewModel: BudgetManager = viewModel()
+    viewModel: BudgetManager = viewModel(),
+    navController: NavController = rememberNavController()
 ) {
 
     val historicalPeriods by viewModel.historicalPeriods.collectAsState()
@@ -54,7 +58,10 @@ fun OverviewTabView(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 8.dp)
+                        .clickable {
+                            navController.navigate("periodDetail/${period.id}")
+                        },
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
