@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,8 +17,11 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.models.Identifiable
 import com.example.mybudgetbuddy.utils.formatAmount
 import java.text.SimpleDateFormat
@@ -32,6 +36,9 @@ fun <T : Identifiable> CustomListView(
     itemContent: (T) -> Triple<String, Double?, Date?>,
     showNegativeAmount: Boolean
 ) {
+    val isDarkMode = isSystemInDarkTheme()
+    val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+
     LazyColumn {
         items(
             count = items.size,
@@ -71,20 +78,24 @@ fun <T : Identifiable> CustomListView(
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = category)
+                            Text(text = category, color = textColor)
 
                             Spacer(modifier = Modifier.weight(1f))
 
                             if (date != null) {
                                 Text(
                                     text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
-                                fontWeight = FontWeight.Bold)
+                                    fontWeight = FontWeight.Bold,
+                                    color = textColor
+                                )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(dateFormatter.format(date))
                             } else {
                                 Text(
                                     text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
-                                    fontWeight = FontWeight.Bold)
+                                    fontWeight = FontWeight.Bold,
+                                    color = textColor
+                                )
                             }
                         }
                     }

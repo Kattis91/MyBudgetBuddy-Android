@@ -33,6 +33,7 @@ fun CategoryList(
     onAddCategoryClick: () -> Unit
 ) {
     val isDarkMode = isSystemInDarkTheme()
+    val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -54,7 +55,7 @@ fun CategoryList(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = category)
+                        Text(text = category, color = textColor)
 
                         Row {
                             IconButton(onClick = { /*TODO*/ }) {

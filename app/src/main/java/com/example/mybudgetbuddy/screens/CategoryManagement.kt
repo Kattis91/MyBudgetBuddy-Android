@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,10 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.AddCategoryDialog
 import com.example.mybudgetbuddy.components.CategoryList
@@ -36,6 +40,8 @@ fun CategoryManagement(
 
     var showDialog by remember { mutableStateOf(false) }
 
+    val isDarkMode = isSystemInDarkTheme()
+
     LaunchedEffect(Unit) {
         viewModel.loadIncomeCategories()
         viewModel.loadFixedExpenseCategories()
@@ -51,6 +57,7 @@ fun CategoryManagement(
         Text(
             "Manage Categories",
             fontSize = 20.sp,
+            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
         )
 
         Spacer(modifier = Modifier.height(20.dp))

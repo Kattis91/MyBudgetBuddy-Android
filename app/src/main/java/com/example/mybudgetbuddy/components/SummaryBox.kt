@@ -41,15 +41,19 @@ fun SummaryBox(
         viewModel.getPeriodById(period.id)?.let { it.totalFixedExpenses + it.totalVariableExpenses } ?: 0.0
     }
 
+    val isDarkMode = isSystemInDarkTheme()
+    val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+
     StyledCard {
         Text(
             if (isCurrent) "Current Period" else "Budget Period",
             style = MaterialTheme.typography.titleMedium,
+            color = textColor
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(formattedDateRange(period.startDate, period.endDate))
+        Text(formattedDateRange(period.startDate, period.endDate), color = textColor)
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -57,9 +61,9 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalIncome))
+                Text(formatAmount(totalIncome), color = colorResource(id = R.color.income_color) )
 
-                Text("Income")
+                Text("Income", color = textColor)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -67,9 +71,9 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalExpenses))
+                Text(formatAmount(totalExpenses), color = colorResource(id = R.color.expense_color))
 
-                Text("Expenses")
+                Text("Expenses", color = textColor)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -77,9 +81,9 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalIncome - totalExpenses))
+                Text(formatAmount(totalIncome - totalExpenses), color = Color.Blue)
 
-                Text("Outcome")
+                Text("Outcome", color = textColor)
             }
         }
     }
