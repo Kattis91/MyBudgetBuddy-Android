@@ -32,7 +32,8 @@ fun TopAppBarWithMenu(
     isDarkMode: Boolean,
     showDropdownMenu: Boolean,
     onDropdownMenuChange: (Boolean) -> Unit,
-    onCategoryClick: () -> Unit
+    onCategoryClick: () -> Unit,
+    onInvoiceClick: () -> Unit
 ) {
     TopAppBar(
         title = { },
@@ -91,7 +92,9 @@ fun TopAppBarWithMenu(
                             )
                         }
                     },
-                    onClick = { onDropdownMenuChange(false) }
+                    onClick = {
+                        onInvoiceClick()
+                        onDropdownMenuChange(false) }
                 )
             }
         }

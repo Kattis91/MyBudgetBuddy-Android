@@ -10,9 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
@@ -22,14 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,6 +43,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
 
     var showInfoSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
+    var showInvoiceSheet by remember { mutableStateOf(false)}
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -92,7 +84,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         isDarkMode = isDarkMode,
                         showDropdownMenu = showDropdownMenu,
                         onDropdownMenuChange = { showDropdownMenu = it },
-                        onCategoryClick = { showCategorySheet = true }
+                        onCategoryClick = { showCategorySheet = true },
+                        onInvoiceClick = { showInvoiceSheet = true }
                     )
                 }
                 "expenses" -> {
@@ -100,7 +93,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         isDarkMode = isDarkMode,
                         showDropdownMenu = showDropdownMenu,
                         onDropdownMenuChange = { showDropdownMenu = it },
-                        onCategoryClick = { showCategorySheet = true }
+                        onCategoryClick = { showCategorySheet = true },
+                        onInvoiceClick = { showInvoiceSheet = true }
                     )
                 }
             }
@@ -198,6 +192,14 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 onDismissRequest = { showCategorySheet = false }
             ) {
                 CategoryManagement()
+            }
+        }
+
+        if (showInvoiceSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showInvoiceSheet = false }
+            ) {
+                InvoiceReminder()
             }
         }
     }
