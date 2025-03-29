@@ -454,4 +454,37 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun editCategory(oldName: String, newName: String, type: CategoryType) {
+        if (newName.isBlank()) return
+
+        viewModelScope.launch {
+            try {
+                val success = repository.editCategory(oldName, newName, type)
+
+                if (success) {
+                    // Update the appropriate category list with the new name
+                    when (type) {
+                        CategoryType.INCOME -> {
+                            _incomeCategories.value = _incomeCategories.value.map {
+                                if (it == oldName) newName else it
+                            }
+                        }
+                        CategoryType.FIXED_EXPENSE -> {
+                            _fixedExpenseCategories.value = _fixedExpenseCategories.value.map {
+                                if (it == oldName) newName else it
+                            }
+                        }
+                        CategoryType.VARIABLE_EXPENSE -> {
+                            _variableExpenseCategories.value = _variableExpenseCategories.value.map {
+                                if (it == oldName) newName else it
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error editing category: ${e.message}")
+            }
+        }
+    }
 }

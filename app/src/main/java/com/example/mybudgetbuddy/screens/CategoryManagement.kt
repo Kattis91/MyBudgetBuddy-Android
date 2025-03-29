@@ -113,7 +113,14 @@ fun CategoryManagement(
         if (showEditDialog && categoryToEdit != null) {
             HandleCategoryDialog(
                 onDismiss = { showEditDialog = false },
-                onSaveCategory = {
+                onSaveCategory = { categoryName ->
+                    categoryToEdit?.let { category ->
+                        viewModel.editCategory(
+                            oldName = category.name,
+                            newName = categoryName,
+                            currentCategoryType
+                        )
+                    }
                     showEditDialog = false
                 },
                 isEditing = true,

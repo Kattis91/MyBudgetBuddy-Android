@@ -765,4 +765,41 @@ class BudgetRepository {
             false
         }
     }
+
+    suspend fun editCategory(oldName: String, newName: String, type: CategoryType): Boolean {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return false
+
+        val ref = Firebase.database.reference
+            .child("categories")
+            .child(userId)
+            .child(type.value)
+
+        return try {
+            val snapshot = ref.get().await()
+            val categories = snapshot.getValue<List<String>>()?.toMutableList() ?: mutableListOf()
+
+            // Find the index of the old category name
+            val index = categories.indexOf(oldName)
+
+            // If the category wasn't found, return false
+            if (index == -1) {
+                return false
+            }
+
+            // Check if the new name already exists in the list (and it's not just renaming to the same name)
+            if (newName != oldName && newName in categories) {
+                return false
+            }
+
+            // Replace the old name with the new name
+            categories[index] = newName
+
+            // Update the database
+            ref.setValue(categories).await()
+            true
+        } catch (e: Exception) {
+            println("Error editing category: ${e.message}")
+            false
+        }
+    }
 }
