@@ -4,11 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
@@ -19,8 +22,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +39,7 @@ import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.budget.BudgetViewModel
 import com.example.mybudgetbuddy.components.TabBar
+import com.example.mybudgetbuddy.components.TopAppBarWithMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +57,10 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
 
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination?.route
+
+    var showDropdownMenu by remember { mutableStateOf(false) }
+
+    val isDarkMode = isSystemInDarkTheme()
 
     LaunchedEffect(Unit) {
         isVisible = true
@@ -74,23 +88,19 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     )
                 }
                 "incomes" -> {
-                    TopAppBar(
-                        title = { },
-                        actions = {
-                            IconButton(onClick = { showCategorySheet = true }) {
-                                Icon(Icons.Filled.Settings, contentDescription = "Settings")
-                            }
-                        }
+                    TopAppBarWithMenu(
+                        isDarkMode = isDarkMode,
+                        showDropdownMenu = showDropdownMenu,
+                        onDropdownMenuChange = { showDropdownMenu = it },
+                        onCategoryClick = { showCategorySheet = true }
                     )
                 }
                 "expenses" -> {
-                    TopAppBar(
-                        title = { },
-                        actions = {
-                            IconButton(onClick = { showCategorySheet = true }) {
-                                Icon(Icons.Filled.Settings, contentDescription = "Settings")
-                            }
-                        }
+                    TopAppBarWithMenu(
+                        isDarkMode = isDarkMode,
+                        showDropdownMenu = showDropdownMenu,
+                        onDropdownMenuChange = { showDropdownMenu = it },
+                        onCategoryClick = { showCategorySheet = true }
                     )
                 }
             }
