@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +67,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "Email"
+                label = "Email",
+                icon = Icons.Default.Email
             )
         }
 
@@ -80,7 +84,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             CustomTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = "Password"
+                label = "Password",
+                icon = Icons.Default.Lock
             )
         }
 
@@ -95,7 +100,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
             CustomTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = "Confirm Password"
+                label = "Confirm Password",
+                icon = Icons.Default.Lock
             )
         }
 
