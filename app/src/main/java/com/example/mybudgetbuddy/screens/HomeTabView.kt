@@ -46,6 +46,10 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
     val isDarkMode = isSystemInDarkTheme()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadCurrentBudgetPeriod()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

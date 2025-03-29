@@ -104,7 +104,7 @@ class BudgetManager : ViewModel() {
         }
     }
 
-    private fun loadCurrentBudgetPeriod() {
+    fun loadCurrentBudgetPeriod() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Initialize with default empty values
@@ -281,7 +281,6 @@ class BudgetManager : ViewModel() {
     }
 
     private fun updateGroupedData() {
-
         // Update income grouping and total
         val incomesGrouped = _incomeList.groupBy { it.category }
             .mapValues { (_, incomes) ->
