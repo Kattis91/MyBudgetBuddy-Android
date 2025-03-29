@@ -835,7 +835,7 @@ class BudgetRepository {
         val invoiceEntry = mapOf(
             "title" to title,
             "amount" to amount,
-            "expiryDate" to expiryDate.time,
+            "expiryDate" to expiryDate.time / 1000,
             "processed" to false,
             "uid" to userId
         )
