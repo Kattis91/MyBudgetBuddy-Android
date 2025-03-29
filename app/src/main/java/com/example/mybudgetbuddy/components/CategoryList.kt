@@ -20,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +38,9 @@ fun CategoryList(
 ) {
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+
+    val showAlertDialog = remember { mutableStateOf(false) }
+    val categoryToDelete = remember { mutableStateOf<String?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -67,7 +72,10 @@ fun CategoryList(
                                     tint = if (isDarkMode) Color.White else Color.Blue
                                 )
                             }
-                            IconButton(onClick = { onDeleteCategoryClick(category) }) {
+                            IconButton(onClick = {
+                                categoryToDelete.value = category
+                                showAlertDialog.value = true
+                            }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = "Delete",
@@ -78,6 +86,33 @@ fun CategoryList(
                     }
                 }
             }
+
+        }
+
+        if (showAlertDialog.value && categoryToDelete.value != null) {
+            CustomAlertDialog(
+                show = true,
+                onDismiss = {
+                    categoryToDelete.value = null
+                    showAlertDialog.value = false
+                },
+                onConfirm = {
+                    categoryToDelete.value?.let { category ->
+                        onDeleteCategoryClick(category)
+                    }
+                    categoryToDelete.value = null
+                    showAlertDialog.value = false
+                },
+                title = "Delete Category",
+                message = "Are you sure you want to delete ${categoryToDelete.value} category?",
+                customColor = colorResource(id = R.color.error_message_color),
+                confirmText = "Delete!",
+                cancelButtonText = "Go back!",
+                onCancel = {
+                    showAlertDialog.value = false
+                    categoryToDelete.value = null
+                },
+            )
         }
 
         // Position the FloatingActionButton at the bottom center of the screen
