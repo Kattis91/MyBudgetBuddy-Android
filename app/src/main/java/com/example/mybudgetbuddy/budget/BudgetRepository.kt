@@ -802,4 +802,24 @@ class BudgetRepository {
             false
         }
     }
+
+    suspend fun deleteCategory(name: String, type: CategoryType): Boolean {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return false
+
+        val ref = Firebase.database.reference
+            .child("categories")
+            .child(userId)
+            .child(type.value)
+
+        return try {
+            val snapshot = ref.get().await()
+            val categories = snapshot.getValue<List<String>>()?.toMutableList() ?: mutableListOf()
+            categories.remove(name)
+            ref.setValue(categories).await()
+            true
+        } catch (e: Exception) {
+            println("Error deleting category: ${e.message}")
+            false
+        }
+    }
 }

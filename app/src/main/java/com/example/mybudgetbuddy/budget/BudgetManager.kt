@@ -487,4 +487,22 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun deleteCategory(category: String, type: CategoryType) {
+        viewModelScope.launch {
+            try {
+                val success = repository.deleteCategory(category, type)
+
+                if (success) {
+                    when (type) {
+                        CategoryType.INCOME -> _incomeCategories.value -= category
+                        CategoryType.FIXED_EXPENSE -> _fixedExpenseCategories.value -= category
+                        CategoryType.VARIABLE_EXPENSE -> _variableExpenseCategories.value -= category
+                    }
+                }
+                } catch (e: Exception) {
+                Log.e("BudgetManager", "Error deleting category: ${e.message}")
+            }
+        }
+    }
 }
