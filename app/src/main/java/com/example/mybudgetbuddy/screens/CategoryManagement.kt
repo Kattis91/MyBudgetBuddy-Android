@@ -24,9 +24,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
-import com.example.mybudgetbuddy.components.AddCategoryDialog
 import com.example.mybudgetbuddy.components.CategoryList
+import com.example.mybudgetbuddy.components.HandleCategoryDialog
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
+import com.example.mybudgetbuddy.models.Category
 import com.example.mybudgetbuddy.models.CategoryType
 
 @Composable
@@ -38,7 +39,9 @@ fun CategoryManagement(
     val fixedExpenseCategories by viewModel.fixedExpenseCategories.collectAsState()
     val variableExpenseCategories by viewModel.variableExpenseCategories.collectAsState()
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showAddDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var categoryToEdit by remember { mutableStateOf<Category?>(null) }
 
     val isDarkMode = isSystemInDarkTheme()
 
@@ -72,33 +75,49 @@ fun CategoryManagement(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        when (selectedTabIndex) {
-            0 -> {
-                CategoryList(
-                    categories = incomeCategories,
-                    onAddCategoryClick = { showDialog = true }
-                )
-            }
-            1 -> {
-                CategoryList(
-                    categories = fixedExpenseCategories,
-                    onAddCategoryClick = { showDialog = true }
-                )
-            }
-            2 -> {
-                CategoryList(
-                    categories = variableExpenseCategories,
-                    onAddCategoryClick = { showDialog = true }
-                )
-            }
+        val currentCategories = when (selectedTabIndex) {
+            0 -> incomeCategories
+            1 -> fixedExpenseCategories
+            2 -> variableExpenseCategories
+            else -> emptyList()
         }
-        if (showDialog) {
-            AddCategoryDialog(
-                onDismiss = { showDialog = false },
+
+        // Get the current category type
+        val currentCategoryType = CategoryType.entries[selectedTabIndex]
+
+        CategoryList(
+            categories = currentCategories,
+            onAddCategoryClick = { showAddDialog = true },
+            onEditCategoryClick = { categoryName ->
+                // Create a Category object for editing
+                categoryToEdit = Category(
+                    name = categoryName,
+                    type = currentCategoryType
+                )
+                showEditDialog = true
+            }
+        )
+
+        if (showAddDialog) {
+            HandleCategoryDialog(
+                onDismiss = { showAddDialog = false },
                 onSaveCategory = { categoryName ->
-                    viewModel.addCategory(categoryName, CategoryType.entries[selectedTabIndex]) // Save the category
-                    showDialog = false // Close the dialog after saving
-                }
+                    viewModel.addCategory(categoryName, currentCategoryType) // Save the category
+                    showAddDialog = false // Close the dialog after saving
+                },
+                isEditing = false,
+                category = Category("", "", currentCategoryType)
+            )
+        }
+
+        if (showEditDialog && categoryToEdit != null) {
+            HandleCategoryDialog(
+                onDismiss = { showEditDialog = false },
+                onSaveCategory = {
+                    showEditDialog = false
+                },
+                isEditing = true,
+                category = categoryToEdit
             )
         }
     }
