@@ -30,7 +30,8 @@ import com.example.mybudgetbuddy.R
 @Composable
 fun CategoryList(
     categories: List<String>,
-    onAddCategoryClick: () -> Unit
+    onAddCategoryClick: () -> Unit,
+    onEditCategoryClick: (String) -> Unit
 ) {
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -58,7 +59,7 @@ fun CategoryList(
                         Text(text = category, color = textColor)
 
                         Row {
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = { onEditCategoryClick(category) }) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
                                     contentDescription = "Edit",
