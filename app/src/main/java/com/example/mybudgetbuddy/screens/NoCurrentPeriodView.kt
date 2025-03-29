@@ -28,8 +28,10 @@ import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.components.CustomButton
 
 @Composable
-fun NoCurrentPeriodScreen(onPeriodCreated: () -> Unit) {
-
+fun NoCurrentPeriodScreen(
+    onPeriodCreated: () -> Unit,
+    isFirstTime: Boolean = false
+) {
     var showNewPeriodDialog by remember { mutableStateOf(false) }
 
     val isDarkMode = isSystemInDarkTheme()
@@ -51,7 +53,7 @@ fun NoCurrentPeriodScreen(onPeriodCreated: () -> Unit) {
         )
 
         Text(
-            "Welcome to MyBudgetBuddy!",
+            if (isFirstTime) "Welcome to MyBudgetBuddy!" else "Your last budget period has ended",
             fontSize = 25.sp,
             modifier = Modifier.padding(top = 16.dp),
             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -60,7 +62,8 @@ fun NoCurrentPeriodScreen(onPeriodCreated: () -> Unit) {
         Spacer(modifier = Modifier.height(26.dp))
 
         Text(
-            "To start tracking your budget, you'll need to create your first budget period.",
+            if (isFirstTime) "To start tracking your budget, you'll need to create your first budget period."
+            else "Start a new period to continue tracking your budget",
             fontSize = 20.sp,
             modifier = Modifier
                 .padding(horizontal = 10.dp),
@@ -74,7 +77,7 @@ fun NoCurrentPeriodScreen(onPeriodCreated: () -> Unit) {
             onClick = {
                 showNewPeriodDialog = true
             },
-            buttonText = "Create a new period",
+            buttonText = if (isFirstTime) "Create Budget Period" else "Start New Period",
             isIncome = false,
             isExpense = true,
             isThirdButton = false,

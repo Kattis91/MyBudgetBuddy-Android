@@ -170,7 +170,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     NoCurrentPeriodScreen(
                         onPeriodCreated = {
                             viewModel.checkInitialState()
-                        }
+                        },
+                        isFirstTime = false
                     )
                 }
                 else -> {
@@ -178,7 +179,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     NoCurrentPeriodScreen(
                         onPeriodCreated = {
                             viewModel.checkInitialState()
-                        }
+                        },
+                        isFirstTime = true
                     )
                 }
             }
