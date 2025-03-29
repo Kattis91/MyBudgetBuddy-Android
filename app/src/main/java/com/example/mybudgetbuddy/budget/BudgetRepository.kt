@@ -822,4 +822,33 @@ class BudgetRepository {
             false
         }
     }
+
+    fun saveInvoiceReminder(title: String, amount: Double, expiryDate: Date) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+            ?: run {
+                Log.e("InvoiceReminder", "Error: Unable to retrieve user ID")
+                return
+            }
+
+        val ref = Firebase.database.reference
+
+        val invoiceEntry = mapOf(
+            "title" to title,
+            "amount" to amount,
+            "expiryDate" to expiryDate.time,
+            "processed" to false,
+            "uid" to userId
+        )
+
+        ref.child("invoices")
+            .child(userId)
+            .push()  // This is equivalent to childByAutoId() in iOS
+            .setValue(invoiceEntry)
+            .addOnSuccessListener {
+                Log.d("InvoiceReminder", "Invoice saved successfully")
+            }
+            .addOnFailureListener { error ->
+                Log.e("InvoiceReminder", "Error saving invoice: ${error.message}")
+            }
+    }
 }

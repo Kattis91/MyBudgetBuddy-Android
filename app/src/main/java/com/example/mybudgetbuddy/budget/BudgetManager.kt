@@ -505,4 +505,15 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun addInvoice(title: String, amount: Double, expiryDate: Date) {
+
+        viewModelScope.launch {
+            try {
+                repository.saveInvoiceReminder(title, amount, expiryDate)
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error adding invoice: ${e.message}")
+            }
+        }
+    }
 }

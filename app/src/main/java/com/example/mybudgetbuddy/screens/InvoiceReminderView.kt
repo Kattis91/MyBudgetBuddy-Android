@@ -29,14 +29,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
+import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.DatePickerButton
 import java.util.Date
 
 @Composable
-fun InvoiceReminder() {
+fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
 
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
@@ -109,7 +111,8 @@ fun InvoiceReminder() {
             CustomButton(
                 buttonText = "Save",
                 onClick = {
-                    // Handle save button click
+                    val invoiceAmount = amount.toDouble()
+                    viewModel.addInvoice(title = title, amount = invoiceAmount, expiryDate = expiryDate)
                 },
                 isIncome = false,
                 isExpense = true,
