@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,13 +27,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.mybudgetbuddy.models.Category
+import com.example.mybudgetbuddy.models.CategoryType
 
 @Composable
-fun AddCategoryDialog(
+fun HandleCategoryDialog(
     onDismiss: () -> Unit,
-    onSaveCategory: (String) -> Unit
+    onSaveCategory: (String) -> Unit,
+    isEditing: Boolean = false,
+    category: Category? = null
 ) {
-    var categoryName by remember { mutableStateOf("") }
+    var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
+
+    val titleText = if (isEditing) "Editing" else "Add New"
+    val categoryTypeText = if (category != null) {
+        when (category.type) {
+            CategoryType.INCOME -> "Income Category"
+            CategoryType.FIXED_EXPENSE -> "Fixed Expense Category"
+            CategoryType.VARIABLE_EXPENSE -> "Variable Expense Category"
+        }
+    } else {
+        ""
+    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -58,16 +74,30 @@ fun AddCategoryDialog(
                     }
                 }
 
-                Text(
-                    "Add New Category",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = titleText,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    if (categoryTypeText.isNotEmpty()) {
+                        Text(
+                            text = categoryTypeText,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
 
                 CustomTextField(
                     value = categoryName,
                     onValueChange = { categoryName = it },
                     label = "Category Name",
+                    icon = Icons.Default.FolderOpen,
                 )
 
                 Row(
@@ -93,8 +123,8 @@ fun AddCategoryDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun AddCategoryDialogPreview() {
-    AddCategoryDialog(
+fun HandleCategoryDialogPreview() {
+    HandleCategoryDialog(
         onDismiss = {},
         onSaveCategory = {}
     )
