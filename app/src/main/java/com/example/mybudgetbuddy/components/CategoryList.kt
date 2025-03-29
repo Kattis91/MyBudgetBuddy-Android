@@ -31,7 +31,8 @@ import com.example.mybudgetbuddy.R
 fun CategoryList(
     categories: List<String>,
     onAddCategoryClick: () -> Unit,
-    onEditCategoryClick: (String) -> Unit
+    onEditCategoryClick: (String) -> Unit,
+    onDeleteCategoryClick: (String) -> Unit
 ) {
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -66,7 +67,7 @@ fun CategoryList(
                                     tint = if (isDarkMode) Color.White else Color.Blue
                                 )
                             }
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = { onDeleteCategoryClick(category) }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = "Delete",

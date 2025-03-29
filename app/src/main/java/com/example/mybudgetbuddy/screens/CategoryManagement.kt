@@ -95,6 +95,9 @@ fun CategoryManagement(
                     type = currentCategoryType
                 )
                 showEditDialog = true
+            },
+            onDeleteCategoryClick = { categoryName ->
+                viewModel.deleteCategory(categoryName, currentCategoryType)
             }
         )
 
