@@ -10,6 +10,9 @@ import com.example.mybudgetbuddy.models.defaultCategories
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -25,6 +28,8 @@ import kotlinx.coroutines.withTimeout
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class BudgetRepository {
 
@@ -75,7 +80,10 @@ class BudgetRepository {
             }
 
             // Add more debug logging
-            Log.d("BudgetRepository", "Query complete. Snapshot exists: ${snapshot.exists()}, child count: ${snapshot.childrenCount}")
+            Log.d(
+                "BudgetRepository",
+                "Query complete. Snapshot exists: ${snapshot.exists()}, child count: ${snapshot.childrenCount}"
+            )
 
             if (!snapshot.exists() || snapshot.childrenCount <= 0) {
                 Log.d("BudgetRepository", "No current period found in database")
@@ -84,7 +92,10 @@ class BudgetRepository {
 
             // Get the period data
             val periodData = snapshot.children.iterator().next()
-            Log.d("BudgetRepository", "Period key: ${periodData.key}, has value: ${periodData.value != null}")
+            Log.d(
+                "BudgetRepository",
+                "Period key: ${periodData.key}, has value: ${periodData.value != null}"
+            )
 
             val dict = periodData.value as? Map<String, Any>
             if (dict == null) {
@@ -120,7 +131,10 @@ class BudgetRepository {
 
             if (periodEndDate.before(today)) {
                 // Period has expired, save as historical and remove
-                Log.d("BudgetRepository", "Period expired: end date $periodEndDate is before today $today")
+                Log.d(
+                    "BudgetRepository",
+                    "Period expired: end date $periodEndDate is before today $today"
+                )
                 saveHistoricalPeriod(budgetPeriod)
                 periodData.ref.removeValue().await()
                 return null
@@ -157,7 +171,8 @@ class BudgetRepository {
                     }
                 }
 
-                val period = BudgetPeriod.fromDict(formattedDict)?.copy(id = periodSnapshot.key ?: "")
+                val period =
+                    BudgetPeriod.fromDict(formattedDict)?.copy(id = periodSnapshot.key ?: "")
                 if (period != null) {
                     periods.add(period)
                 }
@@ -900,4 +915,66 @@ class BudgetRepository {
             emptyList()
         }
     }
+
+    suspend fun loadInvoicesByStatus(processed: Boolean): List<Invoice> {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+            ?: return emptyList()
+
+        val ref = Firebase.database.reference
+            .child("invoices")
+            .child(userId)
+
+        return suspendCoroutine { continuation ->
+            // Use orderByChild and equalTo for filtering
+            ref.orderByChild("processed")
+                .equalTo(processed)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val invoices = mutableListOf<Invoice>()
+
+                        for (childSnapshot in snapshot.children) {
+                            try {
+                                val invoiceData = childSnapshot.getValue(object :
+                                    GenericTypeIndicator<Map<String, Any>>() {}) ?: continue
+
+                                val title = invoiceData["title"] as? String ?: continue
+                                val amount = when (val rawAmount = invoiceData["amount"]) {
+                                    is Double -> rawAmount
+                                    is Long -> rawAmount.toDouble()
+                                    else -> continue
+                                }
+                                val processedStatus =
+                                    invoiceData["processed"] as? Boolean ?: continue
+                                val expiryDateTimestamp =
+                                    (invoiceData["expiryDate"] as? Number)?.toLong() ?: continue
+
+                                val expiryDate = Date(expiryDateTimestamp * 1000)
+
+                                val invoice = Invoice(
+                                    id = childSnapshot.key ?: "",
+                                    title = title,
+                                    amount = amount,
+                                    processed = processedStatus,
+                                    expiryDate = expiryDate
+                                )
+
+                                invoices.add(invoice)
+                            } catch (e: Exception) {
+                                Log.e("InvoiceReminder", "Error parsing invoice: ${e.message}")
+                            }
+                        }
+
+                        // Sort invoices by expiry date
+                        val sortedInvoices = invoices.sortedBy { it.expiryDate }
+                        continuation.resume(sortedInvoices)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("InvoiceReminder", "Error loading invoices: ${error.message}")
+                        continuation.resume(emptyList())
+                    }
+                })
+        }
+    }
 }
+

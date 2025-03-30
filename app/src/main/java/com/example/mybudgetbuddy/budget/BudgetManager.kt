@@ -537,4 +537,13 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun loadInvoicesByStatus(processed: Boolean) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val invoices = repository.loadInvoicesByStatus(processed)
+            _invoicesFlow.value = invoices
+            _isLoading.value = false
+        }
+    }
 }
