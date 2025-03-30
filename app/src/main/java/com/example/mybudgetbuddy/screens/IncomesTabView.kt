@@ -152,7 +152,8 @@ fun IncomesTabView(
                 itemContent = { income ->
                     Triple(income.category, income.amount, null)
                 },
-                showNegativeAmount = false
+                showNegativeAmount = false,
+                alignAmountInMiddle = false
             )
         }
     }

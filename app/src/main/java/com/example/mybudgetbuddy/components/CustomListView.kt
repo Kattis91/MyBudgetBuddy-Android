@@ -34,7 +34,8 @@ fun <T : Identifiable> CustomListView(
     items: List<T>,
     deleteAction: (T) -> Unit,
     itemContent: (T) -> Triple<String, Double?, Date?>,
-    showNegativeAmount: Boolean
+    showNegativeAmount: Boolean,
+    alignAmountInMiddle: Boolean
 ) {
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -74,28 +75,38 @@ fun <T : Identifiable> CustomListView(
                     ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth() // Se till att raden fyller hela bredden
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = category, color = textColor)
 
-                            Spacer(modifier = Modifier.weight(1f))
-
                             if (date != null) {
+                                Spacer(modifier = Modifier.weight(1f)) // Skjuter beloppet och datumet åt höger
                                 Text(
-                                    text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
+                                    text = if (showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
                                     fontWeight = FontWeight.Bold,
                                     color = textColor
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(dateFormatter.format(date))
                             } else {
-                                Text(
-                                    text = if(showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
-                                    fontWeight = FontWeight.Bold,
-                                    color = textColor
-                                )
+                                if (alignAmountInMiddle) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Text(
+                                        text = if (showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
+                                        fontWeight = FontWeight.Bold,
+                                        color = textColor
+                                    )
+                                    Spacer(modifier = Modifier.weight(1f))
+                                } else {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Text(
+                                        text = if (showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
+                                        fontWeight = FontWeight.Bold,
+                                        color = textColor
+                                    )
+                                }
                             }
                         }
                     }

@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.CustomButton
+import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.DatePickerButton
 import java.util.Date
@@ -177,30 +178,20 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Invoices section
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (invoices.isEmpty()) {
-                Text(
-                    text = "No invoices found",
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(16.dp)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(invoices) { invoice ->
-                        Text(invoice.title)
-                    }
-                }
-            }
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            CustomListView(
+                items = invoices,
+                deleteAction = { 
+
+                },
+                itemContent = { invoice->
+                    Triple(invoice.title, invoice.amount, invoice.expiryDate)
+                },
+                showNegativeAmount = false,
+                alignAmountInMiddle = true
+            )
         }
     }
 }

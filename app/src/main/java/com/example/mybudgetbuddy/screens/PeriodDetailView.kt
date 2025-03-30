@@ -56,7 +56,8 @@ fun PeriodDetailView(
                     itemContent = { income ->
                         Triple(income.category, income.amount, null)
                     },
-                    showNegativeAmount = false
+                    showNegativeAmount = false,
+                    alignAmountInMiddle = false
                 )
             }
             1 -> {
@@ -66,7 +67,8 @@ fun PeriodDetailView(
                     itemContent = { expense ->
                         Triple(expense.category, expense.amount, null)
                     },
-                    showNegativeAmount = true
+                    showNegativeAmount = true,
+                    alignAmountInMiddle = false
                 )
             }
             2 -> {
@@ -76,7 +78,8 @@ fun PeriodDetailView(
                     itemContent = { expense ->
                         Triple(expense.category, expense.amount, null)
                     },
-                    showNegativeAmount = true
+                    showNegativeAmount = true,
+                    alignAmountInMiddle = false
                 )
             }
         }
