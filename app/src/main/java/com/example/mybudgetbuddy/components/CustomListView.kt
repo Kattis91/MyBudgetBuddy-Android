@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.models.Identifiable
 import com.example.mybudgetbuddy.utils.formatAmount
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,7 +48,11 @@ fun <T : Identifiable> CustomListView(
         ) { index ->
             val item = items[index]
             val (category, amount, date) = itemContent(item)
-            val dateFormatter = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
+            val dateFormatter: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+            fun formatDate(date: Date?): String {
+                return date?.let { dateFormatter.format(it) } ?: ""
+            }
 
             val swipeState = rememberSwipeToDismissBoxState(
                 confirmValueChange = { dismissValue ->
@@ -75,21 +80,21 @@ fun <T : Identifiable> CustomListView(
                     ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth() // Se till att raden fyller hela bredden
+                                .fillMaxWidth()
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = category, color = textColor)
 
                             if (date != null) {
-                                Spacer(modifier = Modifier.weight(1f)) // Skjuter beloppet och datumet åt höger
+                                Spacer(modifier = Modifier.weight(1f))
                                 Text(
                                     text = if (showNegativeAmount) "- ${formatAmount(amount)}" else formatAmount(amount),
                                     fontWeight = FontWeight.Bold,
                                     color = textColor
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(dateFormatter.format(date))
+                                Text(formatDate(date))
                             } else {
                                 if (alignAmountInMiddle) {
                                     Spacer(modifier = Modifier.weight(1f))
