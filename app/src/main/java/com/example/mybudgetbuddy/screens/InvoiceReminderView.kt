@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachMoney
@@ -26,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +42,8 @@ import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
 import com.example.mybudgetbuddy.components.DatePickerButton
+import com.example.mybudgetbuddy.components.SegmentedButtonRow
+import com.example.mybudgetbuddy.models.Invoice
 import java.util.Date
 
 @Composable
@@ -54,12 +55,26 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
 
     val invoices by viewModel.invoices.collectAsState()
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
+    val unprocessedInvoices = remember { mutableStateListOf<Invoice>() }
+    val processedInvoices = remember { mutableStateListOf<Invoice>() }
+
+    var selectedTabIndex by remember { mutableStateOf(0) }
 
     val isDarkMode = isSystemInDarkTheme()
 
+    LaunchedEffect(selectedTabIndex) {
+        viewModel.loadInvoicesByStatus(processed = selectedTabIndex == 1)
+    }
+
     // Load invoices when the screen appears
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadInvoices()
+    LaunchedEffect(invoices, selectedTabIndex) {
+        if (selectedTabIndex == 0) {
+            unprocessedInvoices.clear()
+            unprocessedInvoices.addAll(invoices)
+        } else {
+            processedInvoices.clear()
+            processedInvoices.addAll(invoices)
+        }
     }
 
     Column(
@@ -166,6 +181,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                             title = ""
                             amount = ""
                             expiryDate = Date()
+
+                            viewModel.loadInvoicesByStatus(processed = selectedTabIndex == 1)
                         }
                     }
                 },
@@ -178,20 +195,52 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (isLoading) {
-            CircularProgressIndicator()
-        } else {
-            CustomListView(
-                items = invoices,
-                deleteAction = { 
+        SegmentedButtonRow(
+            options = listOf("Unprocessed Invoices", "Processed Invoices"),
+            selectedIndex = selectedTabIndex,
+            onSelectionChanged = { index ->
+                selectedTabIndex = index
+            }
+        )
 
-                },
-                itemContent = { invoice->
-                    Triple(invoice.title, invoice.amount, invoice.expiryDate)
-                },
-                showNegativeAmount = false,
-                alignAmountInMiddle = true
-            )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        when (selectedTabIndex) {
+            0 -> {
+                if (isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    CustomListView(
+                        items = unprocessedInvoices,
+                        deleteAction = {
+                            // Add delete action here
+                        },
+                        itemContent = { invoice ->
+                            Triple(invoice.title, invoice.amount, invoice.expiryDate)
+                        },
+                        showNegativeAmount = false,
+                        alignAmountInMiddle = true
+                    )
+                }
+            }
+
+            1 -> {
+                if (isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    CustomListView(
+                        items = processedInvoices,
+                        deleteAction = {
+                            // Add delete action here
+                        },
+                        itemContent = { invoice ->
+                            Triple(invoice.title, invoice.amount, invoice.expiryDate)
+                        },
+                        showNegativeAmount = false,
+                        alignAmountInMiddle = true
+                    )
+                }
+            }
         }
     }
 }
