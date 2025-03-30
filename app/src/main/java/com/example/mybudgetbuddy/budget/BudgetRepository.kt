@@ -5,6 +5,7 @@ import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
+import com.example.mybudgetbuddy.models.Invoice
 import com.example.mybudgetbuddy.models.defaultCategories
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -850,5 +851,53 @@ class BudgetRepository {
             .addOnFailureListener { error ->
                 Log.e("InvoiceReminder", "Error saving invoice: ${error.message}")
             }
+    }
+
+    suspend fun loadInvoices(): List<Invoice> {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+            ?: return emptyList()
+
+        val ref = Firebase.database.reference
+            .child("invoices")
+            .child(userId)
+
+        return try {
+            val snapshot = ref.get().await()
+            val invoices = mutableListOf<Invoice>()
+
+            if (snapshot.exists()) {
+                for (childSnapshot in snapshot.children) {
+                    Log.d("InvoiceReminder", "Child snapshot: ${childSnapshot.value}")
+                    val invoiceData = childSnapshot.value as? Map<String, Any> ?: continue
+
+                    val title = invoiceData["title"] as? String ?: continue
+                    val amount = when (val rawAmount = invoiceData["amount"]) {
+                        is Double -> rawAmount
+                        is Long -> rawAmount.toDouble()
+                        else -> continue
+                    }
+
+                    val processed = invoiceData["processed"] as? Boolean ?: continue
+                    val expiryDateTimestamp = invoiceData["expiryDate"] as? Long ?: continue
+
+                    val expiryDate = Date(expiryDateTimestamp * 1000)
+
+                    val invoice = Invoice(
+                        id = childSnapshot.key ?: "",
+                        title = title,
+                        amount = amount,
+                        processed = processed,
+                        expiryDate = expiryDate
+                    )
+
+                    invoices.add(invoice)
+                }
+            }
+
+            invoices.sortedBy { it.expiryDate }
+        } catch (e: Exception) {
+            Log.e("InvoiceReminder", "Error loading invoices: ${e.message}")
+            emptyList()
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.example.mybudgetbuddy.models.BudgetPeriod
 import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.Expense
 import com.example.mybudgetbuddy.models.Income
+import com.example.mybudgetbuddy.models.Invoice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,6 +73,9 @@ class BudgetManager : ViewModel() {
 
     private val _variableExpenseCategories = MutableStateFlow<List<String>>(emptyList())
     val variableExpenseCategories: StateFlow<List<String>> = _variableExpenseCategories
+
+    private val _invoicesFlow = MutableStateFlow<List<Invoice>>(emptyList())
+    val invoices: StateFlow<List<Invoice>> = _invoicesFlow.asStateFlow()
 
     fun getPeriodById(periodId: String?): BudgetPeriod? {
         return historicalPeriods.value.find { it.id == periodId } // Assuming periodList is a LiveData or StateFlow
@@ -507,12 +511,28 @@ class BudgetManager : ViewModel() {
     }
 
     fun addInvoice(title: String, amount: Double, expiryDate: Date) {
-
+        Log.d("BudgetManager", "Attempting to save invoice: $title, $amount, $expiryDate")
         viewModelScope.launch {
             try {
                 repository.saveInvoiceReminder(title, amount, expiryDate)
+                Log.d("BudgetManager", "Invoice successfully added!")
             } catch (e: Exception) {
                 Log.e("BudgetManager", "Error adding invoice: ${e.message}")
+            }
+        }
+    }
+
+    fun loadInvoices() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val loadedInvoices = repository.loadInvoices()
+                _invoicesFlow.value = loadedInvoices
+                Log.d("BudgetManager", "Loaded ${loadedInvoices.size} invoices")
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error loading invoices: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
