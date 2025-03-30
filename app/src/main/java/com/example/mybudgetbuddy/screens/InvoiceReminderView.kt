@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,7 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var expiryDate by remember { mutableStateOf(Date()) }
+    var errorMessage by remember { mutableStateOf("") }
 
     val isDarkMode = isSystemInDarkTheme()
 
@@ -107,12 +109,45 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
             }
         }
 
+        Box(modifier = Modifier.heightIn(min = 30.dp).padding(start = 25.dp)) {
+            if (errorMessage.isNotEmpty()) {
+                Text(text = errorMessage,
+                    color = colorResource(id = R.color.error_message_color))
+            }
+        }
+
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             CustomButton(
                 buttonText = "Save",
                 onClick = {
-                    val invoiceAmount = amount.toDouble()
-                    viewModel.addInvoice(title = title, amount = invoiceAmount, expiryDate = expiryDate)
+                    val normalizedAmount = amount.replace(",", ".")
+
+                    when {
+                        title.isEmpty() -> {
+                            errorMessage = "Please enter a title"
+                        }
+
+                        normalizedAmount.toDoubleOrNull() == null -> {
+                            errorMessage = "Amount must be a number"
+                        }
+
+                        (normalizedAmount.toDoubleOrNull() ?: 0.0) <= 0.0 -> {
+                            errorMessage = "Amount must be greater than zero"
+                        }
+
+                        else -> {
+                            val invoiceAmount = normalizedAmount.toDoubleOrNull() ?: 0.0
+                            errorMessage = ""
+                            viewModel.addInvoice(
+                                title = title,
+                                amount = invoiceAmount,
+                                expiryDate = expiryDate
+                            )
+                            title = ""
+                            amount = ""
+                            expiryDate = Date()
+                        }
+                    }
                 },
                 isIncome = false,
                 isExpense = true,
