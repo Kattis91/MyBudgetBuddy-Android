@@ -579,4 +579,27 @@ class BudgetManager : ViewModel() {
             }
         }
     }
+
+    fun deleteInvoice(invoiceId: String) {
+        viewModelScope.launch {
+            try {
+                // Update the local state immediately for UI feedback
+                _unprocessedInvoices.update { currentList ->
+                    currentList.filter { it.id != invoiceId }
+                }
+
+                // Also update the regular invoices list
+                _invoicesFlow.value = _invoicesFlow.value.filter { it.id != invoiceId }
+
+                // Then delete from Firebase
+                val result = repository.deleteInvoiceReminder(invoiceId)
+                if (result) {
+                    Log.d("BudgetManager", "Invoice deleted successfully")
+                }
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error deleting invoice: ${e.message}")
+                // If there's an error, you might want to restore the item in your UI state
+            }
+        }
+    }
 }

@@ -213,8 +213,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 } else {
                     CustomListView(
                         items = unprocessedInvoiceState,
-                        deleteAction = {
-                            // Add delete action here
+                        deleteAction = { invoice ->
+                            viewModel.deleteInvoice(invoiceId = invoice.id)
                         },
                         itemContent = { invoice ->
                             Triple(invoice.title, invoice.amount, invoice.expiryDate)
@@ -235,8 +235,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 } else {
                     CustomListView(
                         items = processedInvoices,
-                        deleteAction = {
-                            // Add delete action here
+                        deleteAction = { invoice ->
+                            viewModel.deleteInvoice(invoiceId = invoice.id)
                         },
                         itemContent = { invoice ->
                             Triple(invoice.title, invoice.amount, invoice.expiryDate)

@@ -29,6 +29,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class BudgetRepository {
@@ -993,5 +994,32 @@ class BudgetRepository {
         }
     }
 
+    suspend fun deleteInvoiceReminder(invoiceId: String): Boolean {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+            ?: throw Exception("User not authenticated")
+
+        val ref = Firebase.database.reference
+            .child("invoices")
+            .child(userId)
+            .child(invoiceId)
+
+        return try {
+            // Convert the callback-based removeValue() to a coroutine-friendly suspending function
+            suspendCoroutine<Boolean> { continuation ->
+                ref.removeValue().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(true)
+                    } else {
+                        continuation.resumeWithException(
+                            task.exception ?: Exception("Failed to delete invoice reminder")
+                        )
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("InvoiceRepository", "Error deleting invoice: ${e.message}")
+            throw Exception("Failed to delete invoice reminder: ${e.message}")
+        }
+    }
 }
 
