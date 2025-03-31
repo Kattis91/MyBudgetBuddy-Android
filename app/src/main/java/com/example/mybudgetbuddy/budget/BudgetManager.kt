@@ -516,7 +516,6 @@ class BudgetManager : ViewModel() {
             try {
                 repository.saveInvoiceReminder(title, amount, expiryDate)
                 Log.d("BudgetManager", "Invoice successfully added!")
-                loadInvoices()
             } catch (e: Exception) {
                 Log.e("BudgetManager", "Error adding invoice: ${e.message}")
             }
