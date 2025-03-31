@@ -546,4 +546,10 @@ class BudgetManager : ViewModel() {
             _isLoading.value = false
         }
     }
+
+    fun markInvoiceAsProcessed(invoiceId: String, processed: Boolean) {
+        viewModelScope.launch {
+            repository.updateInvoiceStatus(invoiceId, processed)
+        }
+    }
 }

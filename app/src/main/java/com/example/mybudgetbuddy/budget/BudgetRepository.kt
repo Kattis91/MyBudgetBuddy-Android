@@ -976,5 +976,22 @@ class BudgetRepository {
                 })
         }
     }
+
+    suspend fun updateInvoiceStatus(invoiceId: String, processed: Boolean) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+            ?: throw Exception("User not authenticated")
+
+        val ref = Firebase.database.reference
+            .child("invoices")
+            .child(userId)
+            .child(invoiceId)
+
+        try {
+            ref.updateChildren(mapOf("processed" to processed)).await()
+        } catch (e: Exception) {
+            throw Exception("Failed to update invoice status: ${e.message}")
+        }
+    }
+
 }
 

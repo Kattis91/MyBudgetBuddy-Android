@@ -219,7 +219,11 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                             Triple(invoice.title, invoice.amount, invoice.expiryDate)
                         },
                         showNegativeAmount = false,
-                        alignAmountInMiddle = true
+                        alignAmountInMiddle = true,
+                        isInvoice = true,
+                        onMarkAsProcessed = { item ->
+                            viewModel.markInvoiceAsProcessed(invoiceId = item.id, processed = true)
+                        }
                     )
                 }
             }
@@ -237,7 +241,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                             Triple(invoice.title, invoice.amount, invoice.expiryDate)
                         },
                         showNegativeAmount = false,
-                        alignAmountInMiddle = true
+                        alignAmountInMiddle = true,
+                        isInvoice = false
                     )
                 }
             }
