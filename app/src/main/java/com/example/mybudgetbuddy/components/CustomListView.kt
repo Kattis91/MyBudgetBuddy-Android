@@ -1,6 +1,7 @@
 package com.example.mybudgetbuddy.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.models.Identifiable
 import com.example.mybudgetbuddy.utils.formatAmount
@@ -36,7 +38,9 @@ fun <T : Identifiable> CustomListView(
     deleteAction: (T) -> Unit,
     itemContent: (T) -> Triple<String, Double?, Date?>,
     showNegativeAmount: Boolean,
-    alignAmountInMiddle: Boolean
+    alignAmountInMiddle: Boolean,
+    isInvoice: Boolean,
+    onMarkAsProcessed: ((T) -> Unit)? = null
 ) {
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -117,6 +121,26 @@ fun <T : Identifiable> CustomListView(
                     }
                 }
             )
+
+            if(isInvoice) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CustomButton(
+                        buttonText = "Mark as processed",
+                        onClick = {
+                            if (onMarkAsProcessed != null) {
+                                onMarkAsProcessed(item)
+                            }
+                        },
+                        isIncome = true,
+                        isExpense = false,
+                        isThirdButton = false,
+                        width = 230
+                    )
+                }
+            }
         }
     }
 }

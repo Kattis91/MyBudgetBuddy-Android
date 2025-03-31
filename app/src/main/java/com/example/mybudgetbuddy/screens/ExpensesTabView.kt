@@ -184,7 +184,8 @@ fun ExpensesTabView(
                     Triple(expense.category, expense.amount, null)
                 },
                 showNegativeAmount = true,
-                alignAmountInMiddle = false
+                alignAmountInMiddle = false,
+                isInvoice = false
             )
         } else {
             CustomListView(
@@ -199,7 +200,8 @@ fun ExpensesTabView(
                     Triple(expense.category, expense.amount, null)
                 },
                 showNegativeAmount = true,
-                alignAmountInMiddle = false
+                alignAmountInMiddle = false,
+                isInvoice = false
             )
         }
     }

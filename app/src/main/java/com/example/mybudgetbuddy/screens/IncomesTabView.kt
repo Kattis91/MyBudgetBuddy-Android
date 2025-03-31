@@ -153,7 +153,8 @@ fun IncomesTabView(
                     Triple(income.category, income.amount, null)
                 },
                 showNegativeAmount = false,
-                alignAmountInMiddle = false
+                alignAmountInMiddle = false,
+                isInvoice = false
             )
         }
     }
