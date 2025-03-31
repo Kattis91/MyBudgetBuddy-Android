@@ -54,6 +54,7 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
     var errorMessage by remember { mutableStateOf("") }
 
     val invoices by viewModel.invoices.collectAsState()
+    val unprocessedInvoiceState by viewModel.unprocessedInvoices.collectAsState()
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
     val unprocessedInvoices = remember { mutableStateListOf<Invoice>() }
     val processedInvoices = remember { mutableStateListOf<Invoice>() }
@@ -211,7 +212,7 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                     CircularProgressIndicator()
                 } else {
                     CustomListView(
-                        items = unprocessedInvoices,
+                        items = unprocessedInvoiceState,
                         deleteAction = {
                             // Add delete action here
                         },

@@ -12,9 +12,11 @@ import com.example.mybudgetbuddy.models.Income
 import com.example.mybudgetbuddy.models.Invoice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
@@ -76,6 +78,9 @@ class BudgetManager : ViewModel() {
 
     private val _invoicesFlow = MutableStateFlow<List<Invoice>>(emptyList())
     val invoices: StateFlow<List<Invoice>> = _invoicesFlow.asStateFlow()
+
+    private val _unprocessedInvoices = MutableStateFlow<List<Invoice>>(emptyList())
+    val unprocessedInvoices: StateFlow<List<Invoice>> = _unprocessedInvoices
 
     fun getPeriodById(periodId: String?): BudgetPeriod? {
         return historicalPeriods.value.find { it.id == periodId } // Assuming periodList is a LiveData or StateFlow
@@ -542,13 +547,36 @@ class BudgetManager : ViewModel() {
             _isLoading.value = true
             val invoices = repository.loadInvoicesByStatus(processed)
             _invoicesFlow.value = invoices
+
+            // Also update the unprocessed invoices state if we're loading unprocessed ones
+            if (!processed) {
+                _unprocessedInvoices.value = invoices
+            }
+
             _isLoading.value = false
         }
     }
 
     fun markInvoiceAsProcessed(invoiceId: String, processed: Boolean) {
         viewModelScope.launch {
-            repository.updateInvoiceStatus(invoiceId, processed)
+            try {
+                // First update the local state for immediate UI feedback
+                _unprocessedInvoices.update { currentList ->
+                    currentList.filter { it.id != invoiceId }
+                }
+
+                // Also update the regular invoices list if needed
+                _invoicesFlow.value = _invoicesFlow.value.filter { it.id != invoiceId }
+
+                // Then update Firebase
+                repository.updateInvoiceStatus(invoiceId, processed)
+
+                // After a short delay, refresh processed invoices if we're on that tab
+                delay(500)
+                loadInvoicesByStatus(processed = true)
+            } catch (e: Exception) {
+                Log.e("BudgetManager", "Error marking invoice as processed", e)
+            }
         }
     }
 }
