@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -129,7 +130,11 @@ fun IncomesTabView(
                 selectedCategory = selectedCategory,
                 onCategorySelected = { category -> selectedCategory = category },
                 showNewCategoryField = showNewCategoryField,
-                onShowNewCategoryFieldChange = { showNewCategoryField = it }
+                onShowNewCategoryFieldChange = { showNewCategoryField = it },
+                newCategory = newCategory,
+                onNewCategoryChange = {
+                    newCategory = it
+                }
             )
         }
 
@@ -156,20 +161,21 @@ fun IncomesTabView(
                     if (showNewCategoryField) {
                         if (newCategory.isNotEmpty()) {
                             // Use coroutine scope to launch the suspend function
+                            // In your IncomesTabView
                             CoroutineScope(Dispatchers.Main).launch {
+                                errorMessage = ""  // Clear error message before attempting
+                                Log.d("IncomesTabView", "Adding category: $newCategory")
                                 val success = viewModel.addCategory(newCategory, CategoryType.INCOME)
 
                                 if (success) {
-                                    // Create a mutable copy of the list
-                                    val mutableCategories = categories.toMutableList()
-                                    mutableCategories.add(newCategory)
-
+                                    Log.d("IncomesTabView", "Category added successfully")
                                     incomeAmount = ""
                                     selectedCategory = newCategory
                                     viewModel.addIncome(income, newCategory)
                                     showNewCategoryField = false
                                     newCategory = ""
                                 } else {
+                                    Log.e("IncomesTabView", "Failed to add category: $newCategory")
                                     errorMessage = "Failed to add category"
                                 }
                             }

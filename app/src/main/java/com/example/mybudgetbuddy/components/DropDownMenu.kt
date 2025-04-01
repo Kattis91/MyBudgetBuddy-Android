@@ -36,9 +36,10 @@ fun CategoryMenu(
     onCategorySelected: (String) -> Unit,
     showNewCategoryField: Boolean,
     onShowNewCategoryFieldChange: (Boolean) -> Unit,
+    newCategory: String = "",
+    onNewCategoryChange: (String) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var newCategory by remember { mutableStateOf("") }
 
     Card(modifier = Modifier
         .padding(vertical = 15.dp),
@@ -53,7 +54,7 @@ fun CategoryMenu(
             ) {
                 TextField(
                     value = newCategory,
-                    onValueChange = { newCategory = it },
+                    onValueChange = { onNewCategoryChange(it) },
                     label = { Text("New category") },
                     leadingIcon = {
                         Icon(
@@ -67,7 +68,7 @@ fun CategoryMenu(
                 IconButton(onClick = {
                     onShowNewCategoryFieldChange(false)
                     onCategorySelected("")
-                    newCategory = ""
+                    onNewCategoryChange("")
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
