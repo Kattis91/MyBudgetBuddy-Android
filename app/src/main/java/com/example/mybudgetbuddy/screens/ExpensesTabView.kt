@@ -1,10 +1,12 @@
 package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -41,6 +43,9 @@ import com.example.mybudgetbuddy.models.ExpenseViewType
 import com.example.mybudgetbuddy.models.defaultCategories
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ExpensesTabView(
@@ -60,6 +65,7 @@ fun ExpensesTabView(
 
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
+    var newCategory by remember { mutableStateOf("") }
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
@@ -68,6 +74,8 @@ fun ExpensesTabView(
     val variableExpenseItems by viewModel.variableExpenseItems.collectAsState()
 
     val totalExpenses by viewModel.totalExpenses.collectAsState()
+
+    var errorMessage by remember { mutableStateOf("") }
 
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -146,21 +154,66 @@ fun ExpensesTabView(
                 selectedCategory = selectedCategory,
                 onCategorySelected = { category -> selectedCategory = category },
                 showNewCategoryField = showNewCategoryField,
-                onShowNewCategoryFieldChange = { showNewCategoryField = it }
+                onShowNewCategoryFieldChange = { showNewCategoryField = it },
+                newCategory = newCategory,
+                onNewCategoryChange = {
+                    newCategory = it
+                }
             )
+        }
+
+        Box(modifier = Modifier.heightIn(min = 50.dp).padding(horizontal = 60.dp)) {
+            if (errorMessage.isNotEmpty()) {
+                Text(text = errorMessage,
+                    color = colorResource(id = R.color.error_message_color))
+            }
         }
 
         CustomButton(
             buttonText = "Add Expense",
             onClick = {
-                if (expenseAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
-                    val amount = expenseAmount.toDoubleOrNull() ?: 0.0
-                    // Pass the isFixed parameter based on the selected type
-                    val isFixed = selectedExpenseType == ExpenseViewType.FIXED
-                    viewModel.addExpense(amount, selectedCategory, isFixed)
+                val normalizedAmount = expenseAmount.replace(",", ".")
+                val expense = normalizedAmount.toDoubleOrNull()
+
+                if (expense == null) {
+                    errorMessage = "Amount must be a number."
+                } else if (expense <= 0.00) {
+                    errorMessage = "Amount must be greater than zero."
+                } else {
+                    if (showNewCategoryField) {
+                        if (newCategory.isNotEmpty()) {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                errorMessage = ""
+                                val success =
+                                    if(selectedExpenseType == ExpenseViewType.FIXED)
+                                        viewModel.addCategory(newCategory, CategoryType.FIXED_EXPENSE)
+                                    else
+                                        viewModel.addCategory(newCategory, CategoryType.VARIABLE_EXPENSE)
+                                if (success) {
+                                    expenseAmount = ""
+                                    selectedCategory = newCategory
+                                    val isFixed = selectedExpenseType == ExpenseViewType.FIXED
+                                    viewModel.addExpense(expense, selectedCategory, isFixed)
+                                    showNewCategoryField = false
+                                    newCategory = ""
+                                } else {
+                                    errorMessage = "Failed to add category"
+                                }
+                            }
+                        } else {
+                            errorMessage = "Please add a category"
+                        }
+                    } else {
+                        if (selectedCategory.isNotEmpty()) {
+                            val isFixed = selectedExpenseType == ExpenseViewType.FIXED
+                            viewModel.addExpense(expense, selectedCategory, isFixed)
+                            expenseAmount = ""
+                            selectedCategory = ""
+                        } else {
+                            errorMessage = "Please select a category"
+                        }
+                    }
                 }
-                expenseAmount = ""
-                selectedCategory = ""
             },
             isIncome = false,
             isExpense = true,
