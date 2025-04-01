@@ -344,7 +344,6 @@ class BudgetRepository {
                         // Update existing category
                         val existingAmount = when (val amountValue = income["amount"]) {
                             is Number -> amountValue.toDouble()
-                            is String -> (amountValue as String).toDoubleOrNull() ?: 0.0
                             else -> 0.0
                         }
                         val newAmount = existingAmount + amount
@@ -379,7 +378,6 @@ class BudgetRepository {
                 val newTotal = incomesList.sumOf {
                     when (val amountValue = it["amount"]) {
                         is Number -> amountValue.toDouble()
-                        is String -> (amountValue as String).toDoubleOrNull() ?: 0.0
                         else -> 0.0
                     }
                 }
@@ -566,11 +564,18 @@ class BudgetRepository {
 
                 // Process the snapshot data to a list
                 if (snapshot.exists()) {
-                    // Convert the data to a list
-                    val genericList = snapshot.getValue<ArrayList<HashMap<String, Any>>>()
-                    if (genericList != null) {
-                        expensesList.addAll(genericList)
-                        Log.d("BudgetRepo", "Loaded existing incomes: ${expensesList.size}")
+                    try {
+                        val dataSnapshot = snapshot.children
+                        dataSnapshot.forEach { childSnapshot ->
+                            val expenseMap = childSnapshot.getValue(object :
+                                GenericTypeIndicator<Map<String, Any>>() {})
+                            if (expenseMap != null) {
+                                expensesList.add(expenseMap)
+                            }
+                        }
+                        Log.d("BudgetRepo", "Loaded existing expenses: ${expensesList.size}")
+                    } catch (e: Exception) {
+                        Log.e("BudgetRepo", "Error parsing existing expenses: ${e.message}", e)
                     }
                 }
 
@@ -616,6 +621,7 @@ class BudgetRepository {
                 val newTotal = expensesList.sumOf {
                     when (val amountValue = it["amount"]) {
                         is Number -> amountValue.toDouble()
+                        is String -> (amountValue as String).toDoubleOrNull() ?: 0.0
                         else -> 0.0
                     }
                 }
@@ -632,6 +638,7 @@ class BudgetRepository {
                 }
             } catch (e: Exception) {
                 Log.e("BudgetRepo", "Error in saveExpenseData: ${e.message}", e)
+                e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     onComplete()
                 }
