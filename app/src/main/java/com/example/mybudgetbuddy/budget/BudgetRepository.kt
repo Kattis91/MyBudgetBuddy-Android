@@ -313,17 +313,26 @@ class BudgetRepository {
                     .child(periodId)
                     .child("incomes")
 
-                // Get current incomes as an array
+                // Get current incomes
                 val snapshot = incomesRef.get().await()
+
+                // Initialize as empty list
                 val incomesList = mutableListOf<Map<String, Any>>()
 
-                // Process the snapshot data to a list
+                // Convert Firebase data to our format - matching Swift implementation
                 if (snapshot.exists()) {
-                    // Convert the data to a list
-                    val genericList = snapshot.getValue<ArrayList<HashMap<String, Any>>>()
-                    if (genericList != null) {
-                        incomesList.addAll(genericList)
+                    try {
+                        // Try to get as a list, which matches your Swift implementation
+                        val dataSnapshot = snapshot.children
+                        dataSnapshot.forEach { childSnapshot ->
+                            val incomeMap = childSnapshot.getValue(object : GenericTypeIndicator<Map<String, Any>>() {})
+                            if (incomeMap != null) {
+                                incomesList.add(incomeMap)
+                            }
+                        }
                         Log.d("BudgetRepo", "Loaded existing incomes: ${incomesList.size}")
+                    } catch (e: Exception) {
+                        Log.e("BudgetRepo", "Error parsing existing incomes: ${e.message}", e)
                     }
                 }
 
@@ -335,6 +344,7 @@ class BudgetRepository {
                         // Update existing category
                         val existingAmount = when (val amountValue = income["amount"]) {
                             is Number -> amountValue.toDouble()
+                            is String -> (amountValue as String).toDoubleOrNull() ?: 0.0
                             else -> 0.0
                         }
                         val newAmount = existingAmount + amount
@@ -361,29 +371,34 @@ class BudgetRepository {
                     Log.d("BudgetRepo", "Added new category: $category with amount: $amount")
                 }
 
-                // First update the incomes list
+                // Save the incomes list as an ARRAY (critical difference)
                 incomesRef.setValue(incomesList).await()
+                Log.d("BudgetRepo", "Saved incomes list with ${incomesList.size} items")
 
                 // Calculate new total
                 val newTotal = incomesList.sumOf {
                     when (val amountValue = it["amount"]) {
                         is Number -> amountValue.toDouble()
+                        is String -> (amountValue as String).toDoubleOrNull() ?: 0.0
                         else -> 0.0
                     }
                 }
 
-                // Then update the total income
+                // Update the total income
                 ref.child("budgetPeriods")
                     .child(userId)
                     .child(periodId)
                     .child("totalIncome")
                     .setValue(newTotal).await()
 
+                Log.d("BudgetRepo", "Updated total income to $newTotal")
+
                 withContext(Dispatchers.Main) {
                     onComplete()
                 }
             } catch (e: Exception) {
                 Log.e("BudgetRepo", "Error in saveIncomeData: ${e.message}", e)
+                e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     onComplete()
                 }
@@ -767,18 +782,26 @@ class BudgetRepository {
             .child(type.value)
 
         return try {
+            // Get the current categories
             val snapshot = ref.get().await()
-            val categories = snapshot.getValue<List<String>>()?.toMutableList() ?: mutableListOf()
 
+            // Get as a string array (matching Swift)
+            val categories = snapshot.getValue(object : GenericTypeIndicator<List<String>>() {}) ?: mutableListOf()
+
+            // Check if category already exists
             if (name in categories) {
                 return false
             }
 
-            categories.add(name)
-            ref.setValue(categories).await()
+            // Add the new category
+            val updatedCategories = categories.toMutableList()
+            updatedCategories.add(name)
+
+            // Save as array (important!)
+            ref.setValue(updatedCategories).await()
             true
         } catch (e: Exception) {
-            println("Error adding category: ${e.message}")
+            Log.e("FirebaseCategory", "Error adding category: ${e.message}", e)
             false
         }
     }
