@@ -52,18 +52,11 @@ fun CategoryMenu(
                     .padding(top = 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextField(
+                CustomTextField(
                     value = newCategory,
                     onValueChange = { onNewCategoryChange(it) },
-                    label = { Text("New category") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.AddCircle,
-                            contentDescription = "Tag",
-                            modifier = Modifier.padding(start = 33.dp)
-                        )
-                    },
-                    modifier = Modifier.weight(1f)
+                    label = "New category",
+                    icon = Icons.Filled.AddCircle,
                 )
                 IconButton(onClick = {
                     onShowNewCategoryFieldChange(false)
