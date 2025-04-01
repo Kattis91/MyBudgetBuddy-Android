@@ -71,11 +71,18 @@ fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel)
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
-                icon = Icons.Default.Email
+                icon = Icons.Default.Email,
+                onChange = {
+                    emailErrorMessage = ""
+                }
             )
         }
 
-        Box(modifier = Modifier.heightIn(min = 30.dp)) {
+        Box(modifier = Modifier
+            .heightIn(min = 30.dp)
+            .align(Alignment.Start)
+            .padding(start = 30.dp)
+        ) {
             if (emailErrorMessage.isNotEmpty()) {
                 Text(text = emailErrorMessage,
                     color = colorResource(id = R.color.error_message_color))
@@ -87,11 +94,18 @@ fun LoginScreen(navController: NavController, budgetViewModel : BudgetViewModel)
                 value = password,
                 onValueChange = { password = it },
                 label = "Password",
-                icon = Icons.Default.Lock
+                icon = Icons.Default.Lock,
+                onChange = {
+                    passwordErrorMessage = ""
+                }
             )
         }
 
-        Box(modifier = Modifier.heightIn(min = 30.dp)) {
+        Box(modifier = Modifier
+            .heightIn(min = 30.dp)
+            .align(Alignment.Start)
+            .padding(start = 30.dp)
+        ) {
             if (passwordErrorMessage.isNotEmpty()) {
                 Text(text = passwordErrorMessage,
                     color = colorResource(id = R.color.error_message_color))

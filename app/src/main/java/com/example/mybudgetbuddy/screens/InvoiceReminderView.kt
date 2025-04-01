@@ -102,7 +102,10 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 value = title,
                 onValueChange = { title = it },
                 label = "Title",
-                icon = Icons.Default.Doorbell
+                icon = Icons.Default.Doorbell,
+                onChange = {
+                    errorMessage = ""
+                }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -111,7 +114,10 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 value = amount,
                 onValueChange = { amount = it },
                 label = "Amount",
-                icon = Icons.Default.AttachMoney
+                icon = Icons.Default.AttachMoney,
+                onChange = {
+                    errorMessage = ""
+                }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -145,54 +151,55 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 )
             }
 
-            Box(modifier = Modifier.heightIn(min = 30.dp)) {
-                if (errorMessage.isNotEmpty()) {
-                    Text(
-                        text = errorMessage,
-                        color = colorResource(id = R.color.error_message_color),
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-            }
-
-            // Save button
-            CustomButton(
-                buttonText = "Save",
-                onClick = {
-                    val normalizedAmount = amount.replace(",", ".")
-
-                    when {
-                        title.isEmpty() -> {
-                            errorMessage = "Please enter a title"
-                        }
-                        normalizedAmount.toDoubleOrNull() == null -> {
-                            errorMessage = "Amount must be a number"
-                        }
-                        (normalizedAmount.toDoubleOrNull() ?: 0.0) <= 0.0 -> {
-                            errorMessage = "Amount must be greater than zero"
-                        }
-                        else -> {
-                            val invoiceAmount = normalizedAmount.toDoubleOrNull() ?: 0.0
-                            errorMessage = ""
-                            viewModel.addInvoice(
-                                title = title,
-                                amount = invoiceAmount,
-                                expiryDate = expiryDate
-                            )
-                            title = ""
-                            amount = ""
-                            expiryDate = Date()
-
-                            viewModel.loadInvoicesByStatus(processed = selectedTabIndex == 1)
-                        }
-                    }
-                },
-                isIncome = false,
-                isExpense = true,
-                isThirdButton = false,
-                width = 0
-            )
+            Spacer(modifier = Modifier.height(10.dp))
         }
+
+        Box(modifier = Modifier
+            .heightIn(min = 25.dp)
+            .align(Alignment.Start)
+            .padding(start = 25.dp)) {
+            if (errorMessage.isNotEmpty()) {
+                Text(text = errorMessage,
+                    color = colorResource(id = R.color.error_message_color))
+            }
+        }
+
+        CustomButton(
+            buttonText = "Save",
+            onClick = {
+                val normalizedAmount = amount.replace(",", ".")
+
+                when {
+                    title.isEmpty() -> {
+                        errorMessage = "Please enter a title"
+                    }
+                    normalizedAmount.toDoubleOrNull() == null -> {
+                        errorMessage = "Amount must be a number"
+                    }
+                    (normalizedAmount.toDoubleOrNull() ?: 0.0) <= 0.0 -> {
+                        errorMessage = "Amount must be greater than zero"
+                    }
+                    else -> {
+                        val invoiceAmount = normalizedAmount.toDoubleOrNull() ?: 0.0
+                        errorMessage = ""
+                        viewModel.addInvoice(
+                            title = title,
+                            amount = invoiceAmount,
+                            expiryDate = expiryDate
+                        )
+                        title = ""
+                        amount = ""
+                        expiryDate = Date()
+
+                        viewModel.loadInvoicesByStatus(processed = selectedTabIndex == 1)
+                    }
+                }
+            },
+            isIncome = false,
+            isExpense = true,
+            isThirdButton = false,
+            width = 0
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

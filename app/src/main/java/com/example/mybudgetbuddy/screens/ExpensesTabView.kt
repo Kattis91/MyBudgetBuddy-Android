@@ -147,6 +147,9 @@ fun ExpensesTabView(
                 onValueChange = { expenseAmount = it },
                 label = "Amount",
                 icon = Icons.Default.RemoveCircleOutline,
+                onChange = {
+                    errorMessage = ""
+                }
             )
 
             CategoryMenu(
@@ -162,7 +165,10 @@ fun ExpensesTabView(
             )
         }
 
-        Box(modifier = Modifier.heightIn(min = 50.dp).padding(horizontal = 60.dp)) {
+        Box(modifier = Modifier
+            .heightIn(min = 25.dp)
+            .align(Alignment.Start)
+            .padding(start = 25.dp)) {
             if (errorMessage.isNotEmpty()) {
                 Text(text = errorMessage,
                     color = colorResource(id = R.color.error_message_color))
