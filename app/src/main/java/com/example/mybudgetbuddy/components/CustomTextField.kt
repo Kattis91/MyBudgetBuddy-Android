@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     label: String,
     icon: ImageVector? = null,
+    onChange: (() -> Unit)? = null
 ) {
     val isDarkMode = isSystemInDarkTheme()
 
@@ -69,5 +71,9 @@ fun CustomTextField(
                 }
             }
         )
+    }
+
+    LaunchedEffect(value) { // Observe changes to the 'value' parameter
+        onChange?.invoke() // Call the onChange callback
     }
 }
