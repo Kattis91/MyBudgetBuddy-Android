@@ -540,6 +540,29 @@ class BudgetRepository {
         }
     }
 
+    suspend fun deleteHistoricalPeriod(periodId: String): Boolean {
+        return try {
+            val userId = Firebase.auth.currentUser?.uid ?: run {
+                Log.e("BudgetRepository", "Failed to delete historical period: No user ID")
+                return false
+            }
+
+            val database = Firebase.database
+            val historicalRef = database.reference
+                .child("historicalPeriods")
+                .child(userId)
+                .child(periodId)
+
+            historicalRef.removeValue().await()
+            Log.d("BudgetRepository", "Successfully deleted historical period $periodId")
+
+            true
+        } catch (e: Exception) {
+            Log.e("BudgetRepository", "Error deleting historical period: ${e.message}")
+            false
+        }
+    }
+
     fun saveExpenseData(amount: Double, category: String, isfixed: Boolean, onComplete: () -> Unit) {
         val userId = Firebase.auth.currentUser?.uid ?: return
         val database = Firebase.database

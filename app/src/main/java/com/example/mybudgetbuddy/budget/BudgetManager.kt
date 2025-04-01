@@ -227,6 +227,36 @@ class BudgetManager : ViewModel() {
         }
     }
 
+    fun deleteHistoricalPeriod(periodId: String) {
+        // Keep track of items being deleted to prevent visual glitches
+        val currentList = _historicalPeriods.value.toMutableList()
+
+        // Immediately remove from UI list
+        val updatedList = currentList.filter { it.id != periodId }
+        _historicalPeriods.value = updatedList
+
+        // Then delete from Firebase
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val success = repository.deleteHistoricalPeriod(periodId)
+
+                if (!success) {
+                    // If deletion failed, restore the item to the list
+                    withContext(Dispatchers.Main) {
+                        _historicalPeriods.value = currentList
+                    }
+                    Log.e("BudgetManager", "Failed to delete period $periodId")
+                }
+            } catch (e: Exception) {
+                // If error occurred, restore the item to the list
+                withContext(Dispatchers.Main) {
+                    _historicalPeriods.value = currentList
+                }
+                Log.e("BudgetManager", "Error deleting historical period: ${e.message}")
+            }
+        }
+    }
+
     fun startNewPeriod(
         startDate: Date,
         endDate: Date,
