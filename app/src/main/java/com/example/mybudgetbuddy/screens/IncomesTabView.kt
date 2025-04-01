@@ -1,10 +1,12 @@
 package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -39,6 +41,9 @@ import com.example.mybudgetbuddy.models.CategoryType
 import com.example.mybudgetbuddy.models.defaultCategories
 import com.example.mybudgetbuddy.utils.formatAmount
 import com.example.mybudgetbuddy.utils.formattedDateRange
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun IncomesTabView(
@@ -51,6 +56,7 @@ fun IncomesTabView(
 
     var selectedCategory by remember { mutableStateOf("") }
     var showNewCategoryField by remember { mutableStateOf(false) }
+    var newCategory by remember { mutableStateOf("") }
 
     val currentPeriod by viewModel.currentPeriod.observeAsState()
 
@@ -58,6 +64,8 @@ fun IncomesTabView(
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
 
     val totalIncome by viewModel.totalIncome.collectAsState()
+
+    var errorMessage by remember { mutableStateOf("") }
 
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -125,15 +133,59 @@ fun IncomesTabView(
             )
         }
 
+        Box(modifier = Modifier.heightIn(min = 50.dp).padding(horizontal = 60.dp)) {
+            if (errorMessage.isNotEmpty()) {
+                Text(text = errorMessage,
+                    color = colorResource(id = R.color.error_message_color))
+            }
+        }
+
         CustomButton(
             buttonText = "Add Income",
             onClick = {
-                if (incomeAmount.isNotEmpty() && selectedCategory.isNotEmpty()) {
-                    val amount = incomeAmount.toDoubleOrNull() ?: 0.0
-                    viewModel.addIncome(amount, selectedCategory)
+                val normalizedAmount = incomeAmount.replace(",", ".")
+                val income = normalizedAmount.toDoubleOrNull()
+
+                // Check if income is valid and greater than zero
+                if (income == null) {
+                    errorMessage = "Amount must be a number."
+                } else if (income <= 0.00) {
+                    errorMessage = "Amount must be greater than zero."
+                } else {
+                    // Proceed with adding category and income
+                    if (showNewCategoryField) {
+                        if (newCategory.isNotEmpty()) {
+                            // Use coroutine scope to launch the suspend function
+                            CoroutineScope(Dispatchers.Main).launch {
+                                val success = viewModel.addCategory(newCategory, CategoryType.INCOME)
+
+                                if (success) {
+                                    // Create a mutable copy of the list
+                                    val mutableCategories = categories.toMutableList()
+                                    mutableCategories.add(newCategory)
+
+                                    incomeAmount = ""
+                                    selectedCategory = newCategory
+                                    viewModel.addIncome(income, newCategory)
+                                    showNewCategoryField = false
+                                    newCategory = ""
+                                } else {
+                                    errorMessage = "Failed to add category"
+                                }
+                            }
+                        } else {
+                            errorMessage = "Please add a category"
+                        }
+                    } else {
+                        if (selectedCategory.isNotEmpty()) {
+                            viewModel.addIncome(income, selectedCategory)
+                            incomeAmount = ""
+                            selectedCategory = ""
+                        } else {
+                            errorMessage = "Please select a category"
+                        }
+                    }
                 }
-                incomeAmount = ""
-                selectedCategory = ""
             },
             isIncome = true,
             isExpense = false,

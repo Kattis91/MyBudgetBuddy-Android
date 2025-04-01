@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.activity.result.launch
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +31,7 @@ import com.example.mybudgetbuddy.components.HandleCategoryDialog
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.models.Category
 import com.example.mybudgetbuddy.models.CategoryType
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryManagement(
@@ -102,11 +105,14 @@ fun CategoryManagement(
         )
 
         if (showAddDialog) {
+            val coroutineScope = rememberCoroutineScope()
             HandleCategoryDialog(
                 onDismiss = { showAddDialog = false },
                 onSaveCategory = { categoryName ->
-                    viewModel.addCategory(categoryName, currentCategoryType) // Save the category
-                    showAddDialog = false // Close the dialog after saving
+                    coroutineScope.launch { // Launch a coroutine
+                        viewModel.addCategory(categoryName, currentCategoryType)
+                        showAddDialog = false
+                    }// Close the dialog after saving
                 },
                 isEditing = false,
                 category = Category("", "", currentCategoryType)

@@ -446,21 +446,25 @@ class BudgetManager : ViewModel() {
         }
     }
 
-    fun addCategory(category: String, type: CategoryType) {
-        if (category.isBlank()) return
+    suspend fun addCategory(category: String, type: CategoryType): Boolean {
+        if (category.isBlank()) return false
 
-        viewModelScope.launch {
-            try {
-                repository.addCategory(category, type)
+        return try {
+            val success = repository.addCategory(category, type)
 
+            if (success) {
                 when (type) {
                     CategoryType.INCOME -> _incomeCategories.value += category
                     CategoryType.FIXED_EXPENSE -> _fixedExpenseCategories.value += category
                     CategoryType.VARIABLE_EXPENSE -> _variableExpenseCategories.value += category
                 }
-            } catch (e: Exception) {
-                Log.e("BudgetManager", "Error adding category: ${e.message}")
+                true
+            } else {
+                false
             }
+        } catch (e: Exception) {
+            Log.e("BudgetManager", "Error adding category: ${e.message}")
+            false
         }
     }
 
