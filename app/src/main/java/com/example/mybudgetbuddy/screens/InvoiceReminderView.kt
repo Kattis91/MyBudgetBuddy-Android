@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
+import com.example.mybudgetbuddy.components.CustomAlertDialog
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.CustomTextField
@@ -62,6 +63,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
     val processedInvoices = remember { mutableStateListOf<Invoice>() }
 
     var selectedTabIndex by remember { mutableStateOf(0) }
+    val showAlertDialog = remember { mutableStateOf(false) }
+    var invoiceToMarkAsProcessed by remember { mutableStateOf<Invoice?>(null) }
 
     val isDarkMode = isSystemInDarkTheme()
 
@@ -246,10 +249,8 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                             alignAmountInMiddle = true,
                             isInvoice = true,
                             onMarkAsProcessed = { item ->
-                                viewModel.markInvoiceAsProcessed(
-                                    invoiceId = item.id,
-                                    processed = true
-                                )
+                                invoiceToMarkAsProcessed = item
+                                showAlertDialog.value = true
                             }
                         )
                     }
@@ -289,6 +290,32 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                     }
                 }
             }
+        }
+        if (showAlertDialog.value) {
+            CustomAlertDialog(
+                show = true,
+                onDismiss = {
+                    showAlertDialog.value = false
+                },
+                onConfirm = {
+                    val invoice = invoiceToMarkAsProcessed
+                    if (invoice != null) {
+                        viewModel.markInvoiceAsProcessed(
+                            invoiceId = invoice.id,
+                            processed = true
+                        )
+                    }
+                    showAlertDialog.value = false
+                },
+                title = "Mark as processed",
+                message = "Are you sure you want to mark this invoice as processed?",
+                customColor = colorResource(id = R.color.income_color),
+                confirmText = "Yes",
+                cancelButtonText = "Go Back",
+                onCancel = {
+                    showAlertDialog.value = false
+                },
+            )
         }
     }
 }
