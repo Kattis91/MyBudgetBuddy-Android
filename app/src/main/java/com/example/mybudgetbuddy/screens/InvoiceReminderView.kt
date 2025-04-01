@@ -32,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -218,21 +220,39 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 if (isLoading) {
                     CircularProgressIndicator()
                 } else {
-                    CustomListView(
-                        items = unprocessedInvoiceState,
-                        deleteAction = { invoice ->
-                            viewModel.deleteInvoice(invoiceId = invoice.id)
-                        },
-                        itemContent = { invoice ->
-                            Triple(invoice.title, invoice.amount, invoice.expiryDate)
-                        },
-                        showNegativeAmount = false,
-                        alignAmountInMiddle = true,
-                        isInvoice = true,
-                        onMarkAsProcessed = { item ->
-                            viewModel.markInvoiceAsProcessed(invoiceId = item.id, processed = true)
+                    if (unprocessedInvoiceState.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .padding(top = 20.dp)
+                        ) {
+                            Text(
+                                "You have no unprocessed invoices right now.",
+                                style = TextStyle(textAlign = TextAlign.Center),
+                                fontSize = 23.sp,
+                                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+                            )
                         }
-                    )
+                    } else {
+                        CustomListView(
+                            items = unprocessedInvoiceState,
+                            deleteAction = { invoice ->
+                                viewModel.deleteInvoice(invoiceId = invoice.id)
+                            },
+                            itemContent = { invoice ->
+                                Triple(invoice.title, invoice.amount, invoice.expiryDate)
+                            },
+                            showNegativeAmount = false,
+                            alignAmountInMiddle = true,
+                            isInvoice = true,
+                            onMarkAsProcessed = { item ->
+                                viewModel.markInvoiceAsProcessed(
+                                    invoiceId = item.id,
+                                    processed = true
+                                )
+                            }
+                        )
+                    }
                 }
             }
 
@@ -240,18 +260,33 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
                 if (isLoading) {
                     CircularProgressIndicator()
                 } else {
-                    CustomListView(
-                        items = processedInvoices,
-                        deleteAction = { invoice ->
-                            viewModel.deleteInvoice(invoiceId = invoice.id)
-                        },
-                        itemContent = { invoice ->
-                            Triple(invoice.title, invoice.amount, invoice.expiryDate)
-                        },
-                        showNegativeAmount = false,
-                        alignAmountInMiddle = true,
-                        isInvoice = false
-                    )
+                    if (processedInvoices.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .padding(top = 20.dp)
+                        ) {
+                            Text(
+                                "You have no processed invoices right now.",
+                                style = TextStyle(textAlign = TextAlign.Center),
+                                fontSize = 23.sp,
+                                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+                            )
+                        }
+                    } else {
+                        CustomListView(
+                            items = processedInvoices,
+                            deleteAction = { invoice ->
+                                viewModel.deleteInvoice(invoiceId = invoice.id)
+                            },
+                            itemContent = { invoice ->
+                                Triple(invoice.title, invoice.amount, invoice.expiryDate)
+                            },
+                            showNegativeAmount = false,
+                            alignAmountInMiddle = true,
+                            isInvoice = false
+                        )
+                    }
                 }
             }
         }
