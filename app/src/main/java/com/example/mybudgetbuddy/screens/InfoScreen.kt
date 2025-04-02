@@ -61,7 +61,7 @@ fun InfoScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         SegmentedButtonRow(
-            options = listOf("About", "Next", "Development"),
+            options = listOf("About", "Extra", "Development"),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
                 selectedTabIndex = index
@@ -77,7 +77,7 @@ fun InfoScreen() {
 
             }
             1 -> {
-                SectionHeader(title = "Coming Soon:", textColor = textColor)
+                SectionHeader(title = "Extra Features", textColor = textColor)
                 extraFeatures.forEach { FeatureCard(it) }
 
             }
