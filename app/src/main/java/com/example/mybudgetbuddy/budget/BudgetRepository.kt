@@ -189,7 +189,6 @@ class BudgetRepository {
     suspend fun saveBudgetPeriod(
         budgetPeriod: BudgetPeriod,
         transferData: Pair<Boolean, Boolean>, // (incomes, expenses)
-        isFixed: Boolean = false
     ): Boolean {
         val userId = Firebase.auth.currentUser?.uid ?: run {
             Log.e("BudgetRepository", "Failed to save budget period: No user ID")
@@ -200,47 +199,64 @@ class BudgetRepository {
             val database = Firebase.database
             val ref = database.reference
             val budgetPeriodsRef = ref.child("budgetPeriods").child(userId)
-            val newBudgetRef = budgetPeriodsRef.child(budgetPeriod.id)
 
-            // First, get and save the current period as historical
+            // First, get the current period
             val currentPeriod = loadCurrentPeriod()
 
+            // Move the current period to historical BEFORE creating the new one
+            currentPeriod?.let {
+                saveHistoricalPeriod(it)
+                // Important: remove the current period after saving it as historical
+                ref.child("budgetPeriods").child(userId).child(it.id).removeValue().await()
+            }
+
+            // Now save the new budget period
+            val newBudgetRef = budgetPeriodsRef.child(budgetPeriod.id)
             newBudgetRef.setValue(budgetPeriod.toDictionary()).await()
 
-            // If we're not transferring any data, complete here
-            if ((!transferData.first && !transferData.second) || currentPeriod == null) {
-                currentPeriod?.let {
-                    // Only after saving the new period, save the old one as historical
-                    saveHistoricalPeriod(it)
-                }
-                return true
-            }
-
-            // Transfer data from current period
-            val currentRef = budgetPeriodsRef.child(currentPeriod.id)
-
-            // Transfer incomes if requested
-            if (transferData.first) {
-                try {
-                    val incomesSnapshot = currentRef.child("incomes").get().await()
-                    incomesSnapshot.value?.let { incomes ->
-                        newBudgetRef.child("incomes").setValue(incomes).await()
+            // If we need to transfer data and had a current period
+            if ((transferData.first || transferData.second) && currentPeriod != null) {
+                // Transfer incomes if requested
+                if (transferData.first && currentPeriod.incomes.isNotEmpty()) {
+                    // Create array of income dictionaries to save
+                    val incomesToTransfer = currentPeriod.incomes.map { income ->
+                        mapOf(
+                            "id" to UUID.randomUUID().toString(),
+                            "category" to income.category,
+                            "amount" to income.amount
+                        )
                     }
-                } catch (e: Exception) {
-                    Log.e("BudgetRepository", "Error transferring incomes: ${e.message}")
-                }
-            }
 
-            // Transfer expenses if requested
-            if (transferData.second) {
-                try {
-                    val expenseType = if (isFixed) "fixedExpenses" else "variableExpenses"
-                    val expensesSnapshot = currentRef.child(expenseType).get().await()
-                    expensesSnapshot.value?.let { expenses ->
-                        newBudgetRef.child(expenseType).setValue(expenses).await()
+                    // Save the transferred incomes
+                    newBudgetRef.child("incomes").setValue(incomesToTransfer).await()
+
+                    // Update the total income
+                    val totalIncome = incomesToTransfer.sumOf { it["amount"] as Double }
+                    newBudgetRef.child("totalIncome").setValue(totalIncome).await()
+
+                    Log.d("BudgetRepository", "Transferred ${incomesToTransfer.size} incomes with total: $totalIncome")
+                }
+
+                // Transfer expenses if requested
+                if (transferData.second && currentPeriod.fixedExpenses.isNotEmpty()) {
+                    // Create array of expense dictionaries to save
+                    val expensesToTransfer = currentPeriod.fixedExpenses.map { expense ->
+                        mapOf(
+                            "id" to UUID.randomUUID().toString(),
+                            "category" to expense.category,
+                            "amount" to expense.amount,
+                            "isfixed" to true
+                        )
                     }
-                } catch (e: Exception) {
-                    Log.e("BudgetRepository", "Error transferring expenses: ${e.message}")
+
+                    // Save the transferred expenses
+                    newBudgetRef.child("fixedExpenses").setValue(expensesToTransfer).await()
+
+                    // Update the total fixed expenses
+                    val totalFixedExpenses = expensesToTransfer.sumOf { it["amount"] as Double }
+                    newBudgetRef.child("totalFixedExpenses").setValue(totalFixedExpenses).await()
+
+                    Log.d("BudgetRepository", "Transferred ${expensesToTransfer.size} expenses with total: $totalFixedExpenses")
                 }
             }
 

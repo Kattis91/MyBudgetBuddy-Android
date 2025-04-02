@@ -233,7 +233,12 @@ fun NewBudgetPeriodView(
                                 onDismiss()
                             } else {
                                 // Normal flow
-                                budgetManager.startNewPeriod(startDate, endDate)
+                                budgetManager.startNewPeriod(
+                                    startDate,
+                                    endDate,
+                                    includeIncomes,
+                                    includeFixedExpenses
+                                )
                                 // After success
                                 onSuccess()
                                 onDismiss()
