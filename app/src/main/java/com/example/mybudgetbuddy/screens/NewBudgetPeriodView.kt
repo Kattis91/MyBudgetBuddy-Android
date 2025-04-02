@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -34,6 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.DatePickerButton
+import com.example.mybudgetbuddy.components.StyledCard
+import com.example.mybudgetbuddy.utils.formatAmount
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -210,6 +214,19 @@ fun NewBudgetPeriodView(
                                 onCheckedChange = { includeIncomes = it }
                             )
                         }
+                        if (includeIncomes) {
+                            LazyColumn {
+                                items(viewModel.incomeItems.value) { income ->
+                                    StyledCard {
+                                        Row {
+                                            Text(income.category)
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Text(formatAmount(income.amount))
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     if (viewModel.fixedExpenseItems.value.isNotEmpty()) {
@@ -228,6 +245,19 @@ fun NewBudgetPeriodView(
                                 checked = includeFixedExpenses,
                                 onCheckedChange = { includeFixedExpenses = it }
                             )
+                        }
+                        if (includeFixedExpenses) {
+                            LazyColumn {
+                                items(viewModel.fixedExpenseItems.value) { expense ->
+                                    StyledCard {
+                                        Row {
+                                            Text(expense.category)
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Text(formatAmount(expense.amount))
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
