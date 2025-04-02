@@ -73,6 +73,7 @@ fun IncomesTabView(
 
     LaunchedEffect (Unit) {
         viewModel.loadIncomeCategories()
+        viewModel.loadCurrentBudgetPeriod()
     }
 
     Column(

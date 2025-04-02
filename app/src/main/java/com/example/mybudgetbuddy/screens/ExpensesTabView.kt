@@ -89,6 +89,10 @@ fun ExpensesTabView(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.loadCurrentBudgetPeriod()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
