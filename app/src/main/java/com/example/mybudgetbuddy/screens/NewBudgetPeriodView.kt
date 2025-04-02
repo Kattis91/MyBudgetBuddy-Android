@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,11 +29,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.components.CustomButton
 import com.example.mybudgetbuddy.components.DatePickerButton
@@ -103,7 +108,11 @@ fun NewBudgetPeriodView(
         return true
     }
 
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false)
+        ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,7 +120,7 @@ fun NewBudgetPeriodView(
                 .shadow(8.dp, RoundedCornerShape(16.dp)),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(16.dp).padding(horizontal = 16.dp)) {
                 // Header with close button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -124,14 +133,6 @@ fun NewBudgetPeriodView(
                         )
                     }
                 }
-
-                // Title
-                Text(
-                    text = "New Budget Period",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
 
                 // Date pickers
                 Text(
@@ -149,6 +150,7 @@ fun NewBudgetPeriodView(
                 ) {
                     Text("Start Date", modifier = Modifier.width(100.dp))
 
+                    Spacer(modifier = Modifier.weight(1f))
                     // Use a clickable text that shows a DatePicker dialog
                     DatePickerButton(
                         label = "Start Date",
@@ -168,6 +170,7 @@ fun NewBudgetPeriodView(
                 ) {
                     Text("End Date", modifier = Modifier.width(100.dp))
 
+                    Spacer(modifier = Modifier.weight(1f))
                     DatePickerButton(
                         label = "End Date",
                         date = endDate,
@@ -211,7 +214,11 @@ fun NewBudgetPeriodView(
                             )
                             Switch(
                                 checked = includeIncomes,
-                                onCheckedChange = { includeIncomes = it }
+                                onCheckedChange = { includeIncomes = it },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = colorResource(id = R.color.income_color)
+                                )
                             )
                         }
                         if (includeIncomes) {
@@ -243,7 +250,11 @@ fun NewBudgetPeriodView(
                             )
                             Switch(
                                 checked = includeFixedExpenses,
-                                onCheckedChange = { includeFixedExpenses = it }
+                                onCheckedChange = { includeFixedExpenses = it },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = colorResource(id = R.color.income_color)
+                                )
                             )
                         }
                         if (includeFixedExpenses) {
