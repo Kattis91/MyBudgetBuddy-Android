@@ -14,6 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 
 import com.example.mybudgetbuddy.ui.theme.MyBudgetBuddyTheme
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +31,41 @@ class MainActivity : ComponentActivity() {
             }
         }
         askNotificationPermission()
+
+        // Initialize Firebase Auth listener
+        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                // User is signed in, refresh and save token
+                getFCMTokenAndSaveToDatabase(currentUser.uid)
+            }
+        }
+    }
+
+    private fun getFCMTokenAndSaveToDatabase(userId: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("MyBudgetBuddy", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Save token to Firebase Database
+            val database = FirebaseDatabase.getInstance()
+            val reference = database.getReference("userTokens")
+
+            reference.child(userId).setValue(mapOf("token" to token))
+                .addOnSuccessListener {
+                    Log.d("MyBudgetBuddy", "Token saved to database successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("MyBudgetBuddy", "Error saving token to database: ${e.message}")
+                }
+
+            Log.d("MyBudgetBuddy", "FCM Token: $token")
+        })
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
