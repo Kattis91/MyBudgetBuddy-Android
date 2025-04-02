@@ -46,6 +46,10 @@ fun CategoryManagement(
     var showEditDialog by remember { mutableStateOf(false) }
     var categoryToEdit by remember { mutableStateOf<Category?>(null) }
 
+    var errorMessage by remember { mutableStateOf("") }
+
+    val categories = incomeCategories + fixedExpenseCategories + variableExpenseCategories
+
     val isDarkMode = isSystemInDarkTheme()
 
     LaunchedEffect(Unit) {
@@ -90,13 +94,17 @@ fun CategoryManagement(
 
         CategoryList(
             categories = currentCategories,
-            onAddCategoryClick = { showAddDialog = true },
+            onAddCategoryClick = {
+                showAddDialog = true
+                errorMessage = ""
+            },
             onEditCategoryClick = { categoryName ->
                 // Create a Category object for editing
                 categoryToEdit = Category(
                     name = categoryName,
                     type = currentCategoryType
                 )
+                errorMessage = ""
                 showEditDialog = true
             },
             onDeleteCategoryClick = { categoryName ->
@@ -107,33 +115,50 @@ fun CategoryManagement(
         if (showAddDialog) {
             val coroutineScope = rememberCoroutineScope()
             HandleCategoryDialog(
-                onDismiss = { showAddDialog = false },
+                onDismiss = {
+                    showAddDialog = false
+                    errorMessage = ""
+                },
                 onSaveCategory = { categoryName ->
-                    coroutineScope.launch { // Launch a coroutine
-                        viewModel.addCategory(categoryName, currentCategoryType)
-                        showAddDialog = false
+                    coroutineScope.launch {
+                        if (categoryName in categories) {
+                            errorMessage = "Category already exists"
+                        } else {
+                            viewModel.addCategory(categoryName, currentCategoryType)
+                            showAddDialog = false
+                        }
                     }// Close the dialog after saving
                 },
                 isEditing = false,
-                category = Category("", "", currentCategoryType)
+                category = Category("", "", currentCategoryType),
+                errorMessage = errorMessage
             )
         }
 
         if (showEditDialog && categoryToEdit != null) {
             HandleCategoryDialog(
-                onDismiss = { showEditDialog = false },
+                onDismiss = {
+                    showEditDialog = false
+                    errorMessage = ""
+                },
                 onSaveCategory = { categoryName ->
                     categoryToEdit?.let { category ->
-                        viewModel.editCategory(
-                            oldName = category.name,
-                            newName = categoryName,
-                            currentCategoryType
-                        )
+                        if (categoryName in categories) {
+                            errorMessage = "Category already exists"
+                        } else {
+                            viewModel.editCategory(
+                                oldName = category.name,
+                                newName = categoryName,
+                                currentCategoryType
+                            )
+                            errorMessage = ""
+                            showEditDialog = false
+                        }
                     }
-                    showEditDialog = false
                 },
                 isEditing = true,
-                category = categoryToEdit
+                category = categoryToEdit,
+                errorMessage = errorMessage
             )
         }
     }

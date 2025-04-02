@@ -206,6 +206,8 @@ fun ExpensesTabView(
                                     viewModel.addExpense(expense, selectedCategory, isFixed)
                                     showNewCategoryField = false
                                     newCategory = ""
+                                } else if (newCategory in categories) {
+                                    errorMessage = "Category already exists"
                                 } else {
                                     errorMessage = "Failed to add category"
                                 }

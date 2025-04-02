@@ -1,10 +1,12 @@
 package com.example.mybudgetbuddy.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.models.Category
 import com.example.mybudgetbuddy.models.CategoryType
 
@@ -35,7 +39,8 @@ fun HandleCategoryDialog(
     onDismiss: () -> Unit,
     onSaveCategory: (String) -> Unit,
     isEditing: Boolean = false,
-    category: Category? = null
+    category: Category? = null,
+    errorMessage: String = ""
 ) {
     var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
 
@@ -99,6 +104,17 @@ fun HandleCategoryDialog(
                     label = "Category Name",
                     icon = Icons.Default.FolderOpen,
                 )
+
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+
+                Box(modifier = Modifier.heightIn(min = 30.dp)
+                ) {
+                    if (errorMessage.isNotEmpty()) {
+                        Text(text = errorMessage,
+                            color = colorResource(id = R.color.error_message_color)
+                        )
+                    }
+                }
 
                 Row(
                     modifier = Modifier
