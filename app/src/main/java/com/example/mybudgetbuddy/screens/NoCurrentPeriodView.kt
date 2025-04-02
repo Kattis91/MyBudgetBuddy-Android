@@ -90,7 +90,8 @@ fun NoCurrentPeriodScreen(
                 isPresented = true,
                 onDismiss = { showNewPeriodDialog = false },
                 onSuccess = {
-                }
+                },
+                isLandingPage = true
             )
         }
     }

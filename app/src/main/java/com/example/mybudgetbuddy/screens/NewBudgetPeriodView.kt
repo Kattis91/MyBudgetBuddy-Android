@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,14 +39,16 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun NewBudgetPeriodView(
     isPresented: Boolean,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     budgetManager: BudgetManager = viewModel(),
-    isLandingPage: Boolean = false,
-    noCurrentPeriod: Boolean = false
+    isLandingPage: Boolean,
+    noCurrentPeriod: Boolean = false,
+    viewModel: BudgetManager = viewModel()
 ) {
     if (!isPresented) return
 
@@ -181,44 +184,52 @@ fun NewBudgetPeriodView(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "Transfer Settings",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                if (!isLandingPage) {
+                    if (viewModel.incomeItems.value.isNotEmpty() || viewModel.fixedExpenseItems.value.isNotEmpty()) {
+                        Text(
+                            text = "Transfer Settings",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
 
-                // Include incomes toggle
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "Include Incomes",
-                        modifier = Modifier.weight(1f)
-                    )
-                    Switch(
-                        checked = includeIncomes,
-                        onCheckedChange = { includeIncomes = it }
-                    )
-                }
+                    if (viewModel.incomeItems.value.isNotEmpty()) {
+                        // Include incomes toggle
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Include Incomes",
+                                modifier = Modifier.weight(1f)
+                            )
+                            Switch(
+                                checked = includeIncomes,
+                                onCheckedChange = { includeIncomes = it }
+                            )
+                        }
+                    }
 
-                // Include fixed expenses toggle
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "Include Fixed Expenses",
-                        modifier = Modifier.weight(1f)
-                    )
-                    Switch(
-                        checked = includeFixedExpenses,
-                        onCheckedChange = { includeFixedExpenses = it }
-                    )
+                    if (viewModel.fixedExpenseItems.value.isNotEmpty()) {
+                        // Include fixed expenses toggle
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Include Fixed Expenses",
+                                modifier = Modifier.weight(1f)
+                            )
+                            Switch(
+                                checked = includeFixedExpenses,
+                                onCheckedChange = { includeFixedExpenses = it }
+                            )
+                        }
+                    }
                 }
 
                 CustomButton(
@@ -257,6 +268,12 @@ fun NewBudgetPeriodView(
 @Preview(showBackground = true)
 @Composable
 fun NewBudgetPeriodViewPreview() {
-    NewBudgetPeriodView(isPresented = true, onDismiss = {}, onSuccess = {})
+    NewBudgetPeriodView(
+        isPresented = true,
+        onDismiss = {},
+        onSuccess = {},
+        isLandingPage = true,
+        noCurrentPeriod = true
+    )
 }
 

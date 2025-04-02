@@ -152,7 +152,8 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                 onDismiss = { showNewPeriodDialog = false },
                 onSuccess = {
                 },
-                noCurrentPeriod = currentPeriod == null
+                noCurrentPeriod = currentPeriod == null,
+                isLandingPage = false
             )
         }
     }
