@@ -46,6 +46,9 @@ fun PeriodRowView(
     textColor: Color,
     viewModel: BudgetManager = viewModel()
 ) {
+    val outcome = period.totalIncome - (period.totalFixedExpenses + period.totalVariableExpenses)
+    val isNegative: Boolean = outcome < 0
+
     // Track if this item is being deleted
     var isBeingDeleted by remember { mutableStateOf(false) }
 
@@ -95,7 +98,7 @@ fun PeriodRowView(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            "Outcome: ${formatAmount(period.totalIncome - (period.totalFixedExpenses + period.totalVariableExpenses))}",
+                            if (isNegative) "Outcome: - ${formatAmount(outcome)}" else "Outcome: ${formatAmount(outcome)}",
                             color = textColor
                         )
                     }

@@ -41,6 +41,9 @@ fun SummaryBox(
         viewModel.getPeriodById(period.id)?.let { it.totalFixedExpenses + it.totalVariableExpenses } ?: 0.0
     }
 
+    val outcome = totalIncome - totalExpenses
+    val isNegative = outcome < 0
+
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
 
@@ -81,7 +84,7 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalIncome - totalExpenses), color = Color.Blue)
+                Text(if (isNegative) "- ${formatAmount(outcome)}" else formatAmount(outcome), color = Color.Blue)
 
                 Text("Outcome", color = textColor)
             }
