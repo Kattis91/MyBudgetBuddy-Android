@@ -157,7 +157,7 @@ fun ExpensesTabView(
             CustomTextField(
                 value = expenseAmount,
                 onValueChange = { expenseAmount = it },
-                label = "Amount",
+                label = "Enter Expense",
                 icon = Icons.Default.RemoveCircleOutline,
                 onChange = {
                     errorMessage = ""

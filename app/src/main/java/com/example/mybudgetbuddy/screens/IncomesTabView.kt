@@ -120,7 +120,7 @@ fun IncomesTabView(
             }
         }
 
-        Spacer(modifier = Modifier.height(38.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Column(
             modifier = Modifier.padding(horizontal = 25.dp),
@@ -129,7 +129,7 @@ fun IncomesTabView(
             CustomTextField(
                 value = incomeAmount,
                 onValueChange = { incomeAmount = it },
-                label = "Amount",
+                label = "Enter Income",
                 icon = Icons.Default.AddCircleOutline,
                 onChange = {
                     errorMessage = ""

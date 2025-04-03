@@ -130,8 +130,6 @@ fun InvoiceReminder(
                 }
             )
 
-            Spacer(modifier = Modifier.height(14.dp))
-
             CustomTextField(
                 value = amount,
                 onValueChange = { amount = it },

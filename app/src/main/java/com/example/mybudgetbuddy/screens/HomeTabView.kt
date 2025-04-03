@@ -96,13 +96,10 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-
                 Box(modifier = Modifier.weight(1f)) {
                     StatBox(
                         title = "Total Income",
@@ -123,8 +120,6 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             OutcomeBox(
                 income = totalIncome,
