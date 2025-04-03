@@ -141,17 +141,20 @@ fun CategoryManagement(
                 },
                 onSaveCategory = { categoryName ->
                     coroutineScope.launch {
-                        if (categoryName in categories) {
+                        if (categoryName.isBlank()) {
+                            errorMessage = "Category name cannot be empty"
+                        } else if (categoryName in categories) {
                             errorMessage = "Category already exists"
                         } else {
                             viewModel.addCategory(categoryName, currentCategoryType)
                             showAddDialog = false
                         }
-                    }// Close the dialog after saving
+                    }
                 },
                 isEditing = false,
                 category = Category("", "", currentCategoryType),
-                errorMessage = errorMessage
+                errorMessage = errorMessage,
+                onErrorMessageChange = { errorMessage = it }
             )
         }
 
@@ -163,7 +166,9 @@ fun CategoryManagement(
                 },
                 onSaveCategory = { categoryName ->
                     categoryToEdit?.let { category ->
-                        if (categoryName in categories) {
+                        if (categoryName.isBlank()) {
+                            errorMessage = "Category name cannot be empty"
+                        } else if (categoryName in categories) {
                             errorMessage = "Category already exists"
                         } else {
                             viewModel.editCategory(
@@ -178,7 +183,8 @@ fun CategoryManagement(
                 },
                 isEditing = true,
                 category = categoryToEdit,
-                errorMessage = errorMessage
+                errorMessage = errorMessage,
+                onErrorMessageChange = { errorMessage = it }
             )
         }
     }

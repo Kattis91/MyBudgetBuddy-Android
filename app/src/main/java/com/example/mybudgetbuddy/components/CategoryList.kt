@@ -119,7 +119,7 @@ fun CategoryList(
         FloatingActionButton(
             onClick = onAddCategoryClick,
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .align(Alignment.BottomStart)
                 .padding(26.dp),
             containerColor = if (isDarkMode) Color.DarkGray else colorResource(id = R.color.background_tint_dark),
             contentColor = Color.White

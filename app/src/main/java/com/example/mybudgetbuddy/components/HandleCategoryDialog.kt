@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -26,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -40,11 +40,12 @@ fun HandleCategoryDialog(
     onSaveCategory: (String) -> Unit,
     isEditing: Boolean = false,
     category: Category? = null,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    onErrorMessageChange: (String) -> Unit
 ) {
     var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
 
-    val titleText = if (isEditing) "Editing" else "Add New"
+    val titleText = if (isEditing) "Editing" else "Adding"
     val categoryTypeText = if (category != null) {
         when (category.type) {
             CategoryType.INCOME -> "Income Category"
@@ -75,7 +76,11 @@ fun HandleCategoryDialog(
                     TextButton(
                         onClick = onDismiss
                     ) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = colorResource(id = R.color.expense_color),
+                        )
                     }
                 }
 
@@ -85,13 +90,17 @@ fun HandleCategoryDialog(
                     Text(
                         text = titleText,
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        color = colorResource(id = R.color.text_color)
                     )
 
                     if (categoryTypeText.isNotEmpty()) {
                         Text(
                             text = categoryTypeText,
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.titleMedium,
+                            color = colorResource(id = R.color.text_color),
+                            modifier = Modifier.padding(bottom = 10.dp),
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -103,6 +112,9 @@ fun HandleCategoryDialog(
                     onValueChange = { categoryName = it },
                     label = "Category Name",
                     icon = Icons.Default.FolderOpen,
+                    onChange = {
+                        onErrorMessageChange("")
+                    }
                 )
 
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
@@ -117,20 +129,18 @@ fun HandleCategoryDialog(
                 }
 
                 Row(
-                    modifier = Modifier
-                        .padding(top = 20.dp).fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(
+                    CustomButton(
+                        buttonText = "Save",
                         onClick = {
-                            if (categoryName.isNotEmpty()) {
-                                onSaveCategory(categoryName)
-                            }
+                            onSaveCategory(categoryName)
                         },
-                        enabled = categoryName.isNotEmpty()
-                    ) {
-                        Text("Save")
-                    }
+                        isIncome = true,
+                        isExpense = false,
+                        isThirdButton = false
+                    )
                 }
             }
         }
@@ -142,6 +152,7 @@ fun HandleCategoryDialog(
 fun HandleCategoryDialogPreview() {
     HandleCategoryDialog(
         onDismiss = {},
-        onSaveCategory = {}
+        onSaveCategory = {},
+        onErrorMessageChange = {}
     )
 }
