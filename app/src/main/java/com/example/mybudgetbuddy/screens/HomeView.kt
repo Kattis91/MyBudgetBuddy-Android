@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
 import com.example.mybudgetbuddy.budget.BudgetViewModel
+import com.example.mybudgetbuddy.components.CustomAlertDialog
 import com.example.mybudgetbuddy.components.TabBar
 import com.example.mybudgetbuddy.components.TopAppBarWithMenu
 
@@ -45,6 +46,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
     var showInfoSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showInvoiceSheet by remember { mutableStateOf(false)}
+    var showLogOutAlert by remember { mutableStateOf(false) }
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -66,7 +68,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                     TopAppBar(
                         title = { },
                         navigationIcon = {
-                            IconButton(onClick = { budgetViewModel.logout() }) {
+                            IconButton(onClick = { showLogOutAlert = true }) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ExitToApp,
                                     contentDescription = "Sign Out",
@@ -209,6 +211,25 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
             ) {
                 InvoiceReminder(onDismiss = { showInvoiceSheet = false })
             }
+        }
+
+        if (showLogOutAlert)  {
+            CustomAlertDialog(
+                show = true,
+                onDismiss = {
+                    showLogOutAlert = false
+                },
+                onConfirm = {
+                    budgetViewModel.logout()
+                },
+                message = "Are you sure you want to sign out?",
+                customColor = colorResource(id = R.color.error_message_color),
+                confirmText = "Sign Out",
+                cancelButtonText = "Go back!",
+                onCancel = {
+                    showLogOutAlert = false
+                },
+            )
         }
     }
 }
