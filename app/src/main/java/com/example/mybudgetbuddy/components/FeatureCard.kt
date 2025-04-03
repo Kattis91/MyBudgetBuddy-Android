@@ -28,7 +28,7 @@ fun FeatureCard(feature: FeatureItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 23.dp)
             .padding(vertical = 8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ){

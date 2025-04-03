@@ -1,14 +1,23 @@
 package com.example.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +39,9 @@ import com.example.mybudgetbuddy.data.extraFeatures
 import com.example.mybudgetbuddy.data.features
 
 @Composable
-fun InfoScreen() {
+fun InfoScreen(
+    onDismiss: () -> Unit
+) {
     val scrollState = rememberScrollState()
     var selectedTabIndex by remember { mutableStateOf(0) }
 
@@ -43,6 +54,18 @@ fun InfoScreen() {
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = onDismiss) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = colorResource(id = R.color.expense_color)
+                )
+            }
+        }
         Text(
             "MyBudgetBuddy",
             fontSize = 30.sp,
@@ -54,7 +77,7 @@ fun InfoScreen() {
         Text(
             "Budgeting made easy, so you can focus on what matters most to you!",
             fontSize = 20.sp,
-            modifier = Modifier.padding(horizontal = 10.dp),
+            modifier = Modifier.padding(horizontal = 20.dp),
             color = textColor
         )
 
@@ -92,5 +115,5 @@ fun InfoScreen() {
 @Preview(showBackground = true)
 @Composable
 fun InfoScreenPreview() {
-    InfoScreen()
+    InfoScreen(onDismiss = {})
 }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -68,13 +69,20 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                             IconButton(onClick = { budgetViewModel.logout() }) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ExitToApp,
-                                    contentDescription = "Sign Out"
+                                    contentDescription = "Sign Out",
+                                    tint = colorResource(id = R.color.expense_color),
+                                    modifier = Modifier.size(30.dp)
                                 )
                             }
                         },
                         actions = {
                             IconButton(onClick = { showInfoSheet = true }) {
-                                Icon(Icons.Outlined.Info, contentDescription = "Info")
+                                Icon(
+                                    Icons.Outlined.Info,
+                                    contentDescription = "Info",
+                                    tint = colorResource(id = R.color.income_color),
+                                    modifier = Modifier.size(30.dp)
+                                )
                             }
                         }
                     )
@@ -183,7 +191,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
             ModalBottomSheet(
                 onDismissRequest = { showInfoSheet = false }
             ) {
-                InfoScreen()
+                InfoScreen(onDismiss = { showInfoSheet = false })
             }
         }
 
