@@ -324,8 +324,7 @@ fun InvoiceReminder(
                     }
                     showAlertDialog.value = false
                 },
-                title = "Mark as processed",
-                message = "Are you sure you want to mark this invoice as processed?",
+                message = "Are you sure you want to mark ${invoiceToMarkAsProcessed?.title} as processed?",
                 customColor = colorResource(id = R.color.income_color),
                 confirmText = "Yes",
                 cancelButtonText = "Go Back",
