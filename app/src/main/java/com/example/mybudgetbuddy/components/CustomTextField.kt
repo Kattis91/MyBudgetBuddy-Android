@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -33,6 +35,8 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -59,51 +63,37 @@ fun CustomTextField(
         listOf(Color(252, 242, 230), Color(245, 235, 220))
     }
 
+    val rowReference = remember { mutableStateOf<LayoutCoordinates?>(null) }
+
     Box(
         modifier = Modifier
             .padding(vertical = 6.dp)
-            .graphicsLayer {
-                shadowElevation = 8f
-                shape = RoundedCornerShape(18.dp)
+            .shadow(
+                elevation = if (isDarkMode) 2.dp else 1.dp,
+                shape = RoundedCornerShape(16.dp),
+                spotColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
+                ambientColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
                 clip = false
-            }
-            .drawBehind {
-                // Bottom-right shadow (more pronounced)
-                drawRoundRect(
-                    color = Color.Black.copy(alpha = 0.3f),
-                    topLeft = Offset(4f, 4f),
-                    size = Size(size.width - 8f, size.height - 8f),
-                    cornerRadius = CornerRadius(18.dp.toPx()),
-                    style = Stroke(width = 2f, pathEffect = PathEffect.cornerPathEffect(18.dp.toPx()))
-                )
-
-                // Top-left shadow (subtle highlight)
-                drawRoundRect(
-                    color = Color.White.copy(alpha = 0.3f),
-                    topLeft = Offset(-2f, -2f),
-                    size = Size(size.width, size.height),
-                    cornerRadius = CornerRadius(18.dp.toPx()),
-                    style = Stroke(width = 2f, pathEffect = PathEffect.cornerPathEffect(18.dp.toPx()))
-                )
-            }
+            )
+            .graphicsLayer(
+                shadowElevation = 4f,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .offset(x = (3).dp, y = (-3).dp)
             .background(
-                Brush.linearGradient(
+                Brush.horizontalGradient(
                     colors = gradientColors,
-                    start = Offset(0f, 0f),
-                    end = Offset(1000f, 1000f)
                 ),
                 shape = RoundedCornerShape(18.dp)
             )
             .border(
-                width = 1.dp,
-                brush = Brush.linearGradient(
-                    listOf(
-                        Color.White.copy(alpha = if (isDarkMode) 0.15f else 0.4f),
-                        Color.White.copy(alpha = if (isDarkMode) 0.05f else 0.1f)
-                    )
-                ),
-                shape = RoundedCornerShape(18.dp)
+                width = if (isDarkMode) 0.6.dp else 0.8.dp,
+                color = Color.White.copy(alpha = if (isDarkMode) 0.3f else 0.4f),
+                shape = RoundedCornerShape(16.dp)
             )
+            .onGloballyPositioned { coordinates ->
+                rowReference.value = coordinates
+            }
             .height(45.dp)
     ) {
         BasicTextField(
