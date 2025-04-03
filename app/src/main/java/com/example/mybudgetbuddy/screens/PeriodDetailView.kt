@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mybudgetbuddy.components.CustomListView
 import com.example.mybudgetbuddy.components.SegmentedButtonRow
 import com.example.mybudgetbuddy.components.SummaryBox
@@ -23,12 +28,25 @@ import java.util.Date
 @Composable
 fun PeriodDetailView(
     period: BudgetPeriod,
+    navController: NavController
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
     Column(modifier = Modifier
         .fillMaxHeight()
     ) {
+
+        TextButton(
+            onClick = {
+                navController.popBackStack()
+            }
+        ) {
+            Text(
+                "< Back",
+                fontSize = 18.sp,
+            )
+        }
+
         Box(modifier = Modifier
             .padding(vertical = 10.dp)
             .padding(horizontal = 18.dp)
@@ -92,5 +110,6 @@ fun PeriodDetailView(
 @Preview(showBackground = true)
 @Composable
 fun PeriodDetailViewPreview() {
-    PeriodDetailView(period = BudgetPeriod(startDate = Date(), endDate = Date()))
+    PeriodDetailView(
+        navController = rememberNavController(),period = BudgetPeriod(startDate = Date(), endDate = Date()))
 }

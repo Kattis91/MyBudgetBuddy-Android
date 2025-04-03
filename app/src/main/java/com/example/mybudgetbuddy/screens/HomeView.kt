@@ -161,7 +161,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                             val period = viewModel.getPeriodById(periodId)
 
                             period?.let {
-                                PeriodDetailView(period = it)
+                                PeriodDetailView(period = it, navController = navController)
                             } ?: run {
                                 Text("Period not found") // Handle the case where period is null
                             }
