@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
@@ -89,25 +90,32 @@ fun IncomesTabView(
             currentPeriod?.let { period ->
                 StyledCard {
                     Text(
-                        "Current Budget Period",
-                        style = MaterialTheme.typography.titleMedium,
+                        "Current Period:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         color = textColor
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(formattedDateRange(period.startDate, period.endDate), color = textColor)
+                    Text(formattedDateRange(period.startDate, period.endDate), color = textColor, fontSize = 18.sp)
 
                     Text(
                         "Total Income:",
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 14.dp),
-                        color = textColor
+                        modifier = Modifier.padding(top = 10.dp),
+                        color = textColor,
+                        fontSize = 18.sp
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
-                    Text(formatAmount(totalIncome), color = textColor)
+                    Text(
+                        formatAmount(totalIncome),
+                        color = colorResource(id = R.color.income_color),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
                 }
             }
         }
