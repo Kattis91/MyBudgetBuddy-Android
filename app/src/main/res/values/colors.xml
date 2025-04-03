@@ -12,7 +12,7 @@
     <color name="error_message_color">#C95E7B</color>
     <color name="success_message_color">#78B6A8</color>
 
-    <color name="income_color">#338F85</color>
+    <color name="income_color">#78B6A8</color>
     <color name="expense_color">#AE2972</color>
 
     <color name="background_tint_dark">#858CD7</color>

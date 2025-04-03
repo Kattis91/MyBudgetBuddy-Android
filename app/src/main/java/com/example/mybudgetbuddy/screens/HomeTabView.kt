@@ -73,7 +73,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                         Text(
                             "Current Budget Period",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                            fontSize = 18.sp,
                             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                             modifier = Modifier.padding(bottom = 10.dp)
                         )
@@ -83,7 +83,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                         Text(
                             formattedDateRange(period.startDate, period.endDate),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
+                            fontSize = 23.sp,
                             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                         )
                     }

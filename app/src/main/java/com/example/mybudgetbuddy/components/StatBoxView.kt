@@ -40,7 +40,6 @@ fun StatBox(
             )
 
             Text(title,
-                fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                 modifier = Modifier.padding(start = 8.dp)
@@ -49,14 +48,15 @@ fun StatBox(
         }
 
         Column(
-            modifier = Modifier.padding(vertical = 5.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .align(Alignment.Start)
+                .padding(start = 8.dp),
         ) {
-
             Text(
                 text = if (showNegativeAmount && amount > 0) "- ${formatAmount(amount)}" else formatAmount(amount),
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 23.sp,
                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
             )
         }
