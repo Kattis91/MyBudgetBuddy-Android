@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,10 +52,20 @@ fun OverviewTabView(
 
         Spacer(modifier = Modifier.height(26.dp))
 
-        Text("Historical Periods:",
-            fontSize = 25.sp,
-            color = textColor
-        )
+        if (nonEmptyPeriods.isNotEmpty()) {
+            Text(
+                "Historical Periods:",
+                fontSize = 25.sp,
+                color = textColor
+            )
+        } else {
+            Text(
+                "You have no historical periods right now.",
+                style = TextStyle(textAlign = TextAlign.Center),
+                fontSize = 23.sp,
+                color = textColor
+            )
+        }
 
         LazyColumn {
             items(nonEmptyPeriods) { period ->
