@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybudgetbuddy.R
 import com.example.mybudgetbuddy.budget.BudgetManager
@@ -49,22 +51,33 @@ fun SummaryBox(
 
     StyledCard {
         Text(
-            if (isCurrent) "Current Period" else "Budget Period",
-            style = MaterialTheme.typography.titleMedium,
-            color = textColor
+            if (isCurrent) "Current Period" else "",
+            fontSize = 21.sp,
+            color = textColor,
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        Text(formattedDateRange(period.startDate, period.endDate), color = textColor)
+        Text(
+            formattedDateRange(period.startDate, period.endDate),
+            color = textColor,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
+        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Row {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalIncome), color = colorResource(id = R.color.income_color) )
+                Text(
+                    formatAmount(totalIncome),
+                    color = colorResource(id = R.color.income_color),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
                 Text("Income", color = textColor)
             }
@@ -74,7 +87,12 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(formatAmount(totalExpenses), color = colorResource(id = R.color.expense_color))
+                Text(
+                    formatAmount(totalExpenses),
+                    color = colorResource(id = R.color.expense_color),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
                 Text("Expenses", color = textColor)
             }
@@ -84,7 +102,12 @@ fun SummaryBox(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(if (isNegative) "- ${formatAmount(outcome)}" else formatAmount(outcome), color = Color.Blue)
+                Text(
+                    if (isNegative) "- ${formatAmount(outcome)}" else formatAmount(outcome),
+                    color = Color.Blue,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
                 Text("Outcome", color = textColor)
             }
