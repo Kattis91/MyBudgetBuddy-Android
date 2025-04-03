@@ -17,11 +17,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mybudgetbuddy.R
 
 @Composable
 fun CustomButton(
@@ -41,7 +39,9 @@ fun CustomButton(
     val addExpenseMiddle = Color(233 / 255f, 93 / 255f, 115 / 255f) // E95D73
     val addExpenseEnd = Color(201 / 255f, 94 / 255f, 123 / 255f) // C95E7B
 
-    val thirdButtonColor = colorResource(id = R.color.background_tint_dark)
+    val thirdButtonStart =  Color(175 / 255f, 180 / 255f, 250 / 255f) // More saturated blue
+    val thirdButtonEnd =  Color(155 / 255f, 160 / 255f, 230 / 255f)  // Slightly muted blue
+
 
     val background: Brush = when {
         isIncome -> Brush.linearGradient(
@@ -54,7 +54,11 @@ fun CustomButton(
             start = Offset(0f, 0f),
             end = Offset(400f, 400f)
         )
-        isThirdButton -> SolidColor(thirdButtonColor)
+        isThirdButton -> Brush.linearGradient(
+            colors = listOf(thirdButtonStart, thirdButtonEnd),
+            start = Offset(0f, 0f),
+            end = Offset(200f, 200f)
+        )
         else -> SolidColor(Color.Gray)
     }
 
@@ -62,7 +66,12 @@ fun CustomButton(
         modifier = Modifier
             .then(if (width > 0) Modifier.width(width.dp) else Modifier.fillMaxWidth())
             .padding(horizontal = 25.dp, vertical = 16.dp)
-            .shadow(8.dp, shape = RoundedCornerShape(12.dp))
+            .shadow(
+                elevation = 8.dp,  // Increase for a stronger shadow
+                shape = RoundedCornerShape(12.dp),
+                ambientColor = Color(0f, 0f, 0f, 0.3f), // Slightly transparent black
+                spotColor = Color(0f, 0f, 0f, 0.3f) // Soft, natural shadow
+            )
             .clip(RoundedCornerShape(12.dp))
             .background(background)
             .clickable(onClick = onClick)
