@@ -2,11 +2,18 @@ package com.example.mybudgetbuddy.screens
 
 import androidx.activity.result.launch
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CategoryManagement(
     viewModel: BudgetManager = viewModel(),
+    onDismiss: () -> Unit
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val incomeCategories by viewModel.incomeCategories.collectAsState()
@@ -63,6 +71,18 @@ fun CategoryManagement(
         .padding(top = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     )  {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = onDismiss) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = colorResource(id = R.color.expense_color)
+                )
+            }
+        }
 
         Text(
             "Manage Categories",
@@ -167,5 +187,5 @@ fun CategoryManagement(
 @Preview(showBackground = true)
 @Composable
 fun CategoryManagementPreview() {
-    CategoryManagement()
+    CategoryManagement(onDismiss = {})
 }

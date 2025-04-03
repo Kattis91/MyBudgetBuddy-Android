@@ -199,7 +199,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
             ModalBottomSheet(
                 onDismissRequest = { showCategorySheet = false }
             ) {
-                CategoryManagement()
+                CategoryManagement(onDismiss = { showCategorySheet = false })
             }
         }
 
@@ -207,7 +207,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
             ModalBottomSheet(
                 onDismissRequest = { showInvoiceSheet = false }
             ) {
-                InvoiceReminder()
+                InvoiceReminder(onDismiss = { showInvoiceSheet = false })
             }
         }
     }

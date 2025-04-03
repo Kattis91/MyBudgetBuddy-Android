@@ -15,9 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Doorbell
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +52,10 @@ import com.example.mybudgetbuddy.models.Invoice
 import java.util.Date
 
 @Composable
-fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
+fun InvoiceReminder(
+    viewModel: BudgetManager = viewModel(),
+    onDismiss: () -> Unit
+) {
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var expiryDate by remember { mutableStateOf(Date()) }
@@ -88,6 +93,18 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
             .fillMaxSize()
             .padding(bottom = 16.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = onDismiss) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = colorResource(id = R.color.expense_color)
+                )
+            }
+        }
         // Title
         Text(
             "Manage Invoices",
@@ -323,5 +340,5 @@ fun InvoiceReminder(viewModel: BudgetManager = viewModel()) {
 @Preview
 @Composable
 fun InvoiceReminderPreview() {
-    InvoiceReminder()
+    InvoiceReminder(onDismiss = {})
 }
