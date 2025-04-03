@@ -213,16 +213,23 @@ class BudgetManager : ViewModel() {
         }
     }
 
-    private fun loadHistoricalPeriods() {
+    fun loadHistoricalPeriods() {
+        _isLoading.value = true // Set loading to true at start
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val periods = repository.loadHistoricalPeriods()
 
                 withContext(Dispatchers.Main) {
                     _historicalPeriods.value = periods
+                    _isLoading.value = false // Set loading to false when complete
                 }
             } catch (e: Exception) {
                 Log.e("BudgetManager", "Error loading historical periods: ${e.message}")
+
+                withContext(Dispatchers.Main) {
+                    _isLoading.value = false // Also set loading to false on error
+                }
             }
         }
     }
@@ -260,61 +267,83 @@ class BudgetManager : ViewModel() {
     fun startNewPeriod(
         startDate: Date,
         endDate: Date,
-        includeIncomes : Boolean = false,
-        includeFixedExpenses : Boolean = false,
+        includeIncomes: Boolean = false,
+        includeFixedExpenses: Boolean = false,
     ) {
-        val transferredIncomes = if (includeIncomes) {
-            _incomeList.map { income ->
-                Income(
-                    id = UUID.randomUUID().toString(),
-                    amount = income.amount,
-                    category = income.category
-                )
-            }
-        } else emptyList()
-
-        val transferredFixedExpenses = if (includeFixedExpenses) {
-            _fixedExpenseList.map { expense ->
-                Expense(
-                    id = UUID.randomUUID().toString(),
-                    amount = expense.amount,
-                    category = expense.category,
-                    isfixed = true
-                )
-            }
-        } else emptyList()
-
-        // Create new period
+        // Create new period without transferred data initially
         val newPeriod = BudgetPeriod(
             id = UUID.randomUUID().toString(),
             startDate = startDate,
             endDate = endDate,
-            incomes = transferredIncomes,
-            fixedExpenses = transferredFixedExpenses,
+            incomes = emptyList(),
+            fixedExpenses = emptyList(),
             variableExpenses = emptyList(),
             expired = false
         )
 
-        _currentPeriod.value = newPeriod
-
+        // Clear all lists first
         _incomeList.clear()
-        _incomeList.addAll(transferredIncomes)
-
         _fixedExpenseList.clear()
-        _fixedExpenseList.addAll(transferredFixedExpenses)
-
         _variableExpenseList.clear()
 
+        // Set the initial state
+        _currentPeriod.value = newPeriod
         updateGroupedData()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                repository.saveBudgetPeriod(
+                // Let the repository handle the transfer
+                val success = repository.saveBudgetPeriod(
                     newPeriod,
                     Pair(includeIncomes, includeFixedExpenses)
                 )
+
+                if (success) {
+                    // Reload the current period to get the transferred data
+                    val updatedPeriod = repository.loadCurrentPeriod()
+
+                    withContext(Dispatchers.Main) {
+                        updatedPeriod?.let { period ->
+                            _currentPeriod.value = period
+                            _incomeList.clear() // Clear again to prevent duplicates
+                            _incomeList.addAll(period.incomes)
+                            _fixedExpenseList.clear() // Clear again to prevent duplicates
+                            _fixedExpenseList.addAll(period.fixedExpenses)
+                            updateGroupedData()
+                        }
+                    }
+                }
+                loadCurrentBudgetPeriod()
+
             } catch (e: Exception) {
                 Log.e("BudgetManager", "Error saving new period: ${e.message}")
+            }
+        }
+    }
+
+    fun createCleanBudgetPeriodAndRefresh(
+        startDate: Date,
+        endDate: Date,
+        onComplete: (Boolean) -> Unit
+    ) {
+        repository.createCleanBudgetPeriod(startDate, endDate) { success ->
+            if (success) {
+                // First load the current period
+                loadCurrentBudgetPeriod()
+
+                // Use a coroutine for the sequential operations and delay
+                viewModelScope.launch {
+                    // Give some time for current period to be processed
+                    delay(500)
+
+                    // Then load historical periods
+                    loadHistoricalPeriods()
+
+                    // Then call the completion handler
+                    onComplete(true)
+                }
+            } else {
+                onComplete(false)
             }
         }
     }

@@ -279,7 +279,13 @@ fun NewBudgetPeriodView(
                         if (validatePeriod()) {
                             if (isLandingPage && noCurrentPeriod) {
                                 // Create a new clean budget period
-                                budgetManager.startNewPeriod(startDate, endDate)
+                                viewModel.createCleanBudgetPeriodAndRefresh(startDate, endDate) { success ->
+                                    if (success) {
+                                        // Maybe navigate to the overview tab or show a success message
+                                    } else {
+                                        // Show error message
+                                    }
+                                }
                                 // After success
                                 onSuccess()
                                 onDismiss()
