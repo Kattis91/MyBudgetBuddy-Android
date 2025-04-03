@@ -103,8 +103,7 @@ fun CategoryList(
                     categoryToDelete.value = null
                     showAlertDialog.value = false
                 },
-                title = "Delete Category",
-                message = "Are you sure you want to delete ${categoryToDelete.value} category?",
+                message = "Are you sure you want to delete ${categoryToDelete.value}?",
                 customColor = colorResource(id = R.color.error_message_color),
                 confirmText = "Delete!",
                 cancelButtonText = "Go back!",

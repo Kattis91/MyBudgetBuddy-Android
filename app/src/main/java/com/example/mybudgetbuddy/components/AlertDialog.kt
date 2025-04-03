@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 fun CustomAlertDialog(
     show: Boolean,
     onDismiss: () -> Unit,
-    title: String,
+    title: String? = null,
     message: String,
     customColor: Color,
     confirmText: String,
@@ -41,12 +41,14 @@ fun CustomAlertDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     icon?.invoke()
-                    Text(
-                        text = title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = customColor
-                    )
+                    if (title != null) {
+                        Text(
+                            text = title,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = customColor
+                        )
+                    }
                 }
             },
             text = {
