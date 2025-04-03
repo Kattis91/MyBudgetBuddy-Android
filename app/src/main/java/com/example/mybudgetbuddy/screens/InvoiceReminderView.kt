@@ -1,5 +1,6 @@
 package com.example.mybudgetbuddy.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachMoney
@@ -158,7 +160,7 @@ fun InvoiceReminder(
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         "Due to:",
-                        color = Color.Gray
+                        color = Color.Black
                     )
                 }
 
@@ -167,7 +169,13 @@ fun InvoiceReminder(
                     date = expiryDate,
                     onDateSelected = { newDate ->
                         expiryDate = newDate
-                    }
+                    },
+                    modifier = Modifier
+                        .background(
+                            color = Color.Gray.copy(alpha = 0.3f), // Light gray background
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 )
             }
 

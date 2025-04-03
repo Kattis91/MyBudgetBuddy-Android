@@ -159,7 +159,13 @@ fun NewBudgetPeriodView(
                         date = startDate,
                         onDateSelected = { newDate ->
                             startDate = newDate
-                        }
+                        },
+                        modifier = Modifier
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.3f), // Light gray background
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
                     )
                 }
 
@@ -178,7 +184,13 @@ fun NewBudgetPeriodView(
                         date = endDate,
                         onDateSelected = { newDate ->
                             endDate = newDate
-                        }
+                        },
+                        modifier = Modifier
+                            .background(
+                                color = Color.Gray.copy(alpha = 0.3f), // Light gray background
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
                     )
                 }
 
