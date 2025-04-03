@@ -39,7 +39,12 @@ fun TopAppBarWithMenu(
         title = { },
         actions = {
             IconButton(onClick = { onDropdownMenuChange(true) }) {
-                Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    modifier = Modifier.size(30.dp),
+                    tint = colorResource(id = R.color.background_tint_dark)
+                )
             }
 
             DropdownMenu(
