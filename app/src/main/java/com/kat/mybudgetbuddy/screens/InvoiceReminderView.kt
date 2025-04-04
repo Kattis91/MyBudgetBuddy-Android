@@ -91,32 +91,28 @@ fun InvoiceReminder(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp)
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                "Manage Invoices",
+                fontSize = 21.sp,
+                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                modifier = Modifier.padding(start = 18.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
-                    tint = colorResource(id = R.color.expense_color)
+                    tint = colorResource(id = R.color.expense_color),
+                    modifier = Modifier.padding(end = 10.dp)
                 )
             }
         }
-        // Title
-        Text(
-            "Manage Invoices",
-            fontSize = 20.sp,
-            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
-            modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-
+        Spacer(modifier = Modifier.height(20.dp))
         // Form inputs section
         Column(
             modifier = Modifier.padding(horizontal = 20.dp),

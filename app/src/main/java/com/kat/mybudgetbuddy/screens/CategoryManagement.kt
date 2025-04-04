@@ -1,12 +1,10 @@
 package com.kat.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -65,29 +63,27 @@ fun CategoryManagement(
         viewModel.loadVariableExpenseCategories()
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 20.dp),
+    Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     )  {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                "Manage Categories",
+                fontSize = 21.sp,
+                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                modifier = Modifier.padding(start = 18.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
-                    tint = colorResource(id = R.color.expense_color)
+                    tint = colorResource(id = R.color.expense_color),
+                    modifier = Modifier.padding(end = 18.dp)
                 )
             }
         }
-
-        Text(
-            "Manage Categories",
-            fontSize = 20.sp,
-            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
-        )
 
         Spacer(modifier = Modifier.height(20.dp))
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -52,23 +53,24 @@ fun InfoScreen(
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                "MyBudgetBuddy",
+                fontSize = 27.sp,
+                color = textColor,
+                modifier = Modifier.padding(start = 18.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
-                    tint = colorResource(id = R.color.expense_color)
+                    tint = colorResource(id = R.color.expense_color),
+                    modifier = Modifier.padding(end = 18.dp)
                 )
             }
         }
-        Text(
-            "MyBudgetBuddy",
-            fontSize = 30.sp,
-            color = textColor
-        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
