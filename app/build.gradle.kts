@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mybudgetbuddy"
+    namespace = "com.kat.mybudgetbuddy"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mybudgetbuddy"
+        applicationId = "com.kat.mybudgetbuddy"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
