@@ -59,7 +59,6 @@ fun CustomTextField(
 
     Box(
         modifier = Modifier
-            .padding(vertical = 6.dp)
             .shadow(
                 elevation = if (isDarkMode) 2.dp else 1.dp,
                 shape = RoundedCornerShape(16.dp),

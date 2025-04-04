@@ -135,6 +135,8 @@ fun IncomesTabView(
                 }
             )
 
+            Spacer(modifier = Modifier.height(6.dp))
+
             CategoryMenu(
                 categories = categories,
                 selectedCategory = selectedCategory,
