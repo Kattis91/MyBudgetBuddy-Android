@@ -1,6 +1,7 @@
 package com.kat.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,72 +64,76 @@ fun CategoryManagement(
         viewModel.loadVariableExpenseCategories()
     }
 
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    )  {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                "Manage Categories",
-                fontSize = 21.sp,
-                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
-                modifier = Modifier.padding(start = 18.dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = colorResource(id = R.color.expense_color),
-                    modifier = Modifier.padding(end = 18.dp)
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (!showAddDialog && !showEditDialog) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        "Manage Categories",
+                        fontSize = 21.sp,
+                        color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                        modifier = Modifier.padding(start = 18.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(onClick = onDismiss) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = colorResource(id = R.color.expense_color),
+                            modifier = Modifier.padding(end = 18.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                SegmentedButtonRow(
+                    options = listOf("Incomes", "Fixed", "Variable"),
+                    selectedIndex = selectedTabIndex,
+                    onSelectionChanged = { index ->
+                        selectedTabIndex = index
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                val currentCategories = when (selectedTabIndex) {
+                    0 -> incomeCategories
+                    1 -> fixedExpenseCategories
+                    2 -> variableExpenseCategories
+                    else -> emptyList()
+                }
+
+                // Get the current category type
+                val currentCategoryType = CategoryType.entries[selectedTabIndex]
+
+                CategoryList(
+                    categories = currentCategories,
+                    onAddCategoryClick = {
+                        showAddDialog = true
+                        errorMessage = ""
+                    },
+                    onEditCategoryClick = { categoryName ->
+                        // Create a Category object for editing
+                        categoryToEdit = Category(
+                            name = categoryName,
+                            type = currentCategoryType
+                        )
+                        errorMessage = ""
+                        showEditDialog = true
+                    },
+                    onDeleteCategoryClick = { categoryName ->
+                        viewModel.deleteCategory(categoryName, currentCategoryType)
+                    }
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        SegmentedButtonRow(
-            options = listOf("Incomes", "Fixed", "Variable"),
-            selectedIndex = selectedTabIndex,
-            onSelectionChanged = { index ->
-                selectedTabIndex = index
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        val currentCategories = when (selectedTabIndex) {
-            0 -> incomeCategories
-            1 -> fixedExpenseCategories
-            2 -> variableExpenseCategories
-            else -> emptyList()
-        }
-
-        // Get the current category type
-        val currentCategoryType = CategoryType.entries[selectedTabIndex]
-
-        CategoryList(
-            categories = currentCategories,
-            onAddCategoryClick = {
-                showAddDialog = true
-                errorMessage = ""
-            },
-            onEditCategoryClick = { categoryName ->
-                // Create a Category object for editing
-                categoryToEdit = Category(
-                    name = categoryName,
-                    type = currentCategoryType
-                )
-                errorMessage = ""
-                showEditDialog = true
-            },
-            onDeleteCategoryClick = { categoryName ->
-                viewModel.deleteCategory(categoryName, currentCategoryType)
-            }
-        )
-
-        if (showAddDialog) {
+        } else if (showAddDialog) {
             val coroutineScope = rememberCoroutineScope()
+            val currentCategoryType = CategoryType.entries[selectedTabIndex]
             HandleCategoryDialog(
                 onDismiss = {
                     showAddDialog = false
@@ -151,9 +156,8 @@ fun CategoryManagement(
                 errorMessage = errorMessage,
                 onErrorMessageChange = { errorMessage = it }
             )
-        }
-
-        if (showEditDialog && categoryToEdit != null) {
+        } else if (categoryToEdit != null) {
+            val currentCategoryType = CategoryType.entries[selectedTabIndex]
             HandleCategoryDialog(
                 onDismiss = {
                     showEditDialog = false
