@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kat.mybudgetbuddy.budget.BudgetViewModel
-import com.kat.mybudgetbuddy.screens.ForgotPasswordScreen
 import com.kat.mybudgetbuddy.screens.HomeView
 import com.kat.mybudgetbuddy.screens.LoginScreen
 import com.kat.mybudgetbuddy.screens.RegisterScreen
@@ -28,13 +27,10 @@ fun MyBudgetBuddyNav(budgetViewModel: BudgetViewModel = viewModel())  {
             UnloggedScreen(navController)
         }
         composable("login") {
-            LoginScreen(navController, budgetViewModel)
+            LoginScreen(budgetViewModel)
         }
         composable("register") {
             RegisterScreen(budgetViewModel)
-        }
-        composable("forgotPassword") {
-            ForgotPasswordScreen(navController, budgetViewModel)
         }
         composable("main") {
             HomeView(budgetViewModel)

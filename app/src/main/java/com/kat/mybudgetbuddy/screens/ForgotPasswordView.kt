@@ -1,17 +1,21 @@
 package com.kat.mybudgetbuddy.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,113 +25,125 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.kat.mybudgetbuddy.budget.BudgetViewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.CustomButton
+import com.kat.mybudgetbuddy.components.CustomTextField
 import com.kat.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
-fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetViewModel) {
+fun ForgotPasswordScreen(
+    budgetViewModel : BudgetViewModel,
+    onDismiss: () -> Unit
+) {
 
     var email by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var successMessage by remember { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .padding(horizontal = 18.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
         ) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.weight(1f))
+                Row {
+                    Spacer(Modifier.weight(1f))
+                    TextButton(
+                        onClick = onDismiss
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = colorResource(id = R.color.expense_color),
+                        )
+                    }
+                }
 
-                TextButton(
-                    onClick = {
-                        navController.popBackStack()
-                    },
-                    modifier = Modifier.padding(end = 20.dp)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("X")
-                }
-            }
-
-            Text(
-                "Reset Password",
-                fontSize = 20.sp,
-                color = colorResource(id = R.color.text_color),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(bottom = 50.dp)
-            )
-
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") }
-            )
-
-            Box(modifier = Modifier
-                .heightIn(min = 55.dp)
-                .padding(top = 10.dp)
-                .padding(horizontal = 60.dp)) {
-                val message = errorMessage.takeIf { it.isNotEmpty() } ?: successMessage.takeIf { it.isNotEmpty() }
-                val color = when {
-                    errorMessage.isNotEmpty() -> colorResource(id = R.color.error_message_color)
-                    successMessage.isNotEmpty() -> colorResource(id = R.color.success_message_color)
-                    else -> Color.Unspecified
-                }
-
-                message?.let {
                     Text(
-                        text = it,
-                        color = color
+                        text = "Reset password",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 50.dp),
+                        color = colorResource(id = R.color.text_color)
                     )
                 }
-            }
 
-            CustomButton(
-                buttonText = "Send Reset Link",
-                onClick = {
-                    val validationError = ValidationUtils.validateReset(email)
-                    if (validationError != null) {
-                        errorMessage = validationError
-                        successMessage = ""
-                    } else {
-                        budgetViewModel.resetPassword(email) { firebaseError ->
-                            if (firebaseError.isNotEmpty()) {
-                                errorMessage = firebaseError
-                                successMessage = ""
-                            } else {
-                                successMessage = "If the email you provided is registered, we've sent a reset link to your inbox."
-                                email = ""
-                                errorMessage = ""
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+
+                CustomTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = "Email",
+                    icon = Icons.Default.Email,
+                    onChange = {
+                        errorMessage = ""
+                    }
+                )
+
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+
+                Box(modifier = Modifier
+                    .heightIn(min = 55.dp)
+                    .padding(top = 10.dp)
+                    .padding(horizontal = 30.dp)) {
+                    val message = errorMessage.takeIf { it.isNotEmpty() } ?: successMessage.takeIf { it.isNotEmpty() }
+                    val color = when {
+                        errorMessage.isNotEmpty() -> colorResource(id = R.color.error_message_color)
+                        successMessage.isNotEmpty() -> colorResource(id = R.color.success_message_color)
+                        else -> Color.Unspecified
+                    }
+
+                    message?.let {
+                        Text(
+                            text = it,
+                            color = color
+                        )
+                    }
+                }
+
+                CustomButton(
+                    buttonText = "Send Reset Link",
+                    onClick = {
+                        val validationError = ValidationUtils.validateReset(email)
+                        if (validationError != null) {
+                            errorMessage = validationError
+                            successMessage = ""
+                        } else {
+                            budgetViewModel.resetPassword(email) { firebaseError ->
+                                if (firebaseError.isNotEmpty()) {
+                                    errorMessage = firebaseError
+                                    successMessage = ""
+                                } else {
+                                    successMessage = "If the email you provided is registered, we've sent a reset link to your inbox."
+                                    email = ""
+                                    errorMessage = ""
+                                }
                             }
                         }
-                    }
-                },
-                isIncome = false,
-                isExpense = true,
-                isThirdButton = false,
-                width = 200
-            )
+                    },
+                    isIncome = false,
+                    isExpense = true,
+                    isThirdButton = false,
+                    width = 200
+                )
+            }
         }
     }
 }
@@ -135,6 +151,5 @@ fun ForgotPasswordScreen(navController: NavController, budgetViewModel : BudgetV
 @Preview(showBackground = true)
 @Composable
 fun ForgotPasswordScreenPreview() {
-    val previewNavController = rememberNavController()
-    ForgotPasswordScreen(previewNavController, viewModel())
+    ForgotPasswordScreen(viewModel(), onDismiss = {})
 }
