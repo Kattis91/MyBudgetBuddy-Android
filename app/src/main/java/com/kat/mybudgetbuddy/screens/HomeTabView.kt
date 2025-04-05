@@ -50,98 +50,100 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
         viewModel.loadCurrentBudgetPeriod()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else {
-            Spacer(modifier = Modifier.weight(1f))
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (!showNewPeriodDialog) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
 
-            currentPeriod?.let { period ->
-                StyledCard {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    currentPeriod?.let { period ->
+                        StyledCard {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    "Current Budget Period",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                                    modifier = Modifier.padding(bottom = 10.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Text(
+                                    formattedDateRange(period.startDate, period.endDate),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 23.sp,
+                                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+                                )
+                            }
+                        }
+                    } ?: run {
                         Text(
-                            "Current Budget Period",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
-                            modifier = Modifier.padding(bottom = 10.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            formattedDateRange(period.startDate, period.endDate),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 23.sp,
-                            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
+                            "No active budget period",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(bottom = 24.dp)
                         )
                     }
-                }
-            } ?: run {
-                Text(
-                    "No active budget period",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    StatBox(
-                        title = "Total Income",
-                        amount = totalIncome,
-                        isIncome = true,
-                        showNegativeAmount = false
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            StatBox(
+                                title = "Total Income",
+                                amount = totalIncome,
+                                isIncome = true,
+                                showNegativeAmount = false
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Box(modifier = Modifier.weight(1f)) {
+                            StatBox(
+                                title = "Total Expense",
+                                amount = totalExpenses,
+                                isIncome = false,
+                                showNegativeAmount = true
+                            )
+                        }
+                    }
+
+                    OutcomeBox(
+                        income = totalIncome,
+                        expense = totalExpenses
                     )
-                }
 
-                Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Box(modifier = Modifier.weight(1f)) {
-                    StatBox(
-                        title = "Total Expense",
-                        amount = totalExpenses,
+                    CustomButton(
+                        onClick = { showNewPeriodDialog = true },
+                        buttonText = "Start New Period",
                         isIncome = false,
-                        showNegativeAmount = true
+                        isExpense = false,
+                        isThirdButton = true,
+                        width = 250
                     )
+
+                    Spacer(modifier = Modifier.weight(1f)) // Additional space at bottom
                 }
             }
-
-            OutcomeBox(
-                income = totalIncome,
-                expense = totalExpenses
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomButton(
-                onClick = { showNewPeriodDialog = true },
-                buttonText = "Start New Period",
-                isIncome = false,
-                isExpense = false,
-                isThirdButton = true,
-                width = 250
-            )
-
-            Spacer(modifier = Modifier.weight(1f)) // Additional space at bottom
-        }
-
-        // Show New Budget Period Dialog when button is clicked
-        if (showNewPeriodDialog) {
+        } else {
+            // Show New Budget Period Dialog when button is clicked
             NewBudgetPeriodView(
                 isPresented = true,
                 onDismiss = { showNewPeriodDialog = false },
