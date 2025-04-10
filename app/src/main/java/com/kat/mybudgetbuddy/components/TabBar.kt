@@ -1,22 +1,33 @@
 package com.kat.mybudgetbuddy.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material.icons.filled.StackedBarChart
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -33,60 +44,78 @@ fun TabBar(navController: NavController) {
         TabItem("Expenses", Icons.Filled.RemoveCircle, "expenses"),
         TabItem("Overview", Icons.Filled.StackedBarChart, "overview")
     )
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val isDarkMode = isSystemInDarkTheme()
-
-    val gradientColors = if (isDarkMode) {
-        listOf(Color(40, 40, 45), Color(28, 28, 32))
-    } else {
-        listOf(Color(252, 242, 230), Color(245, 235, 220))
-    }
-
-    NavigationBar(
-        modifier = Modifier.drawBehind {
-            drawRect(
-                brush = Brush.linearGradient(
-                    colors = gradientColors,
-                    start = Offset(0f, 0f),
-                    end = Offset(1000f, 1000f)
-                )
-            )
-        },
-        containerColor = Color.Transparent, // Set containerColor to transparent
-        tonalElevation = 0.dp // Remove tonal elevation
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp),
     ) {
-        items.forEach { item ->
-            NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = item.title) },
-                label = { Text(item.title) },
-                selected = currentRoute == item.route,
-                onClick = {
-                    if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            // Pop up to the start destination of the graph to
-                            // avoid building up a large stack of destinations
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            // Avoid multiple copies of the same destination when
-                            // re-selecting the same item
-                            launchSingleTop = true
-                            // Restore state when re-selecting a previously selected item
-                            restoreState = true
+        Surface(
+            color = Color(0xFFF5F1FB),
+            tonalElevation = 4.dp,
+            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .align(Alignment.BottomCenter)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items.forEach { item ->
+                    val isSelected = currentRoute == item.route
+                    if (!isSelected) {
+                        NavigationIcon(item, isSelected = false) {
+                            navController.navigate(item.route)
                         }
+                    } else {
+                        Spacer(modifier = Modifier.width(48.dp)) // space for FAB
                     }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colorResource(id = R.color.expense_color),
-                    unselectedIconColor = colorResource(id = R.color.background_tint_dark),
-                    selectedTextColor = colorResource(id = R.color.expense_color),
-                    unselectedTextColor = colorResource(id = R.color.background_tint_dark),
-                    indicatorColor = Color.Transparent
-                )
-            )
+                }
+            }
+        }
+
+        val activeIndex = items.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            repeat(items.size) { index ->
+                if (index == activeIndex) {
+                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        FloatingActionButton(
+                            onClick = { navController.navigate(items[index].route) },
+                            containerColor = Color.White,
+                            contentColor = colorResource(id = R.color.expense_color),
+                            shape = CircleShape,
+                            elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                            modifier = Modifier.size(56.dp)
+                        ) {
+                            Icon(
+                                imageVector = items[index].icon,
+                                contentDescription = ""
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = items[index].title,
+                            color = colorResource(id = R.color.expense_color),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.width(56.dp))
+                }
+            }
         }
     }
 }
