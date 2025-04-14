@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -191,7 +192,11 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
         }
         if (showInfoSheet) {
             ModalBottomSheet(
-                onDismissRequest = { showInfoSheet = false }
+                onDismissRequest = { showInfoSheet = false },
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
             ) {
                 InfoScreen(onDismiss = { showInfoSheet = false })
             }
@@ -199,7 +204,11 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
 
         if (showCategorySheet) {
             ModalBottomSheet(
-                onDismissRequest = { showCategorySheet = false }
+                onDismissRequest = { showCategorySheet = false },
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxHeight(0.35f) // Takes 93% of screen height
             ) {
                 CategoryManagement(onDismiss = { showCategorySheet = false })
             }
@@ -207,7 +216,11 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
 
         if (showInvoiceSheet) {
             ModalBottomSheet(
-                onDismissRequest = { showInvoiceSheet = false }
+                onDismissRequest = { showInvoiceSheet = false },
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
             ) {
                 InvoiceReminder(onDismiss = { showInvoiceSheet = false })
             }
