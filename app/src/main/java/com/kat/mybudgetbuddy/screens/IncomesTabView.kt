@@ -83,7 +83,7 @@ fun IncomesTabView(
 
     Column(
         modifier = Modifier
-            .fillMaxSize().padding(top = 10.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
