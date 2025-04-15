@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -208,7 +207,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 windowInsets = WindowInsets(0, 0, 0, 0),
                 containerColor = MaterialTheme.colorScheme.background,
-                modifier = Modifier.fillMaxHeight(0.35f) // Takes 93% of screen height
+                modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
             ) {
                 CategoryManagement(onDismiss = { showCategorySheet = false })
             }
