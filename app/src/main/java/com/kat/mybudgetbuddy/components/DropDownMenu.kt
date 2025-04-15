@@ -19,8 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,7 +51,6 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 
-
 @Composable
 fun CategoryMenu(
     categories: List<String>,
@@ -80,57 +79,29 @@ fun CategoryMenu(
 
     Box(modifier = Modifier.fillMaxWidth()) {
         // Keep Card but with Swift-like styling
-        Box(
-            modifier = Modifier
-                .zIndex(0f)
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-                .height(45.dp)
-                .shadow(
-                    elevation = if (isDarkMode) 2.dp else 1.dp,
-                    shape = RoundedCornerShape(16.dp),
-                    spotColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
-                    ambientColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
-                    clip = false
-                )
-                .graphicsLayer(
-                    shadowElevation = 4f,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .offset(x = (3).dp, y = (-3).dp)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = gradientColors,
-                    ),
-                    shape = RoundedCornerShape(18.dp)
-                )
-                .border(
-                    width = if (isDarkMode) 0.6.dp else 0.8.dp,
-                    color = Color.White.copy(alpha = if (isDarkMode) 0.3f else 0.4f),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .onGloballyPositioned { coordinates ->
-                    rowReference.value = coordinates
-                }
-        ) {
             if (showNewCategoryField) {
+                // New category input field with back button
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.5.dp)
                 ) {
-                    CustomTextField(
-                        value = newCategory,
-                        onValueChange = { onNewCategoryChange(it) },
-                        label = "New category",
-                        icon = Icons.Filled.AddCircle,
-                    )
-                    IconButton(onClick = {
-                        onShowNewCategoryFieldChange(false)
-                        onCategorySelected("")
-                        onNewCategoryChange("")
-                    }) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        CustomTextField(
+                            value = newCategory,
+                            onValueChange = onNewCategoryChange,
+                            label = "New category",
+                            icon = Icons.Default.Tag,
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            onShowNewCategoryFieldChange(false)
+                            onCategorySelected("")
+                            onNewCategoryChange("")
+                        },
+                        modifier = Modifier.padding(end = 4.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -139,6 +110,40 @@ fun CategoryMenu(
                     }
                 }
             } else {
+                Box(
+                    modifier = Modifier
+                        .zIndex(0f)
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .height(45.dp)
+                        .shadow(
+                            elevation = if (isDarkMode) 2.dp else 1.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            spotColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
+                            ambientColor = Color.Black.copy(alpha = if (isDarkMode) 0.35f else 0.25f),
+                            clip = false
+                        )
+                        .graphicsLayer(
+                            shadowElevation = 4f,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .offset(x = (3).dp, y = (-3).dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = gradientColors,
+                            ),
+                            shape = RoundedCornerShape(18.dp)
+                        )
+                        .border(
+                            width = if (isDarkMode) 0.6.dp else 0.8.dp,
+                            color = Color.White.copy(alpha = if (isDarkMode) 0.3f else 0.4f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            rowReference.value = coordinates
+                        }
+                ) {
+                // Category selector with dropdown
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -167,8 +172,8 @@ fun CategoryMenu(
             }
         }
 
-        // Popup styling remains mostly the same
-        if (expanded) {
+        // Dropdown menu
+        if (expanded && !showNewCategoryField) {
             val positionProvider = object : PopupPositionProvider {
                 override fun calculatePosition(
                     anchorBounds: IntRect,
@@ -191,14 +196,14 @@ fun CategoryMenu(
                     modifier = Modifier
                         .width(280.dp)
                         .shadow(elevation = 8.dp, shape = RoundedCornerShape(8.dp))
-                        .zIndex(1f), // Ensures dropdown is above other elements
+                        .zIndex(1f),
                     shape = RoundedCornerShape(8.dp),
                     color = Color.White.copy(alpha = 0.95f)
-                )
-                {
+                ) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        // Regular categories
                         categories.forEachIndexed { index, category ->
                             CustomDropdownItem(
                                 text = category,
@@ -217,12 +222,16 @@ fun CategoryMenu(
                             }
                         }
 
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            thickness = 0.5.dp,
-                            color = Color.LightGray
-                        )
+                        // Add divider before "+ Add new category" option
+                        if (categories.isNotEmpty()) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                                thickness = 0.5.dp,
+                                color = Color.LightGray
+                            )
+                        }
 
+                        // "+ Add new category" option
                         CustomDropdownItem(
                             text = "Add new category",
                             onClick = {
