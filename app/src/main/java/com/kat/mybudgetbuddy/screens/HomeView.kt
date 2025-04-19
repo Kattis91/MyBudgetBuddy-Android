@@ -46,6 +46,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
     var showInfoSheet by remember { mutableStateOf(false) }
     var showCategorySheet by remember { mutableStateOf(false) }
     var showInvoiceSheet by remember { mutableStateOf(false)}
+    var showDeleteAccountSheet by remember { mutableStateOf(false)}
     var showLogOutAlert by remember { mutableStateOf(false) }
 
     var isVisible by remember { mutableStateOf(false) }
@@ -95,7 +96,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         showDropdownMenu = showDropdownMenu,
                         onDropdownMenuChange = { showDropdownMenu = it },
                         onCategoryClick = { showCategorySheet = true },
-                        onInvoiceClick = { showInvoiceSheet = true }
+                        onInvoiceClick = { showInvoiceSheet = true },
+                        onAccountDeleteClick = { showDeleteAccountSheet = true }
                     )
                 }
                 "expenses" -> {
@@ -104,7 +106,8 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         showDropdownMenu = showDropdownMenu,
                         onDropdownMenuChange = { showDropdownMenu = it },
                         onCategoryClick = { showCategorySheet = true },
-                        onInvoiceClick = { showInvoiceSheet = true }
+                        onInvoiceClick = { showInvoiceSheet = true },
+                        onAccountDeleteClick = { showDeleteAccountSheet = true }
                     )
                 }
             }
@@ -222,6 +225,18 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
             ) {
                 InvoiceReminder(onDismiss = { showInvoiceSheet = false })
+            }
+        }
+
+        if (showDeleteAccountSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showDeleteAccountSheet = false },
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
+            ) {
+                DeleteAccountView(onDismiss = { showDeleteAccountSheet = false })
             }
         }
 

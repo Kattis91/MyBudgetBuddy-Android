@@ -9,10 +9,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -33,7 +34,8 @@ fun TopAppBarWithMenu(
     showDropdownMenu: Boolean,
     onDropdownMenuChange: (Boolean) -> Unit,
     onCategoryClick: () -> Unit,
-    onInvoiceClick: () -> Unit
+    onInvoiceClick: () -> Unit,
+    onAccountDeleteClick: () -> Unit
 ) {
     TopAppBar(
         title = { },
@@ -76,14 +78,14 @@ fun TopAppBarWithMenu(
                         onDropdownMenuChange(false)
                     }
                 )
-                Divider()
+                HorizontalDivider()
                 DropdownMenuItem(
                     text = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Default.Alarm,
                                 contentDescription = "Invoices",
-                                tint = Color(0xFFBF0449),
+                                tint = Color(0xFFFF9800),
                                 modifier = Modifier
                                     .padding(start = 10.dp)
                                     .size(30.dp)
@@ -100,6 +102,32 @@ fun TopAppBarWithMenu(
                     onClick = {
                         onInvoiceClick()
                         onDropdownMenuChange(false) }
+                )
+                HorizontalDivider()
+                DropdownMenuItem(
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.WarningAmber,
+                                contentDescription = "Delete account",
+                                tint = Color(0xFFBF0449),
+                                modifier = Modifier
+                                    .padding(start = 10.dp)
+                                    .size(30.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Delete Account",
+                                color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                                fontSize = 19.sp,
+                                modifier = Modifier.padding(end = 30.dp)
+                            )
+                        }
+                    },
+                    onClick = {
+                        onDropdownMenuChange(false)
+                        onAccountDeleteClick()
+                    }
                 )
             }
         }
