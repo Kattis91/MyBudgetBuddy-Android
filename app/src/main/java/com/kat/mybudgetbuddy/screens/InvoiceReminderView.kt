@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,10 +22,16 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Doorbell
+import androidx.compose.material.icons.filled.Scanner
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -53,6 +62,7 @@ import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.models.Invoice
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvoiceReminder(
     viewModel: BudgetManager = viewModel(),
@@ -60,7 +70,7 @@ fun InvoiceReminder(
 ) {
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
-    var expiryDate by remember { mutableStateOf(Date()) }
+    var expiryDate by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     val invoices by viewModel.invoices.collectAsState()
@@ -72,6 +82,7 @@ fun InvoiceReminder(
     var selectedTabIndex by remember { mutableStateOf(0) }
     val showAlertDialog = remember { mutableStateOf(false) }
     var invoiceToMarkAsProcessed by remember { mutableStateOf<Invoice?>(null) }
+    var showScannerSheet by remember { mutableStateOf(false) }
 
     val isDarkMode = isSystemInDarkTheme()
 
@@ -164,9 +175,9 @@ fun InvoiceReminder(
 
                 DatePickerButton(
                     label = "Start Date",
-                    date = expiryDate,
+                    date = expiryDate.takeIf { it.isNotEmpty() }?.let { Date(it) } ?: Date(),
                     onDateSelected = { newDate ->
-                        expiryDate = newDate
+                        expiryDate = newDate.toString()
                     },
                     modifier = Modifier
                         .background(
@@ -178,6 +189,20 @@ fun InvoiceReminder(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
+
+            TextButton(onClick = {
+                showScannerSheet = true
+            }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        Icons.Default.Scanner,
+                        contentDescription = "Scan",
+                        tint = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
+                        modifier = Modifier.size(45.dp)
+                    )
+                    Text("Scan the invoice")
+                }
+            }
         }
 
         Box(modifier = Modifier
@@ -211,11 +236,11 @@ fun InvoiceReminder(
                         viewModel.addInvoice(
                             title = title,
                             amount = invoiceAmount,
-                            expiryDate = expiryDate
+                            expiryDate = expiryDate.takeIf { it.isNotEmpty() }?.let { Date(it) } ?: Date()
                         )
                         title = ""
                         amount = ""
-                        expiryDate = Date()
+                        expiryDate = Date().toString()
 
                         viewModel.loadInvoicesByStatus(processed = selectedTabIndex == 1)
                     }
@@ -336,6 +361,23 @@ fun InvoiceReminder(
                     showAlertDialog.value = false
                 },
             )
+        }
+        if (showScannerSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showScannerSheet = false },
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                windowInsets = WindowInsets(0, 0, 0, 0),
+                containerColor = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
+            ) {
+                InvoiceScannerView(
+                    onDismiss = { showScannerSheet = false },
+                    scannedAmount = amount,
+                    onAmountChange = { amount = it },
+                    scannedDueDate = expiryDate,
+                    onDueDateChange = { expiryDate = it }
+                )
+            }
         }
     }
 }
