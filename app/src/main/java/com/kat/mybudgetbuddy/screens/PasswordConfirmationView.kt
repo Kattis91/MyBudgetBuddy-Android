@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -109,7 +110,8 @@ fun PasswordConfirmationView(
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
 
                 Box(modifier = Modifier
-                    .heightIn(min = 55.dp)
+                    .heightIn(min = 75.dp)
+                    .animateContentSize()
                     .padding(top = 10.dp)
                     .padding(horizontal = 30.dp)) {
                     val message = errorMessage.takeIf { it.isNotEmpty() } ?: successMessage.takeIf { it.isNotEmpty() }
@@ -126,10 +128,25 @@ fun PasswordConfirmationView(
                         )
                     }
                 }
-
                 CustomButton(
                     buttonText = "Delete Account",
                     onClick = {
+                        if (confirmationText != "DELETE") {
+                            errorMessage = "You must type DELETE to confirm"
+                            return@CustomButton
+                        }
+                        budgetViewModel.deleteAccount(
+                            password = confirmationPassword,
+                            onComplete = {
+                                successMessage = "Account successfully deleted"
+                                errorMessage = ""
+                                onDismiss() // Dismiss the dialog or navigate away
+                            },
+                            onError = { error ->
+                                errorMessage = error
+                                successMessage = ""
+                            }
+                        )
                     },
                     isIncome = false,
                     isExpense = true,
