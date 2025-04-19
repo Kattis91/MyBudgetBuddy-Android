@@ -39,7 +39,8 @@ import com.kat.mybudgetbuddy.utils.ValidationUtils
 @Composable
 fun ForgotPasswordScreen(
     budgetViewModel : BudgetViewModel,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    deletingAccountReset : Boolean
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -131,7 +132,7 @@ fun ForgotPasswordScreen(
                                     errorMessage = firebaseError
                                     successMessage = ""
                                 } else {
-                                    successMessage = "If the email you provided is registered, we've sent a reset link to your inbox."
+                                    successMessage = if (deletingAccountReset)  "Please check your email. Once password is reset, return to delete your account." else "If the email you provided is registered, we've sent a reset link to your inbox."
                                     email = ""
                                     errorMessage = ""
                                 }
@@ -151,5 +152,5 @@ fun ForgotPasswordScreen(
 @Preview(showBackground = true)
 @Composable
 fun ForgotPasswordScreenPreview() {
-    ForgotPasswordScreen(viewModel(), onDismiss = {})
+    ForgotPasswordScreen(viewModel(), onDismiss = {}, deletingAccountReset = false)
 }

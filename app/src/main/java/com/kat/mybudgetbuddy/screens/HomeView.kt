@@ -236,7 +236,7 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 containerColor = MaterialTheme.colorScheme.background,
                 modifier = Modifier.fillMaxHeight(0.93f) // Takes 93% of screen height
             ) {
-                DeleteAccountView(onDismiss = { showDeleteAccountSheet = false })
+                DeleteAccountView(onDismiss = { showDeleteAccountSheet = false }, budgetViewModel = budgetViewModel)
             }
         }
 

@@ -173,7 +173,8 @@ fun LoginScreen(budgetViewModel: BudgetViewModel) {
             // Show only the forgot password screen
             ForgotPasswordScreen(
                 budgetViewModel = budgetViewModel,
-                onDismiss = { showForgotPasswordDialog = false }
+                onDismiss = { showForgotPasswordDialog = false },
+                deletingAccountReset = false
             )
         }
     }
