@@ -357,7 +357,8 @@ fun NewBudgetPeriodView(
                         },
                         isIncome = false,
                         isExpense = false,
-                        isThirdButton = true
+                        isThirdButton = true,
+                        height = 78
                     )
                 }
             }

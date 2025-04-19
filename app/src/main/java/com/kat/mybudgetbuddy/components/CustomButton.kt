@@ -1,10 +1,10 @@
 package com.kat.mybudgetbuddy.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -35,7 +35,8 @@ fun CustomButton(
     isIncome: Boolean,
     isExpense: Boolean,
     isThirdButton: Boolean,
-    width: Int = 200
+    width: Int = 200,
+    height: Int = 72
 ) {
     val addIncomeStart = Color(78 / 255f, 177 / 255f, 181 / 255f) // 76ADA1
     val addIncomeMiddle = Color(120 / 255f, 182 / 255f, 168 / 255f) // 78B6A8
@@ -74,6 +75,7 @@ fun CustomButton(
     Box(
         modifier = Modifier
             .then(if (width > 0) Modifier.width(width.dp) else Modifier.fillMaxWidth())
+            .then(if (height > 0) Modifier.height(height.dp) else Modifier.height(72.dp))
             .padding(horizontal = 25.dp, vertical = 16.dp)
             .then(
                 if (isThirdButton) {

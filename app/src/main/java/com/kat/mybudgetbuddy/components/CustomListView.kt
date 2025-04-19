@@ -97,7 +97,7 @@ fun <T : Identifiable> CustomListView(
                 content = {
                     Card(
                         modifier = Modifier
-                            .padding(vertical = 6.dp)
+                            .padding(vertical = if (isInvoice) 1.dp else 6.dp)
                             .padding(horizontal = 21.dp)
                             .shadow(
                                 elevation = if (isDarkMode) 2.dp else 1.dp,
@@ -181,7 +181,8 @@ fun <T : Identifiable> CustomListView(
                         isIncome = true,
                         isExpense = false,
                         isThirdButton = false,
-                        width = 230
+                        width = 235,
+                        height = 70
                     )
                 }
             }

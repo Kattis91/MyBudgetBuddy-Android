@@ -136,7 +136,8 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                         isIncome = false,
                         isExpense = false,
                         isThirdButton = true,
-                        width = 250
+                        width = 250,
+                        height = 78
                     )
 
                     Spacer(modifier = Modifier.weight(1f)) // Additional space at bottom
