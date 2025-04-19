@@ -14,7 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +51,9 @@ fun CustomTextField(
     isSecure: Boolean = false,
     maxLength: Int? = null
 ) {
+    // Add this state to track password visibility
+    val passwordVisible = remember { mutableStateOf(false) }
+
     val isDarkMode = isSystemInDarkTheme()
 
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -93,7 +100,13 @@ fun CustomTextField(
     ) {
         BasicTextField(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = { newValue ->
+                // Apply max length constraint if specified
+                val truncatedValue = maxLength?.let {
+                    if (newValue.length > it) newValue.take(it) else newValue
+                } ?: newValue
+                onValueChange(truncatedValue)
+            },
             textStyle = TextStyle(
                 color = textColor,
                 fontSize = 16.sp
@@ -102,8 +115,11 @@ fun CustomTextField(
                 .fillMaxWidth()
                 .fillMaxHeight(),
             maxLines = 1,
-            // Add visualTransformation for secure field
-            visualTransformation = if (isSecure) PasswordVisualTransformation() else VisualTransformation.None,
+            // Use passwordVisible state to determine visual transformation
+            visualTransformation = if (isSecure && !passwordVisible.value)
+                PasswordVisualTransformation()
+            else
+                VisualTransformation.None,
             decorationBox = { innerTextField ->
                 Row(
                     modifier = Modifier
@@ -123,7 +139,6 @@ fun CustomTextField(
                                 .padding(horizontal = 5.dp)
                         )
                     }
-
                     // Content box with placeholder
                     Box(
                         modifier = Modifier.weight(1f),
@@ -137,6 +152,28 @@ fun CustomTextField(
                             )
                         }
                         innerTextField()
+                    }
+                    // Password visibility toggle icon
+                    if (isSecure) {
+                        IconButton(
+                            onClick = { passwordVisible.value = !passwordVisible.value },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (passwordVisible.value)
+                                    Icons.Filled.Visibility
+                                else
+                                    Icons.Filled.VisibilityOff,
+                                contentDescription = if (passwordVisible.value)
+                                    "Hide password"
+                                else
+                                    "Show password",
+                                tint = if (isDarkMode)
+                                    Color.White.copy(alpha = 0.5f)
+                                else
+                                    Color.Black.copy(alpha = 0.5f)
+                            )
+                        }
                     }
                 }
             }
