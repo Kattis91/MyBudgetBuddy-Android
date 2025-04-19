@@ -95,7 +95,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
                 icon = Icons.Default.Lock,
                 onChange = {
                     passwordErrorMessage = ""
-                }
+                },
+                isSecure = true
             )
         }
 
@@ -118,7 +119,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
                 icon = Icons.Default.Lock,
                 onChange = {
                     confirmPasswordErrorMessage = ""
-                }
+                },
+                isSecure = true
             )
         }
 

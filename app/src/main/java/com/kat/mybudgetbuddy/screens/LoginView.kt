@@ -30,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.kat.mybudgetbuddy.budget.BudgetViewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.CustomButton
@@ -100,7 +99,8 @@ fun LoginScreen(budgetViewModel: BudgetViewModel) {
                         icon = Icons.Default.Lock,
                         onChange = {
                             passwordErrorMessage = ""
-                        }
+                        },
+                        isSecure = true
                     )
                 }
 
