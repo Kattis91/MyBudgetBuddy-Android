@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +61,9 @@ import com.kat.mybudgetbuddy.components.CustomTextField
 import com.kat.mybudgetbuddy.components.DatePickerButton
 import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.models.Invoice
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -175,9 +178,16 @@ fun InvoiceReminder(
 
                 DatePickerButton(
                     label = "Start Date",
-                    date = expiryDate.takeIf { it.isNotEmpty() }?.let { Date(it) } ?: Date(),
+                    date = expiryDate.takeIf { it.isNotEmpty() }?.let {
+                        try {
+                            SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it) ?: Date()
+                        } catch (e: Exception) {
+                            Log.e("InvoiceReminder", "Failed to parse date: $it", e)
+                            Date() // Fallback to current date
+                        }
+                    } ?: Date(),
                     onDateSelected = { newDate ->
-                        expiryDate = newDate.toString()
+                        expiryDate = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(newDate)
                     },
                     modifier = Modifier
                         .background(
@@ -236,7 +246,14 @@ fun InvoiceReminder(
                         viewModel.addInvoice(
                             title = title,
                             amount = invoiceAmount,
-                            expiryDate = expiryDate.takeIf { it.isNotEmpty() }?.let { Date(it) } ?: Date()
+                            expiryDate = expiryDate.takeIf { it.isNotEmpty() }?.let {
+                                try {
+                                    SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it) ?: Date()
+                                } catch (e: Exception) {
+                                    Log.e("InvoiceReminder", "Failed to parse date: $it", e)
+                                    Date() // Fallback to current date
+                                }
+                            } ?: Date()
                         )
                         title = ""
                         amount = ""

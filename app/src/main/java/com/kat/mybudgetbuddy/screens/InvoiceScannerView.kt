@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Log
+import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -39,6 +40,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -49,6 +51,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
@@ -60,6 +64,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.regex.Pattern
 
 
@@ -219,6 +224,7 @@ fun CameraPreview(
     feedbackMessage: MutableState<String>
 ) {
     val context = LocalContext.current
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -226,13 +232,35 @@ fun CameraPreview(
     val textRecognizer = remember { TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS) }
     val executor = remember { Executors.newSingleThreadExecutor() }
     val processedTexts = remember { mutableSetOf<String>() }
+    val processingTouch = remember { AtomicBoolean(false) }
 
-    // Store detected text for tap processing
-    val detectedTextBlocks = remember { mutableStateListOf<String>() }
+    val detectedTextBlocks = remember {
+        SnapshotStateList<String>().apply {
+            // Pre-allocate some capacity
+            addAll(List(10) { "" })
+            clear()
+        }
+    }
 
-    DisposableEffect(key1 = lifecycleOwner) {
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                try {
+                    cameraProviderFuture.get().unbindAll()
+                } catch (e: Exception) {
+                    Log.e("CameraPreview", "Error unbinding camera", e)
+                }
+            }
+        }
+
+        lifecycle.addObserver(observer)
         onDispose {
-            executor.shutdown()
+            lifecycle.removeObserver(observer)
+            try {
+                cameraProviderFuture.get().unbindAll()
+            } catch (e: Exception) {
+                Log.e("CameraPreview", "Error unbinding camera on dispose", e)
+            }
         }
     }
 
@@ -252,9 +280,13 @@ fun CameraPreview(
                 .build()
                 .apply {
                     setAnalyzer(executor, TextAnalyzer(textRecognizer) { text ->
-                        // Store detected text for tap processing
-                        detectedTextBlocks.clear()
-                        detectedTextBlocks.add(text)
+                        // Add new detected text while keeping the list manageable
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (detectedTextBlocks.size > 20) { // Keep list size reasonable
+                                detectedTextBlocks.removeAt(0)
+                            }
+                            detectedTextBlocks.add(text)
+                        }
                     })
                 }
 
@@ -272,31 +304,60 @@ fun CameraPreview(
                     imageAnalysis
                 )
 
-                // Set up tap listener to process real detected text
+                // Set up tap listener
                 view.setOnTouchListener { _, event ->
-                    val tappedText = if (detectedTextBlocks.isNotEmpty()) {
-                        detectedTextBlocks.joinToString(" ")
-                    } else {
-                        // Fallback if no text is detected
-                        ""
-                    }
+                    if (event.action == MotionEvent.ACTION_DOWN && !processingTouch.get()) {
+                        processingTouch.set(true)
+                        val touchX = event.x
+                        val touchY = event.y
 
-                    // Only process if we have text
-                    if (tappedText.isNotEmpty()) {
+                        Log.d("CameraPreview", "Touch at X: $touchX, Y: $touchY")
+
                         CoroutineScope(Dispatchers.Main).launch {
-                            processTextFromTap(
-                                text = tappedText,
-                                scannedAmount = scannedAmount,
-                                scannedDueDate = scannedDueDate,
-                                showFeedback = showFeedback,
-                                feedbackMessage = feedbackMessage,
-                                processedTexts = processedTexts
-                            )
+                            try {
+                                // Create a safe copy of the list to work with
+                                val textBlocksCopy = detectedTextBlocks.toList()
+
+                                // Process all detected text blocks
+                                for (text in textBlocksCopy) {
+                                    if (text.isEmpty()) continue
+
+                                    val result = processFullText(text, scannedAmount, scannedDueDate)
+                                    if (result != null) {
+                                        showFeedback(result, showFeedback, feedbackMessage)
+                                        processingTouch.set(false)
+                                        return@launch
+                                    }
+                                }
+
+                                // If no full match, try individual components
+                                val messages = mutableListOf<String>()
+                                textBlocksCopy.forEach { textBlock ->
+                                    if (textBlock.isEmpty()) return@forEach
+
+                                    val textComponents = textBlock.split(Regex("\\s+"))
+                                    for (component in textComponents) {
+                                        if (component.isEmpty()) continue
+
+                                        val message = processScannedText(component, scannedAmount, scannedDueDate)
+                                        if (message != null) {
+                                            messages.add(message)
+                                        }
+                                    }
+                                }
+
+                                if (messages.isNotEmpty()) {
+                                    showFeedback(messages.joinToString("\n"), showFeedback, feedbackMessage)
+                                }
+                            } catch (e: Exception) {
+                                Log.e("CameraPreview", "Error processing touch", e)
+                            } finally {
+                                processingTouch.set(false)
+                            }
                         }
                     }
                     true
                 }
-
             } catch (e: Exception) {
                 Log.e("CameraPreview", "Binding failed", e)
             }
@@ -309,32 +370,69 @@ class TextAnalyzer(
     private val onTextFound: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
 
+    // Process every Nth frame to avoid overloading
+    private var frameCounter = 0
+    private val processEveryNthFrame = 5
+
     @androidx.camera.core.ExperimentalGetImage
     override fun analyze(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null) {
-            val image = InputImage.fromMediaImage(
-                mediaImage,
-                imageProxy.imageInfo.rotationDegrees
-            )
+        try {
+            // Only process every Nth frame
+            frameCounter = (frameCounter + 1) % processEveryNthFrame
+            if (frameCounter != 0) {
+                imageProxy.close()
+                return
+            }
 
-            textRecognizer.process(image)
-                .addOnSuccessListener { visionText ->
-                    // Combine all detected text and pass it to the callback
-                    val fullText = visionText.textBlocks.joinToString(" ") { block ->
-                        block.text
+            val mediaImage = imageProxy.image
+            if (mediaImage != null) {
+                val image = InputImage.fromMediaImage(
+                    mediaImage,
+                    imageProxy.imageInfo.rotationDegrees
+                )
+
+                textRecognizer.process(image)
+                    .addOnSuccessListener { visionText ->
+                        try {
+                            // Limit the amount of text to process
+                            val maxBlocks = minOf(5, visionText.textBlocks.size)
+                            for (i in 0 until maxBlocks) {
+                                val block = visionText.textBlocks[i]
+                                if (block.text.isNotEmpty()) {
+                                    onTextFound(block.text)
+                                }
+
+                                // Process at most 3 lines per block
+                                val maxLines = minOf(3, block.lines.size)
+                                for (j in 0 until maxLines) {
+                                    val line = block.lines[j]
+                                    if (line.text.isNotEmpty()) {
+                                        onTextFound(line.text)
+                                    }
+
+                                    // Only process elements with numbers (potential amounts or dates)
+                                    line.elements.forEach { element ->
+                                        if (element.text.matches(Regex(".*\\d+.*"))) {
+                                            onTextFound(element.text)
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.e("TextAnalyzer", "Error processing text blocks", e)
+                        }
                     }
-                    if (fullText.isNotEmpty()) {
-                        onTextFound(fullText)
+                    .addOnFailureListener { e ->
+                        Log.e("TextAnalyzer", "Text recognition failed", e)
                     }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("TextAnalyzer", "Text recognition failed", e)
-                }
-                .addOnCompleteListener {
-                    imageProxy.close()
-                }
-        } else {
+                    .addOnCompleteListener {
+                        imageProxy.close()
+                    }
+            } else {
+                imageProxy.close()
+            }
+        } catch (e: Exception) {
+            Log.e("TextAnalyzer", "Error in analyze", e)
             imageProxy.close()
         }
     }
@@ -380,34 +478,75 @@ fun processFullText(
     scannedAmount: MutableState<String>,
     scannedDueDate: MutableState<String>
 ): String? {
-    // Check for amounts with spaces like "10 000,00"
-    val amountPattern = "(\\d{1,3}(?: \\d{3})+)[,.](\\d{2})"
-    val amountMatcher = Pattern.compile(amountPattern).matcher(text)
+    try {
+        val cleanText = text.trim()
+        Log.d("InvoiceScanner", "Processing text: $cleanText")
 
-    if (amountMatcher.find()) {
-        val match = amountMatcher.group()
-        Log.d("InvoiceScanner", "Amount match found: $match")
-
-        // Remove spaces for storage but keep the format consistent
-        val numericText = match.replace(" ", "")
-        scannedAmount.value = numericText
-        return "Amount captured: $match"
-    }
-
-    // Check for dates
-    val datePattern = "(\\d{4}[-/.]\\d{2}[-/.]\\d{2}|\\d{2}[-/.]\\d{2}[-/.]\\d{4})"
-    val dateMatcher = Pattern.compile(datePattern).matcher(text)
-
-    if (dateMatcher.find()) {
-        val dateMatch = dateMatcher.group()
-        val formattedDate = formatDate(dateMatch)
-        if (formattedDate != null) {
-            scannedDueDate.value = formattedDate
-            return "Due date captured: $formattedDate"
+        if (cleanText.isEmpty()) {
+            return null
         }
-    }
+        // Check for amounts with spaces like "10 000,00"
+        try {
+            val amountPattern = "(\\d{1,3}(?: \\d{3})+)[,.](\\d{2})"
+            val amountMatcher = Pattern.compile(amountPattern).matcher(cleanText)
 
-    return null
+            if (amountMatcher.find()) {
+                val match = amountMatcher.group() ?: return null
+                Log.d("InvoiceScanner", "Amount match found: $match")
+
+                // Remove spaces for storage but keep format consistent
+                val numericText = match.replace(" ", "")
+                scannedAmount.value = numericText
+                return "Amount captured: $match"
+            }
+        } catch (e: Exception) {
+            Log.e("InvoiceScanner", "Error matching amount pattern with spaces", e)
+        }
+
+        // Check for simple amount pattern (no spaces)
+        try {
+            val simpleAmountPattern = "(\\d+)[,.](\\d{2})"
+            val simpleAmountMatcher = Pattern.compile(simpleAmountPattern).matcher(cleanText)
+
+            if (simpleAmountMatcher.find()) {
+                val match = simpleAmountMatcher.group() ?: return null
+                Log.d("InvoiceScanner", "Simple amount match found: $match")
+
+                scannedAmount.value = match
+                return "Amount captured: $match"
+            }
+        } catch (e: Exception) {
+            Log.e("InvoiceScanner", "Error matching simple amount pattern", e)
+        }
+
+        // Check for different date formats
+        val datePatterns = arrayOf(
+            "\\b(20\\d{2})[-/.](0[1-9]|1[0-2])[-/.](0[1-9]|[12]\\d|3[01])\\b",
+            "\\b(0[1-9]|[12]\\d|3[01])[-/.](0[1-9]|1[0-2])[-/.](20\\d{2})\\b"
+        )
+
+        for (pattern in datePatterns) {
+            try {
+                val dateMatcher = Pattern.compile(pattern).matcher(cleanText)
+                if (dateMatcher.find()) {
+                    val dateMatch = dateMatcher.group() ?: continue
+                    Log.d("InvoiceScanner", "Date match found: $dateMatch")
+                    val formattedDate = formatDate(dateMatch)
+                    if (formattedDate != null) {
+                        scannedDueDate.value = formattedDate
+                        return "Due date captured: $formattedDate"
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("InvoiceScanner", "Error matching date pattern: $pattern", e)
+            }
+        }
+
+        return null
+    } catch (e: Exception) {
+        Log.e("InvoiceScanner", "Error in processFullText", e)
+        return null
+    }
 }
 
 fun processScannedText(
@@ -416,8 +555,7 @@ fun processScannedText(
     scannedDueDate: MutableState<String>
 ): String? {
     val cleanText = text.trim()
-
-    var message: String? = null
+    Log.d("InvoiceScanner", "Processing component: $cleanText")
 
     // Enhanced date pattern checking
     val datePattern = "(\\d{4}[-/.]\\d{2}[-/.]\\d{2}|\\d{2}[-/.]\\d{2}[-/.]\\d{4})"
@@ -427,19 +565,28 @@ fun processScannedText(
         val formattedDate = formatDate(cleanText)
         if (formattedDate != null) {
             scannedDueDate.value = formattedDate
-            message = "Due date captured: $formattedDate"
+            return "Due date captured: $formattedDate"
         }
     }
 
-    // Amount pattern check
-    val amountPattern = "^\\d+[,.]\\d{2}$"
-    if (Pattern.matches(amountPattern, cleanText)) {
+    // Amount pattern check - try multiple formats
+    if (cleanText.matches("^\\d+[,.]\\d{2}$".toRegex())) {
         val numericText = cleanText.replace("[^0-9,.]".toRegex(), "")
         scannedAmount.value = numericText
-        message = "Amount captured: $numericText"
+        return "Amount captured: $numericText"
     }
 
-    return message
+    // Try to extract amount from text with other content
+    val amountPattern = "(\\d+)[,.](\\d{2})"
+    val amountMatcher = Pattern.compile(amountPattern).matcher(cleanText)
+
+    if (amountMatcher.find()) {
+        val match = amountMatcher.group()
+        scannedAmount.value = match
+        return "Amount captured: $match"
+    }
+
+    return null
 }
 
 suspend fun showFeedback(
@@ -447,38 +594,53 @@ suspend fun showFeedback(
     showFeedback: MutableState<Boolean>,
     feedbackMessage: MutableState<String>
 ) {
-    // Update feedback message and show it
-    feedbackMessage.value = message
-    showFeedback.value = true
+    try {
+        // Update feedback message and show it
+        feedbackMessage.value = message
+        showFeedback.value = true
 
-    // Hide feedback after 3 seconds
-    delay(3000)
-    showFeedback.value = false
+        // Hide feedback after 3 seconds
+        delay(3000)
+        showFeedback.value = false
+    } catch (e: Exception) {
+        Log.e("InvoiceScanner", "Error showing feedback", e)
+    }
 }
 
 fun formatDate(dateString: String): String? {
-    val formats = arrayOf(
-        "yyyy-MM-dd",
-        "dd-MM-yyyy",
-        "yyyy/MM/dd",
-        "dd/MM/yyyy",
-        "yyyy.MM.dd",
-        "dd.MM.yyyy"
-    )
+    if (dateString.isEmpty()) return null
 
-    formats.forEach { format ->
-        try {
-            val inputFormat = SimpleDateFormat(format, Locale.US)
-            val date = inputFormat.parse(dateString)
-            if (date != null) {
-                // Output in the format expected by the parent view
-                val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                return outputFormat.format(date)
+    try {
+        val formats = arrayOf(
+            SimpleDateFormat("yyyy-MM-dd", Locale.US),
+            SimpleDateFormat("dd-MM-yyyy", Locale.US),
+            SimpleDateFormat("yyyy/MM/dd", Locale.US),
+            SimpleDateFormat("dd/MM/yyyy", Locale.US),
+            SimpleDateFormat("yyyy.MM.dd", Locale.US),
+            SimpleDateFormat("dd.MM.yyyy", Locale.US)
+        )
+
+        for (format in formats) {
+            try {
+                format.isLenient = false // Add this line to enforce strict parsing
+                val date = format.parse(dateString)
+                if (date != null) {
+                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                    val formatted = outputFormat.format(date)
+                    Log.d("InvoiceScanner", "Date formatted: $formatted")
+                    return formatted
+                }
+            } catch (e: Exception) {
+                // Try next format
+                Log.v("InvoiceScanner", "Date format didn't match: ${format.toPattern()}")
             }
-        } catch (e: Exception) {
-            // Try next format
         }
-    }
 
-    return null
+        // If we reach here, no format matched successfully
+        Log.w("InvoiceScanner", "Could not parse date string: $dateString")
+        return null
+    } catch (e: Exception) {
+        Log.e("InvoiceScanner", "Error formatting date: $dateString", e)
+        return null
+    }
 }
