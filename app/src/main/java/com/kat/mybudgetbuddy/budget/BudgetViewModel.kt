@@ -119,6 +119,7 @@ class BudgetViewModel : ViewModel() {
                                 .addOnCompleteListener { deleteTask ->
                                     if (deleteTask.isSuccessful) {
                                         FirebaseAuth.getInstance().signOut() // 🚨 LOG OUT USER
+                                        checkLogin()
                                         onComplete()
                                     } else {
                                         onError("Account deletion failed: ${deleteTask.exception?.message}")
