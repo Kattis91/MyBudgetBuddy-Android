@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.identity.jvm)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.vision.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,4 +82,19 @@ dependencies {
     val nav_version = "2.8.8"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // CameraX
+    implementation ("androidx.camera:camera-camera2:1.4.2")
+    implementation ("androidx.camera:camera-lifecycle:1.4.2")
+    implementation ("androidx.camera:camera-view:1.4.2")
+
+    // ML Kit for text recognition
+    implementation ("com.google.mlkit:text-recognition:16.0.1")
+
+    // For handling permissions
+    implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
+
+    // Coroutines for asynchronous operations
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 }
