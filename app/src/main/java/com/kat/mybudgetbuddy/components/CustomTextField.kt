@@ -97,6 +97,7 @@ fun CustomTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
+            maxLines = 1,
             decorationBox = { innerTextField ->
                 Row(
                     modifier = Modifier
