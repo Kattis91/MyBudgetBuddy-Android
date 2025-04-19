@@ -41,9 +41,10 @@ fun DeleteAccountView(
 ) {
     val isDarkMode = isSystemInDarkTheme()
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (!showForgotPasswordDialog) {
+        if (!showForgotPasswordDialog && !showDeleteConfirmationDialog) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -104,7 +105,7 @@ fun DeleteAccountView(
                     Spacer(modifier = Modifier.height(30.dp))
                     CustomButton(
                         buttonText = "Delete with password",
-                        onClick = {},
+                        onClick = { showDeleteConfirmationDialog = true },
                         isIncome = false,
                         isExpense = true,
                         isThirdButton = false,
@@ -120,11 +121,16 @@ fun DeleteAccountView(
                     )
                 }
             }
-        } else {
+        } else if (showForgotPasswordDialog) {
             ForgotPasswordScreen(
                 budgetViewModel = budgetViewModel,
                 onDismiss = { showForgotPasswordDialog = false },
                 deletingAccountReset = true
+            )
+        } else {
+            PasswordConfirmationView(
+                budgetViewModel = budgetViewModel,
+                onDismiss = { showDeleteConfirmationDialog = false }
             )
         }
     }
