@@ -44,11 +44,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.components.BudgetItemRow
 import com.kat.mybudgetbuddy.components.CustomAlertDialog
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.DatePickerButton
-import com.kat.mybudgetbuddy.components.StyledCard
-import com.kat.mybudgetbuddy.utils.formatAmount
 import java.util.Calendar
 import java.util.Date
 
@@ -241,21 +240,16 @@ fun NewBudgetPeriodView(
                                     modifier = Modifier
                                         .height(
                                             min(
-                                                (viewModel.incomeItems.value.size * 46).dp,
-                                                135.dp
+                                                (viewModel.incomeItems.value.size * 44).dp,
+                                                125.dp
                                             )
                                         )
                                 ) {
                                     items(viewModel.incomeItems.value) { income ->
-                                        StyledCard {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth()
-                                            ) {
-                                                Text(income.category)
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Text(formatAmount(income.amount))
-                                            }
-                                        }
+                                        BudgetItemRow(
+                                            category = income.category,
+                                            amount = income.amount
+                                        )
                                     }
                                 }
                                 if (viewModel.incomeItems.value.size > 3) {
@@ -304,21 +298,16 @@ fun NewBudgetPeriodView(
                                     modifier = Modifier
                                         .height(
                                             min(
-                                                (viewModel.fixedExpenseItems.value.size * 46).dp,
-                                                135.dp
+                                                (viewModel.fixedExpenseItems.value.size * 44).dp,
+                                                125.dp
                                             )
                                         )
                                 ) {
                                     items(viewModel.fixedExpenseItems.value) { expense ->
-                                        StyledCard {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth()
-                                            ) {
-                                                Text(expense.category)
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Text(formatAmount(expense.amount))
-                                            }
-                                        }
+                                        BudgetItemRow(
+                                            category = expense.category,
+                                            amount = expense.amount
+                                        )
                                     }
                                 }
 
@@ -346,7 +335,7 @@ fun NewBudgetPeriodView(
                         buttonText = "Start New Period",
                         onClick = {
                             if (validatePeriod()) {
-                                if (isLandingPage && noCurrentPeriod) {
+                                if (isLandingPage || noCurrentPeriod) {
                                     // Create a new clean budget period
                                     viewModel.createCleanBudgetPeriodAndRefresh(
                                         startDate,
