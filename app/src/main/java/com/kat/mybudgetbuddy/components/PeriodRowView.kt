@@ -5,9 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +49,8 @@ import com.kat.mybudgetbuddy.budget.BudgetManager
 import com.kat.mybudgetbuddy.models.BudgetPeriod
 import com.kat.mybudgetbuddy.utils.formatAmount
 import com.kat.mybudgetbuddy.utils.formattedDateRange
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,14 +63,10 @@ fun PeriodRowView(
 ) {
     val outcome = period.totalIncome - (period.totalFixedExpenses + period.totalVariableExpenses)
     val isNegative: Boolean = outcome < 0
-
-    // Track if this item is being deleted
-    var isBeingDeleted by remember { mutableStateOf(false) }
     val isDarkMode = isSystemInDarkTheme()
-    // Don't show items being deleted
-    if (isBeingDeleted) {
-        return
-    }
+
+    val coroutineScope = rememberCoroutineScope()
+
     val rowReference = remember { mutableStateOf<LayoutCoordinates?>(null) }
 
     val gradientColors = if (isDarkMode) {
@@ -79,10 +81,12 @@ fun PeriodRowView(
     val swipeState = rememberSwipeToDismissBoxState(
         confirmValueChange = { dismissValue ->
             if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                // Mark as being deleted
-                isBeingDeleted = true
-                // Delete from Firebase
-                viewModel.deleteHistoricalPeriod(period.id)
+                // Just delegate to the viewModel and don't maintain local state
+                coroutineScope.launch {
+                    // Let animation complete before actually deleting
+                    delay(300)
+                    viewModel.deleteHistoricalPeriod(period.id)
+                }
                 true
             } else {
                 false

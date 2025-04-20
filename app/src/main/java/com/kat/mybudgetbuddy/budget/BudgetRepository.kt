@@ -531,14 +531,36 @@ class BudgetRepository {
 
             val database = Firebase.database
 
-            // First add to historical node
+            // Check if period is empty (similar to your Swift code)
+            if (budgetPeriod.incomes.isEmpty() &&
+                budgetPeriod.fixedExpenses.isEmpty() &&
+                budgetPeriod.variableExpenses.isEmpty()) {
+
+                // Just remove from active periods without saving to historical
+                val activeRef = database.reference
+                    .child("budgetPeriods")
+                    .child(userId)
+                    .child(budgetPeriod.id)
+
+                activeRef.removeValue().await()
+                Log.d("BudgetRepository", "Removed empty period without saving to historical")
+                return true
+            }
+
+            // First check if it already exists in historical
             val historicalRef = database.reference
                 .child("historicalPeriods")
                 .child(userId)
                 .child(budgetPeriod.id)
 
+            val snapshot = historicalRef.get().await()
+            if (snapshot.exists()) {
+                Log.d("BudgetRepository", "Period already exists in historical: ${budgetPeriod.id}")
+                return true
+            }
+
+            // Continue with saving as you already have
             historicalRef.setValue(budgetPeriod.toDictionary()).await()
-            Log.d("BudgetRepository", "Successfully saved period ${budgetPeriod.id} to historical node")
 
             // Then remove from active periods
             val activeRef = database.reference
@@ -547,7 +569,6 @@ class BudgetRepository {
                 .child(budgetPeriod.id)
 
             activeRef.removeValue().await()
-            Log.d("BudgetRepository", "Successfully removed period ${budgetPeriod.id} from active node")
 
             true
         } catch (e: Exception) {

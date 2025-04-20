@@ -235,31 +235,36 @@ class BudgetManager : ViewModel() {
     }
 
     fun deleteHistoricalPeriod(periodId: String) {
-        // Keep track of items being deleted to prevent visual glitches
-        val currentList = _historicalPeriods.value.toMutableList()
+        // Don't filter the list yet - just mark what we're deleting
+        val periodBeingDeleted = periodId
 
-        // Immediately remove from UI list
-        val updatedList = currentList.filter { it.id != periodId }
-        _historicalPeriods.value = updatedList
-
-        // Then delete from Firebase
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
+                Log.d("BudgetManager", "Starting deletion of period $periodId")
+
+                // Only now update the UI list - with very specific filtering
+                val currentList = _historicalPeriods.value
+                val updatedList = currentList.filter { it.id != periodBeingDeleted }
+
+                // Log before/after counts to verify
+                Log.d("BudgetManager", "Before deletion: ${currentList.size} periods")
+                Log.d("BudgetManager", "After filtering: ${updatedList.size} periods")
+
+                // Update the list
+                _historicalPeriods.value = updatedList
+
+                // Now delete from Firebase
                 val success = repository.deleteHistoricalPeriod(periodId)
 
                 if (!success) {
-                    // If deletion failed, restore the item to the list
-                    withContext(Dispatchers.Main) {
-                        _historicalPeriods.value = currentList
-                    }
-                    Log.e("BudgetManager", "Failed to delete period $periodId")
+                    // If deletion failed, reload the entire list to be safe
+                    Log.e("BudgetManager", "Deletion failed, reloading periods")
+                    loadHistoricalPeriods()
                 }
             } catch (e: Exception) {
-                // If error occurred, restore the item to the list
-                withContext(Dispatchers.Main) {
-                    _historicalPeriods.value = currentList
-                }
-                Log.e("BudgetManager", "Error deleting historical period: ${e.message}")
+                Log.e("BudgetManager", "Error in deletion process: ${e.message}")
+                // On any error, reload entire list to ensure consistency
+                loadHistoricalPeriods()
             }
         }
     }
