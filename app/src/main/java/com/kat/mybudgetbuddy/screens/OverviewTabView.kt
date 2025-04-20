@@ -57,6 +57,7 @@ fun OverviewTabView(
     val nonEmptyPeriods = historicalPeriods.filter {
         it.incomes.isNotEmpty() || it.fixedExpenses.isNotEmpty() || it.variableExpenses.isNotEmpty()
     }
+    val currentPeriod by viewModel.currentPeriod.observeAsState()
 
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -66,7 +67,9 @@ fun OverviewTabView(
     ) {
         Spacer(modifier = Modifier.height(26.dp))
 
-        SummaryBox(period = period, isCurrent = true)
+        currentPeriod?.let { period ->
+            SummaryBox(period = period, isCurrent = true)
+        }
 
         Spacer(modifier = Modifier.height(26.dp))
 

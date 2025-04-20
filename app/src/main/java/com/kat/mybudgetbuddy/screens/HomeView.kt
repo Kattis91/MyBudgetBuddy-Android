@@ -159,14 +159,10 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                         }
                         composable("periodDetail/{periodId}") { backStackEntry ->
                             val periodId = backStackEntry.arguments?.getString("periodId")
-
-                            // Fetch the period based on the periodId
-                            val period = viewModel.getPeriodById(periodId)
-
-                            period?.let {
-                                PeriodDetailView(period = it, navController = navController)
-                            } ?: run {
-                                Text("Period not found") // Handle the case where period is null
+                            if (periodId != null) {
+                                PeriodDetailView(periodId = periodId, navController = navController)
+                            } else {
+                                Text("Invalid period ID")
                             }
                         }
 
