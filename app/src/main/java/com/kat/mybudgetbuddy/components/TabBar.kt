@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,13 +48,15 @@ fun TabBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val isDarkMode = isSystemInDarkTheme()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(90.dp),
     ) {
         Surface(
-            color = Color(0xFFF5F1FB),
+            color = if (isDarkMode) Color.Black else Color(0xFFF5F1FB),
             tonalElevation = 4.dp,
             shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
             modifier = Modifier
@@ -94,7 +97,7 @@ fun TabBar(navController: NavController) {
                     Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                         FloatingActionButton(
                             onClick = { navController.navigate(items[index].route) },
-                            containerColor = Color.White,
+                            containerColor = if (isDarkMode) Color.Black.copy(alpha = 0.4f) else Color.White,
                             contentColor = colorResource(id = R.color.expense_color),
                             shape = CircleShape,
                             elevation = FloatingActionButtonDefaults.elevation(8.dp),
