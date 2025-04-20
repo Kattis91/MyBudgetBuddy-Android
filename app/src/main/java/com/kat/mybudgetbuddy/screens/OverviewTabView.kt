@@ -55,6 +55,8 @@ fun OverviewTabView(
     Column(
         modifier = Modifier.padding(horizontal = 18.dp)
     ) {
+        Spacer(modifier = Modifier.height(26.dp))
+
         SummaryBox(period = period, isCurrent = true)
 
         Spacer(modifier = Modifier.height(26.dp))
