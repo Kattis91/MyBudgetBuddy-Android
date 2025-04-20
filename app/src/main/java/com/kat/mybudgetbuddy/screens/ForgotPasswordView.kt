@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ fun ForgotPasswordScreen(
     onDismiss: () -> Unit,
     deletingAccountReset : Boolean
 ) {
+    val isDarkMode = isSystemInDarkTheme()
 
     var email by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
@@ -82,7 +84,7 @@ fun ForgotPasswordScreen(
                         text = "Reset password",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 50.dp),
-                        color = colorResource(id = R.color.text_color)
+                        color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                     )
                 }
 

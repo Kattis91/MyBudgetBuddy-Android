@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,8 @@ import com.kat.mybudgetbuddy.components.CustomButton
 @Composable
 fun UnloggedScreen(navController: NavController) {
 
+    val isDarkMode = isSystemInDarkTheme()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -48,7 +51,7 @@ fun UnloggedScreen(navController: NavController) {
         Text(
             "MyBudgetBuddy",
             fontSize = 30.sp,
-            color = colorResource(id = R.color.text_color),
+            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
             modifier = Modifier
                 .padding(top = 55.dp)
         )
@@ -56,7 +59,7 @@ fun UnloggedScreen(navController: NavController) {
         Text(
             "Managing Money shouldn't be hard",
             fontSize = 20.sp,
-            color = colorResource(id = R.color.text_color),
+            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(bottom = 10.dp)

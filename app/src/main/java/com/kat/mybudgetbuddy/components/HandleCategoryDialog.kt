@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +45,7 @@ fun HandleCategoryDialog(
     errorMessage: String = "",
     onErrorMessageChange: (String) -> Unit
 ) {
+    val isDarkMode = isSystemInDarkTheme()
     var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
 
     val titleText = if (isEditing) "Editing" else "Adding"
@@ -91,14 +94,14 @@ fun HandleCategoryDialog(
                         text = titleText,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 5.dp),
-                        color = colorResource(id = R.color.text_color)
+                        color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                     )
 
                     if (categoryTypeText.isNotEmpty()) {
                         Text(
                             text = categoryTypeText,
                             style = MaterialTheme.typography.titleMedium,
-                            color = colorResource(id = R.color.text_color),
+                            color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                             modifier = Modifier.padding(bottom = 10.dp),
                             fontWeight = FontWeight.Bold
                         )

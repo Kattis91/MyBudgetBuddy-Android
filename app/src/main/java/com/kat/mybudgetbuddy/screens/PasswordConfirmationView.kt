@@ -1,6 +1,7 @@
 package com.kat.mybudgetbuddy.screens
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +48,8 @@ fun PasswordConfirmationView(
     var errorMessage by remember { mutableStateOf("") }
     var successMessage by remember { mutableStateOf("") }
 
+    val isDarkMode = isSystemInDarkTheme()
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -82,7 +85,7 @@ fun PasswordConfirmationView(
                         text = "Confirm Deletion",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 50.dp),
-                        color = colorResource(id = R.color.text_color)
+                        color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                     )
                 }
 

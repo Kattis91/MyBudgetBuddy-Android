@@ -172,7 +172,7 @@ fun InvoiceReminder(
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         "Due to:",
-                        color = Color.Black
+                        color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                     )
                 }
 
