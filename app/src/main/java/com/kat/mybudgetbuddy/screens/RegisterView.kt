@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -45,126 +48,142 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
     var confirmPasswordErrorMessage by remember { mutableStateOf("") }
     var generalErrorMessage by remember { mutableStateOf("") }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .imePadding()
     ) {
-
-        Icon(
-            painter = painterResource(id = R.drawable.savings),
-            contentDescription = "App Logo",
-            modifier = Modifier
-                .height(200.dp)
-                .width(200.dp)
-                .padding(bottom = 16.dp),
-            tint = Color.Unspecified
-        )
-
-        Spacer(modifier = Modifier.height(70.dp))
-
-        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
-            CustomTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = "Email",
-                icon = Icons.Default.Email,
-                onChange = {
-                    emailErrorMessage = ""
-                }
-            )
-        }
-
-        Box(modifier = Modifier
-            .heightIn(min = 30.dp)
-            .align(Alignment.Start)
-            .padding(start = 30.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize().imePadding()
         ) {
-            if (emailErrorMessage.isNotEmpty()) {
-                Text(text = emailErrorMessage,
-                    color = colorResource(id = R.color.error_message_color)
+            Icon(
+                painter = painterResource(id = R.drawable.savings),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .height(200.dp)
+                    .width(200.dp)
+                    .padding(bottom = 16.dp),
+                tint = Color.Unspecified
+            )
+
+            Spacer(modifier = Modifier.height(70.dp))
+
+            Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+                CustomTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = "Email",
+                    icon = Icons.Default.Email,
+                    onChange = {
+                        emailErrorMessage = ""
+                    }
                 )
             }
-        }
 
-        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
-            CustomTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = "Password",
-                icon = Icons.Default.Lock,
-                onChange = {
-                    passwordErrorMessage = ""
-                },
-                isSecure = true
-            )
-        }
-
-        Box(modifier = Modifier
-            .heightIn(min = 30.dp)
-            .align(Alignment.Start)
-            .padding(start = 30.dp)
-        ) {
-            if (passwordErrorMessage.isNotEmpty()) {
-                Text(text = passwordErrorMessage,
-                    color = colorResource(id = R.color.error_message_color))
-            }
-        }
-
-        Box(modifier = Modifier.padding(horizontal = 30.dp)) {
-            CustomTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = "Confirm Password",
-                icon = Icons.Default.Lock,
-                onChange = {
-                    confirmPasswordErrorMessage = ""
-                },
-                isSecure = true
-            )
-        }
-
-        Box(modifier = Modifier
-            .heightIn(min = 30.dp)
-            .align(Alignment.Start)
-            .padding(start = 30.dp)
-        ) {
-            if (confirmPasswordErrorMessage.isNotEmpty()) {
-                Text(text = confirmPasswordErrorMessage,
-                    color = colorResource(id = R.color.error_message_color))
-            }
-        }
-
-        Box(modifier = Modifier.heightIn(min = 50.dp).padding(horizontal = 60.dp)) {
-            if (generalErrorMessage.isNotEmpty()) {
-                Text(text = generalErrorMessage,
-                    color = colorResource(id = R.color.error_message_color))
-            }
-        }
-
-        CustomButton(
-            buttonText = "Sign Up",
-            onClick = {
-                emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
-                passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
-                confirmPasswordErrorMessage = ValidationUtils.validateConfirmPassword(password, confirmPassword) ?: ""
-
-                // Check if there are any validation errors
-                if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty() && confirmPasswordErrorMessage.isEmpty()) {
-                    // Proceed with the register or login process
-                    budgetViewModel.register(email, password) { firebaseError ->
-                        generalErrorMessage = firebaseError ?: ""
-                    }
+            Box(
+                modifier = Modifier
+                    .heightIn(min = 30.dp)
+                    .align(Alignment.Start)
+                    .padding(start = 30.dp)
+            ) {
+                if (emailErrorMessage.isNotEmpty()) {
+                    Text(
+                        text = emailErrorMessage,
+                        color = colorResource(id = R.color.error_message_color)
+                    )
                 }
-            },
-            isIncome = false,
-            isExpense = true,
-            isThirdButton = false,
-            width = 200
-        )
+            }
 
+            Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+                CustomTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = "Password",
+                    icon = Icons.Default.Lock,
+                    onChange = {
+                        passwordErrorMessage = ""
+                    },
+                    isSecure = true
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .heightIn(min = 30.dp)
+                    .align(Alignment.Start)
+                    .padding(start = 30.dp)
+            ) {
+                if (passwordErrorMessage.isNotEmpty()) {
+                    Text(
+                        text = passwordErrorMessage,
+                        color = colorResource(id = R.color.error_message_color)
+                    )
+                }
+            }
+
+            Box(modifier = Modifier.padding(horizontal = 30.dp)) {
+                CustomTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = "Confirm Password",
+                    icon = Icons.Default.Lock,
+                    onChange = {
+                        confirmPasswordErrorMessage = ""
+                    },
+                    isSecure = true
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .heightIn(min = 30.dp)
+                    .align(Alignment.Start)
+                    .padding(start = 30.dp)
+            ) {
+                if (confirmPasswordErrorMessage.isNotEmpty()) {
+                    Text(
+                        text = confirmPasswordErrorMessage,
+                        color = colorResource(id = R.color.error_message_color)
+                    )
+                }
+            }
+
+            Box(modifier = Modifier.heightIn(min = 50.dp).padding(horizontal = 60.dp)) {
+                if (generalErrorMessage.isNotEmpty()) {
+                    Text(
+                        text = generalErrorMessage,
+                        color = colorResource(id = R.color.error_message_color)
+                    )
+                }
+            }
+
+            CustomButton(
+                buttonText = "Sign Up",
+                onClick = {
+                    emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
+                    passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""
+                    confirmPasswordErrorMessage =
+                        ValidationUtils.validateConfirmPassword(password, confirmPassword) ?: ""
+
+                    // Check if there are any validation errors
+                    if (emailErrorMessage.isEmpty() && passwordErrorMessage.isEmpty() && confirmPasswordErrorMessage.isEmpty()) {
+                        // Proceed with the register or login process
+                        budgetViewModel.register(email, password) { firebaseError ->
+                            generalErrorMessage = firebaseError ?: ""
+                        }
+                    }
+                },
+                isIncome = false,
+                isExpense = true,
+                isThirdButton = false,
+                width = 200
+            )
+
+        }
     }
-
 }
 
 @Preview(showBackground = true)
