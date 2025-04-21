@@ -204,7 +204,7 @@ fun OutcomeBox(
         ) {
             StyledCard {
                 Text(
-                     "The percentage shows how much of your income you've saved. Try setting a savings goal for your next period",
+                     "This percentage shows how much of your income has been saved or spent. It's a great way to see how you're doing!",
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .widthIn(max = 300.dp), // Limit width to keep card compact

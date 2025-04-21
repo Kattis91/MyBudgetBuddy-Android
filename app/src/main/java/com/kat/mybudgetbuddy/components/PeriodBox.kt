@@ -123,7 +123,7 @@ fun PeriodBox(
         ) {
             StyledCard {
                 Text(
-                    "Tap 'Start New Period' to close the current budget cycle and begin a fresh one. The one that is current now will be saved as historical in the overview tab.",
+                    "Tap 'Start New Period' when you're ready for a fresh budget slate. Pro tip: All your budget history is saved in the Overview tab for those 'how did I do last month?' moments",
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .widthIn(max = 300.dp), // Limit width to keep card compact

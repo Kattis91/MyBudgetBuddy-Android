@@ -145,8 +145,8 @@ fun StatBox(
         ) {
             StyledCard {
                 Text(
-                    if (isIncome) "To add an income go to the Incomes tab below" else
-                        "To add an expense go to the Expenses tab below",
+                    if (isIncome) "Tap the incomes tab to track your latest earnings" else
+                        "Tap the expenses tab to track your latest purchase",
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .widthIn(max = 200.dp), // Limit width to keep card compact
