@@ -29,8 +29,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.OutcomeBox
+import com.kat.mybudgetbuddy.components.PeriodBox
 import com.kat.mybudgetbuddy.components.StatBox
 import com.kat.mybudgetbuddy.components.StyledCard
+import com.kat.mybudgetbuddy.components.SummaryBox
 import com.kat.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
@@ -67,29 +69,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     currentPeriod?.let { period ->
-                        StyledCard {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    "Current Budget Period",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
-                                    modifier = Modifier.padding(bottom = 10.dp)
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Text(
-                                    formattedDateRange(period.startDate, period.endDate),
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 23.sp,
-                                    color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
-                                )
-                            }
-                        }
+                        PeriodBox(period = period)
                     } ?: run {
                         Text(
                             "No active budget period",
