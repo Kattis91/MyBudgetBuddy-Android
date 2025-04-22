@@ -54,12 +54,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.CustomAlertDialog
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.CustomListView
 import com.kat.mybudgetbuddy.components.CustomTextField
 import com.kat.mybudgetbuddy.components.DatePickerButton
-import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.models.Invoice
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -271,7 +271,7 @@ fun InvoiceReminder(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SegmentedButtonRow(
+        AnimatedSegmentedButtonRow (
             options = listOf("Unprocessed Invoices", "Processed Invoices"),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->

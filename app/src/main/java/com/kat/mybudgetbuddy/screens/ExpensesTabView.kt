@@ -1,5 +1,8 @@
 package com.kat.mybudgetbuddy.screens
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,8 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.filled.RemoveCircleOutline
@@ -37,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.CategoryMenu
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.CustomListView
@@ -143,7 +151,7 @@ fun ExpensesTabView(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        SegmentedButtonRow(
+        AnimatedSegmentedButtonRow(
             options = listOf("Fixed Expenses", "Variable Expenses"),
             selectedIndex = if (selectedExpenseType == ExpenseViewType.FIXED) 0 else 1,
             onSelectionChanged = { index ->

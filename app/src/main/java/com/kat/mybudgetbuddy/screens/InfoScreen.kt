@@ -1,15 +1,12 @@
 package com.kat.mybudgetbuddy.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,9 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kat.mybudgetbuddy.R
+import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.FeatureCard
 import com.kat.mybudgetbuddy.components.SectionHeader
-import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.data.aboutTheDeveloper
 import com.kat.mybudgetbuddy.data.extraFeatures
 import com.kat.mybudgetbuddy.data.features
@@ -83,7 +80,7 @@ fun InfoScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        SegmentedButtonRow(
+        AnimatedSegmentedButtonRow (
             options = listOf("About", "Extra", "Development"),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->

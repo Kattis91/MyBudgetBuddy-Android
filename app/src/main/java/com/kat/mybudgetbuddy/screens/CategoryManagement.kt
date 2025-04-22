@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.CategoryList
 import com.kat.mybudgetbuddy.components.HandleCategoryDialog
 import com.kat.mybudgetbuddy.components.SegmentedButtonRow
@@ -91,7 +92,7 @@ fun CategoryManagement(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                SegmentedButtonRow(
+                AnimatedSegmentedButtonRow(
                     options = listOf("Incomes", "Fixed", "Variable"),
                     selectedIndex = selectedTabIndex,
                     onSelectionChanged = { index ->
