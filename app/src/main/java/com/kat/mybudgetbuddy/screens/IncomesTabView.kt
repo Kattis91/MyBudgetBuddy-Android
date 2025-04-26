@@ -151,7 +151,9 @@ fun IncomesTabView(
                 newCategory = newCategory,
                 onNewCategoryChange = {
                     newCategory = it
-                }
+                },
+                viewModel = viewModel,
+                categoryType = CategoryType.INCOME
             )
         }
 

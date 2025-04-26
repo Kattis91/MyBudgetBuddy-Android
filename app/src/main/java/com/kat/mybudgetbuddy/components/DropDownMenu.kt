@@ -27,6 +27,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +52,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.models.CategoryType
 
 @Composable
 fun CategoryMenu(
@@ -59,7 +64,9 @@ fun CategoryMenu(
     showNewCategoryField: Boolean,
     onShowNewCategoryFieldChange: (Boolean) -> Unit,
     newCategory: String = "",
-    onNewCategoryChange: (String) -> Unit = {}
+    onNewCategoryChange: (String) -> Unit = {},
+    categoryType: CategoryType,
+    viewModel: BudgetManager = viewModel()
 ) {
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -76,6 +83,26 @@ fun CategoryMenu(
             Color(red = 240f/255f, green = 242f/255f, blue = 240f/255f)
         )
     }
+    // Load categories when the dropdown opens
+    LaunchedEffect(expanded) {
+        if (expanded) {
+            when (categoryType) {
+                CategoryType.INCOME -> viewModel.loadIncomeCategories()
+                CategoryType.FIXED_EXPENSE -> viewModel.loadFixedExpenseCategories()
+                CategoryType.VARIABLE_EXPENSE -> viewModel.loadVariableExpenseCategories()
+            }
+        }
+    }
+
+    // Always get the latest categories from the ViewModel
+    val latestCategories by when (categoryType) {
+        CategoryType.INCOME -> viewModel.incomeCategories.collectAsState()
+        CategoryType.FIXED_EXPENSE -> viewModel.fixedExpenseCategories.collectAsState()
+        CategoryType.VARIABLE_EXPENSE -> viewModel.variableExpenseCategories.collectAsState()
+    }
+
+    // Use latestCategories instead of the passed categories parameter
+    val currentCategories = latestCategories
 
     Box(modifier = Modifier.fillMaxWidth()) {
         // Keep Card but with Swift-like styling
@@ -204,7 +231,7 @@ fun CategoryMenu(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         // Regular categories
-                        categories.forEachIndexed { index, category ->
+                        currentCategories.forEachIndexed { index, category ->
                             CustomDropdownItem(
                                 text = category,
                                 onClick = {
@@ -213,7 +240,7 @@ fun CategoryMenu(
                                 }
                             )
 
-                            if (index < categories.size - 1) {
+                            if (index < currentCategories.size - 1) {
                                 HorizontalDivider(
                                     modifier = Modifier.padding(horizontal = 8.dp),
                                     thickness = 0.5.dp,
@@ -223,7 +250,7 @@ fun CategoryMenu(
                         }
 
                         // Add divider before "+ Add new category" option
-                        if (categories.isNotEmpty()) {
+                        if (currentCategories.isNotEmpty()) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(horizontal = 8.dp),
                                 thickness = 0.5.dp,

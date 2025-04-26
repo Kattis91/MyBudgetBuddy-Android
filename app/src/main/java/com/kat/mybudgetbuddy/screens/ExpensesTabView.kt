@@ -1,8 +1,5 @@
 package com.kat.mybudgetbuddy.screens
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,12 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.filled.RemoveCircleOutline
@@ -49,7 +42,6 @@ import com.kat.mybudgetbuddy.components.CategoryMenu
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.CustomListView
 import com.kat.mybudgetbuddy.components.CustomTextField
-import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.components.StyledCard
 import com.kat.mybudgetbuddy.models.CategoryType
 import com.kat.mybudgetbuddy.models.ExpenseViewType
@@ -187,7 +179,9 @@ fun ExpensesTabView(
                 newCategory = newCategory,
                 onNewCategoryChange = {
                     newCategory = it
-                }
+                },
+                viewModel = viewModel,
+                categoryType = if (selectedExpenseType == ExpenseViewType.FIXED) CategoryType.FIXED_EXPENSE else CategoryType.VARIABLE_EXPENSE
             )
         }
 
