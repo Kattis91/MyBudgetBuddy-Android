@@ -92,17 +92,14 @@ fun InfoScreen(
 
         when (selectedTabIndex) {
             0 -> {
-                SectionHeader(title = "How it works", textColor = textColor)
                 features.forEach { FeatureCard(it) }
 
             }
             1 -> {
-                SectionHeader(title = "Extra Features", textColor = textColor)
                 extraFeatures.forEach { FeatureCard(it) }
 
             }
             2 -> {
-                SectionHeader(title = "The Developer", textColor = textColor)
                 aboutTheDeveloper.forEach { FeatureCard(it) }
             }
         }
