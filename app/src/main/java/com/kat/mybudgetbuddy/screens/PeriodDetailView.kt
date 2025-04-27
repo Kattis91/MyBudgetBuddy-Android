@@ -23,8 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kat.mybudgetbuddy.budget.BudgetManager
+import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.CustomListView
-import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.components.SummaryBox
 
 @Composable
@@ -69,7 +69,7 @@ fun PeriodDetailView(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        SegmentedButtonRow(
+        AnimatedSegmentedButtonRow(
             options = listOf("Incomes", "Fixed", "Variable"),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
