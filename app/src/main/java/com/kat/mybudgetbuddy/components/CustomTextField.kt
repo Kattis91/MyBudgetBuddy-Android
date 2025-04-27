@@ -96,7 +96,7 @@ fun CustomTextField(
             .onGloballyPositioned { coordinates ->
                 rowReference.value = coordinates
             }
-            .height(45.dp)
+            .height(48.dp)
     ) {
         BasicTextField(
             value = value,
