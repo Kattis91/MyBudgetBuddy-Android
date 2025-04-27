@@ -196,6 +196,7 @@ fun IncomesTabView(
                                     viewModel.addIncome(income, newCategory)
                                     showNewCategoryField = false
                                     newCategory = ""
+                                    selectedCategory = ""
                                 } else if (newCategory in categories) {
                                     errorMessage = "Category already exists"
                                 } else {
