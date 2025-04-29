@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,6 +21,7 @@ import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -55,6 +55,7 @@ fun TabBar(navController: NavController) {
             .fillMaxWidth()
             .height(90.dp),
     ) {
+        // Background surface
         Surface(
             color = if (isDarkMode) Color.Black else Color(0xFFF5F1FB),
             tonalElevation = 4.dp,
@@ -63,60 +64,67 @@ fun TabBar(navController: NavController) {
                 .fillMaxWidth()
                 .height(70.dp)
                 .align(Alignment.BottomCenter)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                items.forEach { item ->
-                    val isSelected = currentRoute == item.route
-                    if (!isSelected) {
-                        NavigationIcon(item, isSelected = false) {
-                            navController.navigate(item.route)
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.width(48.dp)) // space for FAB
-                    }
-                }
-            }
-        }
+        ) {}
 
-        val activeIndex = items.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
+        // Single row for all tab items - fixed positions
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 15.dp),
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 5.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Bottom
         ) {
-            repeat(items.size) { index ->
-                if (index == activeIndex) {
-                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            items.forEachIndexed { index, item ->
+                val isSelected = currentRoute == item.route
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.width(56.dp)
+                ) {
+                    // Tab icon - either floating or regular
+                    if (isSelected) {
                         FloatingActionButton(
-                            onClick = { navController.navigate(items[index].route) },
+                            onClick = { /* Already selected */ },
                             containerColor = if (isDarkMode) Color.Black.copy(alpha = 0.4f) else Color.White,
                             contentColor = colorResource(id = R.color.expense_color),
                             shape = CircleShape,
                             elevation = FloatingActionButtonDefaults.elevation(8.dp),
-                            modifier = Modifier.size(56.dp)
+                            modifier = Modifier
+                                .size(56.dp)
+                                .offset(y = (-10).dp)
                         ) {
                             Icon(
-                                imageVector = items[index].icon,
-                                contentDescription = ""
+                                imageVector = item.icon,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(
-                            text = items[index].title,
-                            color = colorResource(id = R.color.expense_color),
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                    } else {
+                        IconButton(
+                            onClick = { navController.navigate(item.route) },
+                            modifier = Modifier.size(48.dp).padding(top = 10.dp)
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.background_tint_dark),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
-                } else {
-                    Spacer(modifier = Modifier.width(56.dp))
+
+                    // Tab text - consistently positioned
+                    Text(
+                        text = item.title,
+                        color = if (isSelected)
+                            colorResource(id = R.color.expense_color)
+                        else
+                            colorResource(id = R.color.background_tint_dark),
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(bottom = 10.dp)
+                    )
                 }
             }
         }
