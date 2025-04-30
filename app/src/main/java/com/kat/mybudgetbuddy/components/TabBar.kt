@@ -47,6 +47,8 @@ fun TabBar(navController: NavController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    // Check if current route is a period detail page
+    val isPeriodDetailRoute = currentRoute?.startsWith("periodDetail/") ?: false
 
     val isDarkMode = isSystemInDarkTheme()
 
@@ -76,7 +78,12 @@ fun TabBar(navController: NavController) {
             verticalAlignment = Alignment.Bottom
         ) {
             items.forEachIndexed { index, item ->
-                val isSelected = currentRoute == item.route
+                // Consider period detail routes as part of the overview tab
+                val isSelected = if (item.route == "overview" && isPeriodDetailRoute) {
+                    true
+                } else {
+                    currentRoute == item.route
+                }
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,7 +93,11 @@ fun TabBar(navController: NavController) {
                     // Tab icon - either floating or regular
                     if (isSelected) {
                         FloatingActionButton(
-                            onClick = { /* Already selected */ },
+                            onClick = {
+                                if (isPeriodDetailRoute && item.route == "overview") {
+                                    navController.popBackStack(item.route, false)
+                                }
+                            },
                             containerColor = if (isDarkMode) Color.Black.copy(alpha = 0.4f) else Color(0xFFF5F1FB),
                             contentColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                             shape = CircleShape,
