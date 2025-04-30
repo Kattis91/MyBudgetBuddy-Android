@@ -87,8 +87,8 @@ fun TabBar(navController: NavController) {
                     if (isSelected) {
                         FloatingActionButton(
                             onClick = { /* Already selected */ },
-                            containerColor = if (isDarkMode) Color.Black.copy(alpha = 0.4f) else Color.White,
-                            contentColor = colorResource(id = R.color.expense_color),
+                            containerColor = if (isDarkMode) Color.Black.copy(alpha = 0.4f) else Color(0xFFF5F1FB),
+                            contentColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                             shape = CircleShape,
                             elevation = FloatingActionButtonDefaults.elevation(8.dp),
                             modifier = Modifier
@@ -119,7 +119,7 @@ fun TabBar(navController: NavController) {
                     Text(
                         text = item.title,
                         color = if (isSelected)
-                            colorResource(id = R.color.expense_color)
+                            if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                         else
                             colorResource(id = R.color.background_tint_dark),
                         style = MaterialTheme.typography.labelSmall,
