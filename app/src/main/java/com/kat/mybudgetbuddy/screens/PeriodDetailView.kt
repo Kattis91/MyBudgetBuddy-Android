@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,7 +77,7 @@ fun PeriodDetailView(
         Spacer(modifier = Modifier.height(20.dp))
 
         AnimatedSegmentedButtonRow(
-            options = listOf("Incomes", "Fixed", "Variable"),
+            options = listOf(stringResource(R.string.incomes), stringResource(R.string.fixed), stringResource(R.string.variable)),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
                 selectedTabIndex = index

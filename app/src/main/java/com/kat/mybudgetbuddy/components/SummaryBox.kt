@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +50,7 @@ fun SummaryBox(
 
     StyledCard {
         Text(
-            if (isCurrent) "Current Period" else "",
+            if (isCurrent) stringResource(R.string.current_period) else "",
             fontSize = 21.sp,
             color = textColor,
             fontWeight = FontWeight.Bold
@@ -77,7 +78,7 @@ fun SummaryBox(
                     fontWeight = FontWeight.Bold
                 )
 
-                Text("Income", color = textColor)
+                Text(text = stringResource(R.string.income), color = textColor)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -92,7 +93,7 @@ fun SummaryBox(
                     fontWeight = FontWeight.Bold
                 )
 
-                Text("Expenses", color = textColor)
+                Text(stringResource(R.string.expenses), color = textColor)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -107,7 +108,7 @@ fun SummaryBox(
                     fontWeight = FontWeight.Bold
                 )
 
-                Text("Outcome", color = textColor)
+                Text(text = stringResource(R.string.outcome), color = textColor)
             }
         }
     }

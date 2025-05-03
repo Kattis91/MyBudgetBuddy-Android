@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,7 +76,7 @@ fun OverviewTabView(
 
         if (nonEmptyPeriods.isNotEmpty()) {
             Text(
-                "Historical Periods:",
+                text = stringResource(R.string.historical_periods),
                 fontSize = 23.sp,
                 color = textColor
             )
@@ -90,14 +91,14 @@ fun OverviewTabView(
                     contentDescription = "Back"
                 )
                 Text(
-                    "Swipe left to delete periods",
+                    text = stringResource(R.string.swipe_left_to_delete_periods),
                     fontSize = 14.sp,
                     color = textColor
                 )
             }
         } else {
             Text(
-                "You have no historical periods right now.",
+                text = stringResource(R.string.you_have_no_historical_periods),
                 style = TextStyle(textAlign = TextAlign.Center),
                 fontSize = 23.sp,
                 color = textColor
