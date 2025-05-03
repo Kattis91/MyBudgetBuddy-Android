@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Format patterns -->
+    <string name="format_negative_decimal">-%1$.2f</string>
+    <string name="format_decimal">%1$.2f</string>
+    <string name="format_percentage">%1$.1f%%</string>
+    <string name="format_at_symbol">%1$@</string>
+
+    <!-- Basic UI elements -->
+    <string name="about">Om</string>
+    <string name="add_expense">Tilføj udgift</string>
+    <string name="add_fixed_expense_category">Tilføj Fast Udgiftskategori</string>
+    <string name="add_income">Tilføj indkomst</string>
+    <string name="add_income_category">Tilføj Indkomstkategori</string>
+    <string name="add_new_period">Tilføj ny periode</string>
+    <string name="add_variable_expense_category">Tilføj Variabel Udgiftskategori</string>
+    <string name="add_your_income_and_expenses">Tilføj dine indtægter og udgifter, med udgifter kategoriseret som faste eller variable</string>
+
+    <!-- Amount validation -->
+    <string name="amount">Beløb</string>
+    <string name="amount_must_be_a_number">Beløbet skal være et tal.</string>
+    <string name="amount_must_be_greater_than_zero">Beløbet skal være større end nul.</string>
+
+    <!-- Confirmation dialogs -->
+    <string name="are_you_sure_delete">Er du sikker på, at du vil slette \"%1$@\"?</string>
+    <string name="are_you_sure_mark_as_processed">Er du sikker på, at du vil markere \"%1$@\" som behandlet?</string>
+    <string name="are_you_sure_sign_out">Er du sikker på, at du vil logge ud?</string>
+    <string name="are_you_sure_start_new_period">Er du sikker på, at du vil starte en ny budgetperiode? Bemærk venligst, at denne periode erstatter den nuværende.</string>
+
+    <!-- Budgeting -->
+    <string name="budgeting_made_easy">Budgettering gjort let, så du kan fokusere på det, der betyder mest for dig!</string>
+    <string name="business">Forretning</string>
+    <string name="cancel">Ophæve</string>
+    <string name="category">Kategori</string>
+    <string name="category_name">Kategorinavn</string>
+    <string name="child_benefit">Børneydelse</string>
+    <string name="choose_category">Vælg Kategori</string>
+    <string name="coming_budget_period">Kommende budgetperiode</string>
+    <string name="confirm_deletion">Bekræft sletning</string>
+    <string name="confirmation">Bekræftelse</string>
+    <string name="credits">Tak til</string>
+    <string name="current_budget_period">Nuværende budgetperiode</string>
+    <string name="current_password">Nuværende adgangskode</string>
+    <string name="current_period">Nuværende periode</string>
+    <string name="current_period_colon">Nuværende periode:</string>
+
+    <!-- Custom periods -->
+    <string name="customize_budget_periods">Tilpas dine egne budgetperioder: Vælg mellem månedlige, ugentlige eller endda 5-dages perioder for at matche dine behov.</string>
+
+    <!-- Various actions -->
+    <string name="delete">Slet</string>
+    <string name="delete_account">Slette Konto</string>
+    <string name="delete_with_password">Slet med adgangskode</string>
+    <string name="development">Udvikling</string>
+    <string name="dining_out">Restaurantbesøg</string>
+    <string name="done">Færdig</string>
+    <string name="due_to">Forfaldsdato:</string>
+    <string name="editing">Redigerer</string>
+    <string name="electricity">Elektricitet</string>
+    <string name="email_field_empty">E-mail-feltet må ikke være tomt.</string>
+    <string name="end_date">Slutdato</string>
+    <string name="enter_expense">Indtast udgift</string>
+
+    <!-- Enter Income/Expenses -->
+    <string name="enter_income">Indtast indkomst</string>
+    <string name="entertainment">Underholdning</string>
+    <string name="expense_types">Udgiftstyper</string>
+    <string name="expenses">Udgifter</string>
+    <string name="extra">Ekstra</string>
+
+    <!-- Categories -->
+    <string name="failed_to_add_category">Kunne ikke tilføje kategori</string>
+    <string name="fixed">Faste</string>
+    <string name="fixed_expense_category">Fast Udgiftskategori</string>
+    <string name="fixed_expenses">Faste Udgifter</string>
+
+    <!-- Authentication -->
+    <string name="forgot_password">Glemt adgangskode?</string>
+    <string name="go_back">Gå Tilbage</string>
+
+    <!-- Common expense categories -->
+    <string name="groceries">Dagligvarer</string>
+    <string name="heat">Varme</string>
+    <string name="historical_periods">Historiske Perioder</string>
+    <string name="home">Hjem</string>
+    <string name="housing_insurance">Boligforsikring</string>
+
+    <!-- About developer -->
+    <string name="about_developer">Jeg er Ekaterina Durneva Svedmark, skaberen af denne app og en håbefuld app-udvikler. Dette er mit tredje projekt og min første uafhængige app, bygget fra koncept til lancering.</string>
+
+    <!-- Income related -->
+    <string name="include_fixed_expenses">Inkluder Faste Udgifter</string>
+    <string name="include_incomes">Inkluder Indkomster</string>
+    <string name="income">Indkomst</string>
+    <string name="income_category">Indkomstkategori</string>
+    <string name="incomes">Indtægt</string>
+
+    <!-- Miscellaneous -->
+    <string name="info">Info</string>
+    <string name="insurance">Forsikring</string>
+    <string name="invalid_budget_period">Ugyldig budgetperiode</string>
+    <string name="invalid_email_format">Ugyldigt e-mail-format.</string>
+    <string name="invoice_reminders">Fakturapåmindelser</string>
+    <string name="invoice_status_change">Ændring af fakturastatus</string>
+
+    <!-- Main App -->
+    <string name="app_name">MyBudgetBuddy</string>
+    <string name="welcome">Velkommen til MyBudgetBuddy!</string>
+
+    <!-- Categories -->
+    <string name="add_new_category">Tilføj ny kategori</string>
+    <string name="categories">Kategorier</string>
+    <string name="manage_categories">Administrer Kategorier</string>
+    <string name="please_add_a_category">Tilføj venligst en kategori</string>
+    <string name="please_enter_a_category">Vælg venligst en kategori.</string>
+    <string name="please_select_a_category">Vælg venligst en kategori.</string>
+
+    <!-- Budget Period Management -->
+    <string name="start_new_period">Start ny periode</string>
+    <string name="start_date">Startdato</string>
+    <string name="period_dates">Periode Datoer</string>
+    <string name="new_period_created_successfully">Ny periode oprettet med succes!</string>
+    <string name="to_start_tracking">For at begynde at spore dit budget, skal du oprette din første budgetperiode.</string>
+    <string name="tap_start_new_period">Tryk på \'Start ny periode\', når du er klar til en ny budgetoverflade. Professionelt tip: Al din budgethistorik gemmes på fanen Oversigt for dem, \'hvordan klarede jeg mig i sidste måned?\' øjeblikke</string>
+    <string name="start_a_new_period">Start en ny periode for at fortsætte med at spore dit budget</string>
+    <string name="stay_in_control">Bevar kontrollen – Få rettidige påmindelser, når din budgetperiode slutter, så du kan planlægge fremad med tillid.</string>
+    <string name="your_last_budget_period_has_ended">Din sidste budgetperiode er slut</string>
+
+    <!-- Income & Expenses -->
+    <string name="total_income">Samlet indkomst:</string>
+    <string name="total_expense">Udgifter</string>
+    <string name="total_expenses">Samlet udgift:</string>
+    <string name="variable_expense_category">Variabel Udgiftskategori</string>
+    <string name="variable_expenses">Variable Udgifter</string>
+    <string name="swipe_left_to_delete_expenses">Stryg til venstre for at slette udgifter</string>
+    <string name="swipe_left_to_delete_incomes">Stryg til venstre for at slette indkomster</string>
+    <string name="tap_the_expenses_tab">Tryk på fanen Udgifter for at spore dine køb</string>
+    <string name="tap_the_incomes_tab">Tryk på fanen Indkomst for at spore din indtjening</string>
+    <string name="tap_the_amount">Tryk på beløbet</string>
+
+    <!-- Overview & Statistics -->
+    <string name="overview">Oversigt</string>
+    <string name="outcome">Udfald</string>
+    <string name="outcome_format">Udfald: %.2f</string>
+    <string name="this_percentage_shows">Denne procentdel viser, hvor meget af din indkomst, der er blevet sparet eller brugt. Det er en fantastisk måde at se, hvordan du klarer dig!</string>
+
+    <!-- Invoices Management -->
+    <string name="invoices">Fakturaer</string>
+    <string name="manage_invoices">Administrer fakturaer</string>
+    <string name="processed_invoices">Behandlede Fakturaer</string>
+    <string name="unprocessed_invoices">Ubehandlede Fakturaer</string>
+    <string name="mark_as_processed">Markér som behandlet</string>
+    <string name="scan_invoice">Scan Faktura</string>
+    <string name="scan_the_invoice">Scan fakturaen</string>
+    <string name="scanning_not_supported">Scanning understøttes ikke på denne enhed</string>
+    <string name="never_miss_a_payment">Gå aldrig glip af en betaling – Fakturapåmindelser sikrer, at du forbliver på sporet og stressfri, når det kommer til forfaldsdatoer.</string>
+
+    <!-- Security -->
+    <string name="password_field_cannot_be_empty">Kodeordsfeltet må ikke være tomt.</string>
+    <string name="password_must_be_6_plus_characters">Koden skal være på 6+ tegn.</string>
+    <string name="passwords_do_not_match">Koder stemmer ikke overens.</string>
+    <string name="reset_password">Nulstil adgangskode</string>
+    <string name="sign_out">Log ud</string>
+    <string name="type_delete_to_confirm">Skriv DELETE for at bekræfte</string>
+    <string name="warning_account_deletion">Advarsel: Sletning af konto</string>
+
+    <!-- Messages & Notifications -->
+    <string name="you_have_no_historical_periods">Du har ingen historiske perioder lige nu.</string>
+    <string name="you_have_no_processed_invoices">Du har i øjeblikket ingen behandlede fakturaer.</string>
+    <string name="you_have_no_unprocessed_invoices">Du har i øjeblikket ingen udestående fakturaer.</string>
+    <string name="this_action_cannot_be_undone">Denne handling kan ikke fortrydes. Alle dine data vil blive slettet permanent.</string>
+
+    <!-- Budget Management -->
+    <string name="keep_track_of_your_entire_budget">Hold styr på hele din budgethistorik, så du kan se præcis, hvor dine penge går hen.</string>
+    <string name="managing_money_shouldnt_be_hard">Det burde ikke være svært at administrere penge</string>
+    <string name="organize_your_finances">Organiser din økonomi bedre ved at tilføje dine egne kategorier, eller hold dig til standardkategorierne.</string>
+    <string name="preparing_your_budget_details">Forbereder dine budgetoplysninger...</string>
+    <string name="swipe_left_to_delete_periods">Stryg til venstre for at slette perioder</string>
+    <string name="transfer_settings">Overførselsindstillinger</string>
+
+    <!-- Common UI Elements -->
+    <string name="title">Titel</string>
+    <string name="please_enter_a_title">Indtast venligst en titel</string>
+    <string name="ok">OK</string>
+    <string name="yes">Ja</string>
+    <string name="save">Spare</string>
+    <string name="wifi">WiFi</string>
+    <string name="tap_the_due_date">Tryk på forfaldsdatoen</string>
+
+    <!-- Expense Categories -->
+    <string name="rent">Leje</string>
+    <string name="salary">Løn</string>
+    <string name="savings">Opsparing</string>
+    <string name="shopping">Shopping</string>
+    <string name="sickness_insurance">Sygeforsikring</string>
+    <string name="study_grant">Studielegat</string>
+    <string name="transport">Transportere</string>
+    <string name="water">Vand</string>
+    <string name="variable">Variable</string>
+</resources>

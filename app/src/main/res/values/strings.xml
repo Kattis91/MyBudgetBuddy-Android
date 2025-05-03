@@ -1,3 +1,199 @@
 <resources>
+    <!-- Format patterns -->
+    <string name="format_negative_decimal">-%1$.2f</string>
+    <string name="format_decimal">%1$.2f</string>
+    <string name="format_percentage">%1$.1f%%</string>
+    <string name="format_at_symbol">%1$@</string>
+
+    <!-- Basic UI elements -->
+    <string name="about">About</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="add_fixed_expense_category">Add Fixed Expense Category</string>
+    <string name="add_income">Add Income</string>
+    <string name="add_income_category">Add Income Category</string>
+    <string name="add_new_period">Start New Period</string>
+    <string name="add_variable_expense_category">Add Variable Expense Category</string>
+    <string name="add_your_income_and_expenses">Add your income and expenses, with expenses categorized as fixed or variable.</string>
+
+    <!-- Amount validation -->
+    <string name="amount">Amount</string>
+    <string name="amount_must_be_a_number">Amount must be a number.</string>
+    <string name="amount_must_be_greater_than_zero">Amount must be greater than zero.</string>
+
+    <!-- Confirmation dialogs -->
+    <string name="are_you_sure_delete">Are you sure you want to delete "%@"?</string>
+    <string name="are_you_sure_mark_as_processed">Are you sure you want to mark "%@" as processed?</string>
+    <string name="are_you_sure_sign_out">Are you sure you want to sign out?</string>
+    <string name="are_you_sure_start_new_period">Are you sure you want to start a new period? Please note that this period will replace the current one.</string>
+
+    <!-- Budgeting -->
+    <string name="budgeting_made_easy">Budgeting made easy, so you can focus on what matters most to you!</string>
+    <string name="business">Business</string>
+    <string name="cancel">Cancel</string>
+    <string name="category">Category</string>
+    <string name="category_name">Category Name</string>
+    <string name="child_benefit">Child Benefit</string>
+    <string name="choose_category">Choose Category</string>
+    <string name="coming_budget_period">Coming Budget Period</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="credits">Credits</string>
+    <string name="current_budget_period">Current Budget Period</string>
+    <string name="current_password">Current Password</string>
+    <string name="current_period">Current Period</string>
+    <string name="current_period_colon">Current Period:</string>
+
+    <!-- Custom periods -->
+    <string name="customize_budget_periods">Customize your own budget periods: choose from monthly, weekly, or even 5-day periods to match your needs.</string>
+
+    <!-- Various actions -->
+    <string name="delete">Delete</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_with_password">Delete with password</string>
+    <string name="development">Development</string>
+    <string name="dining_out">Dining Out</string>
+    <string name="done">Done</string>
+    <string name="due_to">Due to:</string>
+    <string name="editing">Editing</string>
+    <string name="electricity">Electricity</string>
+    <string name="email_field_empty">Email field cannot be empty.</string>
+    <string name="end_date">End date</string>
+    <string name="enter_expense">Enter Expense</string>
+
+    <!-- Enter Income/Expenses -->
+    <string name="enter_income">Enter Income</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="expense_types">Expense types</string>
+    <string name="expenses">Expenses</string>
+    <string name="extra">Extra</string>
+
+    <!-- Categories -->
+    <string name="failed_to_add_category">Failed to add category</string>
+    <string name="fixed">Fixed</string>
+    <string name="fixed_expense_category">Fixed Expense Category</string>
+    <string name="fixed_expenses">Fixed Expenses</string>
+
+    <!-- Authentication -->
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="go_back">Go Back</string>
+
+    <!-- Common expense categories -->
+    <string name="groceries">Groceries</string>
+    <string name="heat">Heat</string>
+    <string name="historical_periods">Historical Periods</string>
+    <string name="home">Home</string>
+    <string name="housing_insurance">Housing Insurance</string>
+
+    <!-- About developer -->
+    <string name="about_developer">I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch.</string>
+
+    <!-- Income related -->
+    <string name="include_fixed_expenses">Include Fixed Expenses</string>
+    <string name="include_incomes">Include Incomes</string>
+    <string name="income">Income</string>
+    <string name="income_category">Income Category</string>
+    <string name="incomes">Incomes</string>
+
+    <!-- Miscellaneous -->
+    <string name="info">Info</string>
+    <string name="insurance">Insurance</string>
+    <string name="invalid_budget_period">Invalid Budget Period</string>
+    <string name="invalid_email_format">Invalid email format.</string>
+    <string name="invoice_reminders">Invoice Reminders</string>
+    <string name="invoice_status_change">Invoice Status Change</string>
+
+    <!-- Main App -->
     <string name="app_name">MyBudgetBuddy</string>
+    <string name="welcome">Welcome to MyBudgetBuddy!</string>
+
+    <!-- Categories -->
+    <string name="add_new_category">Add new category</string>
+    <string name="categories">Categories</string>
+    <string name="manage_categories">Manage Categories</string>
+    <string name="please_add_a_category">Please add a category</string>
+    <string name="please_enter_a_category">Please enter a category.</string>
+    <string name="please_select_a_category">Please select a category.</string>
+
+    <!-- Budget Period Management -->
+    <string name="start_new_period">Start New Period</string>
+    <string name="start_date">Start Date</string>
+    <string name="period_dates">Period Dates</string>
+    <string name="new_period_created_successfully">New period created successfully!</string>
+    <string name="to_start_tracking">To start tracking your budget, you\'ll need to create your first budget period.</string>
+    <string name="tap_start_new_period">Tap \'Start New Period\' when you\'re ready for a fresh budget slate. Pro tip: All your budget history is saved in the Overview tab for those \'how did I do last month?\' moments</string>
+    <string name="start_a_new_period">Start a new period to continue tracking your budget</string>
+    <string name="stay_in_control">Stay in Control – Get timely reminders when your budget period is ending, so you can plan ahead with confidence.</string>
+    <string name="your_last_budget_period_has_ended">Your last budget period has ended</string>
+
+    <!-- Income & Expenses -->
+    <string name="total_income">Total Income:</string>
+    <string name="total_expense">Total Expense</string>
+    <string name="total_expenses">Total expenses:</string>
+    <string name="variable_expense_category">Variable Expense Category</string>
+    <string name="variable_expenses">Variable Expenses</string>
+    <string name="swipe_left_to_delete_expenses">Swipe left to delete expenses</string>
+    <string name="swipe_left_to_delete_incomes">Swipe left to delete incomes</string>
+    <string name="tap_the_expenses_tab">Tap the expenses tab to track your latest purchases</string>
+    <string name="tap_the_incomes_tab">Tap the incomes tab to track your latest earnings</string>
+    <string name="tap_the_amount">Tap the amount</string>
+
+    <!-- Overview & Statistics -->
+    <string name="overview">Overview</string>
+    <string name="outcome">Outcome</string>
+    <string name="outcome_format">Outcome: %.2f</string>
+    <string name="this_percentage_shows">This percentage shows how much of your income has been saved or spent. It\'s a great way to see how you\'re doing!</string>
+
+    <!-- Invoices Management -->
+    <string name="invoices">Invoices</string>
+    <string name="manage_invoices">Manage Invoices</string>
+    <string name="processed_invoices">Processed Invoices</string>
+    <string name="unprocessed_invoices">Unprocessed Invoices</string>
+    <string name="mark_as_processed">Mark as processed</string>
+    <string name="scan_invoice">Scan Invoice</string>
+    <string name="scan_the_invoice">Scan the Invoice</string>
+    <string name="scanning_not_supported">Scanning not supported on this device</string>
+    <string name="never_miss_a_payment">Never Miss a Payment – Invoice reminders ensure you stay on track and stress-free when it comes to due dates.</string>
+
+    <!-- Security -->
+    <string name="password_field_cannot_be_empty">Password field cannot be empty.</string>
+    <string name="password_must_be_6_plus_characters">Password must be 6+ characters.</string>
+    <string name="passwords_do_not_match">Passwords do not match.</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="type_delete_to_confirm">Type DELETE to confirm</string>
+    <string name="warning_account_deletion">Warning: Account Deletion</string>
+
+    <!-- Messages & Notifications -->
+    <string name="you_have_no_historical_periods">You have no historical periods right now.</string>
+    <string name="you_have_no_processed_invoices">You have no processed invoices right now.</string>
+    <string name="you_have_no_unprocessed_invoices">You have no unprocessed invoices right now.</string>
+    <string name="this_action_cannot_be_undone">This action cannot be undone. All your data will be permanently deleted.</string>
+
+    <!-- Budget Management -->
+    <string name="keep_track_of_your_entire_budget">Keep track of your entire budget history, so you can see exactly where your money goes.</string>
+    <string name="managing_money_shouldnt_be_hard">Managing money shouldn’t be hard</string>
+    <string name="organize_your_finances">Organize your finances better by adding your own categories, or stick with the default ones.</string>
+    <string name="preparing_your_budget_details">Preparing your budget details...</string>
+    <string name="swipe_left_to_delete_periods">Swipe left to delete periods</string>
+    <string name="transfer_settings">Transfer Settings</string>
+
+    <!-- Common UI Elements -->
+    <string name="title">Title</string>
+    <string name="please_enter_a_title">Please enter a title</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="save">Save</string>
+    <string name="wifi">WiFi</string>
+    <string name="tap_the_due_date">Tap the due date</string>
+
+    <!-- Expense Categories -->
+    <string name="rent">Rent</string>
+    <string name="salary">Salary</string>
+    <string name="savings">Savings</string>
+    <string name="shopping">Shopping</string>
+    <string name="sickness_insurance">Sickness Insurance</string>
+    <string name="study_grant">Study Grant</string>
+    <string name="transport">Transport</string>
+    <string name="water">Water</string>
+    <string name="variable">Variable</string>
 </resources>
