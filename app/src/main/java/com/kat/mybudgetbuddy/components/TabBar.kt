@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,10 +41,10 @@ import com.kat.mybudgetbuddy.TabItem
 @Composable
 fun TabBar(navController: NavController) {
     val items = listOf(
-        TabItem("Home", Icons.Filled.Home, "home"),
-        TabItem("Incomes", Icons.Filled.AddCircle, "incomes"),
-        TabItem("Expenses", Icons.Filled.RemoveCircle, "expenses"),
-        TabItem("Overview", Icons.Filled.StackedBarChart, "overview")
+        TabItem(title = stringResource(R.string.home), Icons.Filled.Home, "home"),
+        TabItem(title = stringResource(R.string.incomes), Icons.Filled.AddCircle, "incomes"),
+        TabItem(title = stringResource(R.string.expenses), Icons.Filled.RemoveCircle, "expenses"),
+        TabItem(title = stringResource(R.string.overview), Icons.Filled.StackedBarChart, "overview")
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
