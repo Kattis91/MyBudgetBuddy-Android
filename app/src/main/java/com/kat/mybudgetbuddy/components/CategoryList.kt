@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kat.mybudgetbuddy.R
 
@@ -144,10 +145,10 @@ fun CategoryList(
                     categoryToDelete.value = null
                     showAlertDialog.value = false
                 },
-                message = "Are you sure you want to delete ${categoryToDelete.value}?",
+                message = "${stringResource(R.string.are_you_sure_delete)} \"${categoryToDelete.value}\"?",
                 customColor = colorResource(id = R.color.error_message_color),
-                confirmText = "Delete!",
-                cancelButtonText = "Go back!",
+                confirmText = stringResource(R.string.delete),
+                cancelButtonText = stringResource(R.string.go_back),
                 onCancel = {
                     showAlertDialog.value = false
                     categoryToDelete.value = null

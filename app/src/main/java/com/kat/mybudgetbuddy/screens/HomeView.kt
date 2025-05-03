@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -245,10 +246,10 @@ fun HomeView(budgetViewModel: BudgetViewModel, viewModel: BudgetManager = viewMo
                 onConfirm = {
                     budgetViewModel.logout()
                 },
-                message = "Are you sure you want to sign out?",
+                message = stringResource(R.string.are_you_sure_sign_out),
                 customColor = colorResource(id = R.color.error_message_color),
-                confirmText = "Sign Out",
-                cancelButtonText = "Go back!",
+                confirmText = stringResource(R.string.sign_out),
+                cancelButtonText = stringResource(R.string.go_back),
                 onCancel = {
                     showLogOutAlert = false
                 },

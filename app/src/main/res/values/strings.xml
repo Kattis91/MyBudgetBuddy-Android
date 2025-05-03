@@ -21,8 +21,9 @@
     <string name="amount_must_be_greater_than_zero">Amount must be greater than zero.</string>
 
     <!-- Confirmation dialogs -->
-    <string name="are_you_sure_delete">Are you sure you want to delete "%@"?</string>
-    <string name="are_you_sure_mark_as_processed">Are you sure you want to mark "%@" as processed?</string>
+    <string name="are_you_sure_delete">Are you sure you want to delete</string>
+    <string name="are_you_sure_mark">Are you sure you want to mark</string>
+    <string name="as_processed">as processed</string>
     <string name="are_you_sure_sign_out">Are you sure you want to sign out?</string>
     <string name="are_you_sure_start_new_period">Are you sure you want to start a new period? Please note that this period will replace the current one.</string>
 

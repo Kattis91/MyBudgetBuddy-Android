@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
@@ -381,10 +382,10 @@ fun NewBudgetPeriodView(
                     onSuccess()
                     onDismiss()
                 },
-                message = "Are you sure you want to start a new period? Please note that this period will replace the current one.",
+                message = stringResource(R.string.are_you_sure_start_new_period),
                 customColor = colorResource(id = R.color.error_message_color),
-                confirmText = "Yes!",
-                cancelButtonText = "Go back!",
+                confirmText = stringResource(R.string.yes),
+                cancelButtonText = stringResource(R.string.go_back),
                 onCancel = {
                     showConfirmationDialog = false
                 },

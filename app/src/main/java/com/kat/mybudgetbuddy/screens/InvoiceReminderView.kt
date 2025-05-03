@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -370,10 +371,10 @@ fun InvoiceReminder(
                     }
                     showAlertDialog.value = false
                 },
-                message = "Are you sure you want to mark ${invoiceToMarkAsProcessed?.title} as processed?",
+                message = "${stringResource(R.string.are_you_sure_mark)} \"${invoiceToMarkAsProcessed?.title ?: ""}\" ${stringResource(R.string.as_processed)}?",
                 customColor = colorResource(id = R.color.income_color),
-                confirmText = "Yes",
-                cancelButtonText = "Go Back",
+                confirmText = stringResource(R.string.yes),
+                cancelButtonText = stringResource(R.string.go_back),
                 onCancel = {
                     showAlertDialog.value = false
                 },

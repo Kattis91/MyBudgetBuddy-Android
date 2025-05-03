@@ -22,8 +22,9 @@
     <string name="amount_must_be_greater_than_zero">Beløbet skal være større end nul.</string>
 
     <!-- Confirmation dialogs -->
-    <string name="are_you_sure_delete">Er du sikker på, at du vil slette \"%1$@\"?</string>
-    <string name="are_you_sure_mark_as_processed">Er du sikker på, at du vil markere \"%1$@\" som behandlet?</string>
+    <string name="are_you_sure_delete">Er du sikker på, at du vil slette</string>
+    <string name="are_you_sure_mark">Er du sikker på, at du vil markere</string>
+    <string name="as_processed">som behandlet</string>
     <string name="are_you_sure_sign_out">Er du sikker på, at du vil logge ud?</string>
     <string name="are_you_sure_start_new_period">Er du sikker på, at du vil starte en ny budgetperiode? Bemærk venligst, at denne periode erstatter den nuværende.</string>
 
