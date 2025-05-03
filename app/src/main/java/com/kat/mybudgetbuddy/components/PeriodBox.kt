@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -91,8 +92,7 @@ fun PeriodBox(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        "Current Budget Period",
+                    Text(text = stringResource(R.string.current_budget_period),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
@@ -123,7 +123,7 @@ fun PeriodBox(
         ) {
             StyledCard {
                 Text(
-                    "Tap 'Start New Period' when you're ready for a fresh budget slate. Pro tip: All your budget history is saved in the Overview tab for those 'how did I do last month?' moments",
+                   text = stringResource(R.string.tap_start_new_period),
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .widthIn(max = 300.dp), // Limit width to keep card compact

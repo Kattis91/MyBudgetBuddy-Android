@@ -20,20 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.kat.mybudgetbuddy.budget.BudgetManager
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.CustomButton
 import com.kat.mybudgetbuddy.components.OutcomeBox
 import com.kat.mybudgetbuddy.components.PeriodBox
 import com.kat.mybudgetbuddy.components.StatBox
-import com.kat.mybudgetbuddy.components.StyledCard
-import com.kat.mybudgetbuddy.components.SummaryBox
-import com.kat.mybudgetbuddy.utils.formattedDateRange
 
 @Composable
 fun HomeTabView(viewModel: BudgetManager = viewModel()) {
@@ -84,7 +78,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
                     ) {
                         Box(modifier = Modifier.weight(1f)) {
                             StatBox(
-                                title = "Total Income",
+                                title = stringResource(R.string.income),
                                 amount = totalIncome,
                                 isIncome = true,
                                 showNegativeAmount = false
@@ -95,7 +89,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
                         Box(modifier = Modifier.weight(1f)) {
                             StatBox(
-                                title = "Total Expense",
+                                title = stringResource(R.string.expenses),
                                 amount = totalExpenses,
                                 isIncome = false,
                                 showNegativeAmount = true
@@ -112,7 +106,7 @@ fun HomeTabView(viewModel: BudgetManager = viewModel()) {
 
                     CustomButton(
                         onClick = { showNewPeriodDialog = true },
-                        buttonText = "Start New Period",
+                        buttonText = stringResource(R.string.add_new_period),
                         isIncome = false,
                         isExpense = false,
                         isThirdButton = true,

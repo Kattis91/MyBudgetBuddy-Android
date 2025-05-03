@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -128,7 +129,7 @@ fun OutcomeBox(
                         )
 
                         Text(
-                            "Outcome",
+                            text = stringResource(R.string.outcome),
                             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
@@ -204,7 +205,7 @@ fun OutcomeBox(
         ) {
             StyledCard {
                 Text(
-                     "This percentage shows how much of your income has been saved or spent. It's a great way to see how you're doing!",
+                     text = stringResource(R.string.this_percentage_shows),
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .widthIn(max = 300.dp), // Limit width to keep card compact

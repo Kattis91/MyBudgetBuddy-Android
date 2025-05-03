@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -145,10 +146,10 @@ fun StatBox(
         ) {
             StyledCard {
                 Text(
-                    if (isIncome) "Tap the incomes tab to track your latest earnings" else
-                        "Tap the expenses tab to track your latest purchase",
+                    if (isIncome) stringResource(R.string.tap_the_incomes_tab) else
+                        stringResource(R.string.tap_the_expenses_tab),
                     modifier = Modifier
-                        .padding(horizontal = 12.dp)
+                        .padding(horizontal = 4.dp)
                         .widthIn(max = 200.dp), // Limit width to keep card compact
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp, // Smaller font size to keep card compact

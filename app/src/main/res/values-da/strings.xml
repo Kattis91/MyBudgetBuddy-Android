@@ -121,7 +121,7 @@
     <string name="period_dates">Periode Datoer</string>
     <string name="new_period_created_successfully">Ny periode oprettet med succes!</string>
     <string name="to_start_tracking">For at begynde at spore dit budget, skal du oprette din første budgetperiode.</string>
-    <string name="tap_start_new_period">Tryk på \'Start ny periode\', når du er klar til en ny budgetoverflade. Professionelt tip: Al din budgethistorik gemmes på fanen Oversigt for dem, \'hvordan klarede jeg mig i sidste måned?\' øjeblikke</string>
+    <string name="tap_start_new_period">Tryk på \'Start ny periode\', når du er klar til en ny budgetoverflade. Tip: Al din budgethistorik gemmes på fanen Oversigt for dem, \'hvordan klarede jeg mig i sidste måned?\' øjeblikke</string>
     <string name="start_a_new_period">Start en ny periode for at fortsætte med at spore dit budget</string>
     <string name="stay_in_control">Bevar kontrollen – Få rettidige påmindelser, når din budgetperiode slutter, så du kan planlægge fremad med tillid.</string>
     <string name="your_last_budget_period_has_ended">Din sidste budgetperiode er slut</string>
