@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -110,8 +111,7 @@ fun ExpensesTabView(
         ) {
             currentPeriod?.let { period ->
                 StyledCard {
-                    Text(
-                        "Current Period:",
+                    Text(text = stringResource(R.string.current_period_colon),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = textColor
@@ -122,7 +122,7 @@ fun ExpensesTabView(
                     Text(formattedDateRange(period.startDate, period.endDate), color = textColor, fontSize = 18.sp)
 
                     Text(
-                        "Total Expenses:",
+                        text = stringResource(R.string.total_expenses),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 10.dp),
                         color = textColor,
@@ -144,7 +144,7 @@ fun ExpensesTabView(
         Spacer(modifier = Modifier.height(28.dp))
 
         AnimatedSegmentedButtonRow(
-            options = listOf("Fixed Expenses", "Variable Expenses"),
+            options = listOf(stringResource(R.string.fixed), stringResource(R.string.variable)),
             selectedIndex = if (selectedExpenseType == ExpenseViewType.FIXED) 0 else 1,
             onSelectionChanged = { index ->
                 setSelectedExpenseType(if (index == 0) ExpenseViewType.FIXED else ExpenseViewType.VARIABLE)
@@ -161,7 +161,7 @@ fun ExpensesTabView(
             CustomTextField(
                 value = expenseAmount,
                 onValueChange = { expenseAmount = it },
-                label = "Enter Expense",
+                label = stringResource(R.string.enter_expense),
                 icon = Icons.Default.RemoveCircleOutline,
                 onChange = {
                     errorMessage = ""
@@ -196,7 +196,7 @@ fun ExpensesTabView(
         }
 
         CustomButton(
-            buttonText = "Add Expense",
+            buttonText = stringResource(R.string.add_expense),
             onClick = {
                 val normalizedAmount = expenseAmount.replace(",", ".")
                 val expense = normalizedAmount.toDoubleOrNull()
@@ -266,8 +266,7 @@ fun ExpensesTabView(
                         Icons.AutoMirrored.Filled.ArrowLeft,
                         contentDescription = "Back"
                     )
-                    Text(
-                        "Swipe left to delete periods",
+                    Text(stringResource(R.string.swipe_left_to_delete_expenses),
                         fontSize = 14.sp,
                         color = textColor
                     )

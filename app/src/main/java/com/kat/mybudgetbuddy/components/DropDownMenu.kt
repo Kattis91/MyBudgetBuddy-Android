@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -53,6 +54,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.budget.BudgetManager
 import com.kat.mybudgetbuddy.models.CategoryType
 
@@ -183,7 +185,7 @@ fun CategoryMenu(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = selectedCategory.ifEmpty { "Choose Category" },
+                        text = selectedCategory.ifEmpty { stringResource(R.string.choose_category) },
                         color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 16.sp
                     )

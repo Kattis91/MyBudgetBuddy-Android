@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -94,7 +95,7 @@ fun IncomesTabView(
             currentPeriod?.let { period ->
                 StyledCard {
                     Text(
-                        "Current Period:",
+                        text = stringResource(R.string.current_period_colon),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = textColor
@@ -105,7 +106,7 @@ fun IncomesTabView(
                     Text(formattedDateRange(period.startDate, period.endDate), color = textColor, fontSize = 18.sp)
 
                     Text(
-                        "Total Income:",
+                        text = stringResource(R.string.total_income),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 10.dp),
                         color = textColor,
@@ -133,7 +134,7 @@ fun IncomesTabView(
             CustomTextField(
                 value = incomeAmount,
                 onValueChange = { incomeAmount = it },
-                label = "Enter Income",
+                label = stringResource(R.string.enter_income),
                 icon = Icons.Default.AddCircleOutline,
                 onChange = {
                     errorMessage = ""
@@ -168,7 +169,7 @@ fun IncomesTabView(
         }
 
         CustomButton(
-            buttonText = "Add Income",
+            buttonText = stringResource(R.string.add_income),
             onClick = {
                 val normalizedAmount = incomeAmount.replace(",", ".")
                 val income = normalizedAmount.toDoubleOrNull()
@@ -235,7 +236,7 @@ fun IncomesTabView(
                     contentDescription = "Back"
                 )
                 Text(
-                    "Swipe left to delete periods",
+                    text = stringResource(R.string.swipe_left_to_delete_incomes),
                     fontSize = 14.sp,
                     color = textColor
                 )
