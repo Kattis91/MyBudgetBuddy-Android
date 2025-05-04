@@ -138,7 +138,7 @@ fun NewBudgetPeriodView(
 
                 // Date pickers
                 Text(
-                    text = "Period Dates",
+                    text = stringResource(R.string.period_dates),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -150,7 +150,7 @@ fun NewBudgetPeriodView(
                         .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Start Date", modifier = Modifier.width(100.dp))
+                    Text(text = stringResource(R.string.start_date), modifier = Modifier.width(100.dp))
 
                     Spacer(modifier = Modifier.weight(1f))
                     // Use a clickable text that shows a DatePicker dialog
@@ -176,7 +176,7 @@ fun NewBudgetPeriodView(
                         .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("End Date", modifier = Modifier.width(100.dp))
+                    Text(text = stringResource(R.string.end_date), modifier = Modifier.width(100.dp))
 
                     Spacer(modifier = Modifier.weight(1f))
                     DatePickerButton(
@@ -208,7 +208,7 @@ fun NewBudgetPeriodView(
                 if (!isLandingPage) {
                     if (viewModel.incomeItems.value.isNotEmpty() || viewModel.fixedExpenseItems.value.isNotEmpty()) {
                         Text(
-                            text = "Transfer Settings",
+                            text = stringResource(R.string.transfer_settings),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
@@ -223,7 +223,7 @@ fun NewBudgetPeriodView(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                "Include Incomes",
+                                text = stringResource(R.string.include_incomes),
                                 modifier = Modifier.weight(1f)
                             )
                             Switch(
@@ -280,7 +280,7 @@ fun NewBudgetPeriodView(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                "Include Fixed Expenses",
+                                text = stringResource(R.string.include_fixed_expenses),
                                 modifier = Modifier.weight(1f)
                             )
                             Switch(
@@ -333,7 +333,7 @@ fun NewBudgetPeriodView(
 
                 Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     CustomButton(
-                        buttonText = "Start New Period",
+                        buttonText = stringResource(R.string.start_new_period),
                         onClick = {
                             if (validatePeriod()) {
                                 if (isLandingPage || noCurrentPeriod) {
