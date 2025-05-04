@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -135,7 +136,7 @@ fun LoginScreen(budgetViewModel: BudgetViewModel) {
                         },
                         modifier = Modifier.padding(end = 45.dp)
                     ) {
-                        Text("Forgot Password?")
+                        Text(text = stringResource(R.string.forgot_password))
                     }
                 }
 
@@ -153,7 +154,7 @@ fun LoginScreen(budgetViewModel: BudgetViewModel) {
                 }
 
                 CustomButton(
-                    buttonText = "Sign In",
+                    buttonText = stringResource(R.string.sign_in),
                     onClick = {
                         emailErrorMessage = ValidationUtils.validateEmail(email) ?: ""
                         passwordErrorMessage = ValidationUtils.validatePassword(password) ?: ""

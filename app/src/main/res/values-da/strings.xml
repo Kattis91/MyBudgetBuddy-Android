@@ -112,6 +112,9 @@
     <!-- Main App -->
     <string name="app_name">MyBudgetBuddy</string>
     <string name="welcome">Velkommen til MyBudgetBuddy!</string>
+    <string name="sign_in">Log Ind</string>
+    <string name="sign_up">Tilmeld dig</string>
+    <string name="create_account">Opret konto</string>
 
     <!-- Categories -->
     <string name="add_new_category">Tilføj ny kategori</string>

@@ -111,6 +111,9 @@
     <!-- Main App -->
     <string name="app_name">MyBudgetBuddy</string>
     <string name="welcome">Welcome to MyBudgetBuddy!</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="create_account">Create account</string>
 
     <!-- Categories -->
     <string name="add_new_category">Add new category</string>

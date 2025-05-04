@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,18 +58,18 @@ fun UnloggedScreen(navController: NavController) {
         )
 
         Text(
-            "Managing Money shouldn't be hard",
+            text = stringResource(R.string.managing_money_shouldnt_be_hard),
             fontSize = 20.sp,
             color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(bottom = 10.dp)
+                .padding(vertical = 10.dp, horizontal = 10.dp)
         )
 
         Spacer(modifier = Modifier.height(70.dp))
 
         CustomButton(
-            buttonText = "Sign In",
+            buttonText = stringResource(R.string.sign_in),
             onClick = {
                 navController.navigate("login")
             },
@@ -79,7 +80,7 @@ fun UnloggedScreen(navController: NavController) {
         )
 
         CustomButton(
-            buttonText = "Create account",
+            buttonText = stringResource(R.string.create_account),
             onClick = {
                 navController.navigate("register")
             },
