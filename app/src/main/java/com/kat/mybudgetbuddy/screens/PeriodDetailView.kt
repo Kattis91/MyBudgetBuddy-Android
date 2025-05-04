@@ -105,7 +105,7 @@ fun PeriodDetailView(
                             text = stringResource(R.string.no_incomes_added),
                             fontSize = 23.sp,
                             color = if (isDarkMode) Color.White else colorResource(R.color.text_color),
-                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                            modifier = Modifier.padding(horizontal = 23.dp, vertical = 10.dp),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -129,7 +129,7 @@ fun PeriodDetailView(
                             text = stringResource(R.string.no_fixed_expenses_added),
                             fontSize = 23.sp,
                             color = if (isDarkMode) Color.White else colorResource(R.color.text_color),
-                            modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                            modifier = Modifier.padding(horizontal = 23.dp, vertical = 10.dp),
                             textAlign = TextAlign.Center
                         )
                     }
@@ -153,7 +153,7 @@ fun PeriodDetailView(
                             text = stringResource(R.string.no_variable_expenses_added),
                             fontSize = 23.sp,
                             color = if (isDarkMode) Color.White else colorResource(R.color.text_color),
-                            modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                            modifier = Modifier.padding(horizontal = 23.dp, vertical = 10.dp),
                             textAlign = TextAlign.Center
                         )
                     }
