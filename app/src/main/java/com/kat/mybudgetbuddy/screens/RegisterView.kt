@@ -38,8 +38,7 @@ import com.kat.mybudgetbuddy.components.CustomTextField
 import com.kat.mybudgetbuddy.utils.ValidationUtils
 
 @Composable
-fun RegisterScreen(budgetViewModel : BudgetViewModel) {
-
+fun RegisterScreen(budgetViewModel: BudgetViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -52,14 +51,19 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .imePadding()
     ) {
         Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 40.dp, bottom = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize().imePadding()
+            verticalArrangement = Arrangement.Center
         ) {
+            // Add significant top padding to push content down
+            Spacer(modifier = Modifier.height(80.dp))
+
             Icon(
                 painter = painterResource(id = R.drawable.savings),
                 contentDescription = "App Logo",
@@ -70,7 +74,7 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
                 tint = Color.Unspecified
             )
 
-            Spacer(modifier = Modifier.height(70.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             Box(modifier = Modifier.padding(horizontal = 30.dp)) {
                 CustomTextField(
@@ -183,6 +187,8 @@ fun RegisterScreen(budgetViewModel : BudgetViewModel) {
                 width = 200
             )
 
+            // Add bottom padding for better appearance when scrolling
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
