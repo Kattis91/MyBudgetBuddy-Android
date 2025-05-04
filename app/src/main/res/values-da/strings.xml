@@ -57,6 +57,7 @@
     <string name="done">Færdig</string>
     <string name="due_to">Forfaldsdato:</string>
     <string name="editing">Redigerer</string>
+    <string name="adding">Tilføjer</string>
     <string name="electricity">Elektricitet</string>
     <string name="email_field_empty">E-mail-feltet må ikke være tomt.</string>
     <string name="end_date">Slutdato</string>
@@ -77,6 +78,7 @@
 
     <!-- Authentication -->
     <string name="forgot_password">Glemt adgangskode?</string>
+    <string name="send_reset_link">Send Nulstilningslink</string>
     <string name="go_back">Gå Tilbage</string>
 
     <!-- Common expense categories -->

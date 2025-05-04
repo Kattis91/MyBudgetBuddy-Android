@@ -112,7 +112,7 @@ fun InvoiceReminder(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                "Manage Invoices",
+                text = stringResource(R.string.manage_invoices),
                 fontSize = 21.sp,
                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                 modifier = Modifier.padding(start = 18.dp)
@@ -136,7 +136,7 @@ fun InvoiceReminder(
             CustomTextField(
                 value = title,
                 onValueChange = { title = it },
-                label = "Title",
+                label = stringResource(R.string.title),
                 icon = Icons.Default.Doorbell,
                 onChange = {
                     errorMessage = ""
@@ -148,7 +148,7 @@ fun InvoiceReminder(
             CustomTextField(
                 value = amount,
                 onValueChange = { amount = it },
-                label = "Amount",
+                label = stringResource(R.string.amount),
                 icon = Icons.Default.AttachMoney,
                 onChange = {
                     errorMessage = ""
@@ -172,7 +172,7 @@ fun InvoiceReminder(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        "Due to:",
+                        text = stringResource(R.string.due_to),
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
                     )
                 }
@@ -211,7 +211,7 @@ fun InvoiceReminder(
                         tint = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                         modifier = Modifier.size(45.dp)
                     )
-                    Text("Scan the invoice")
+                    Text(text = stringResource(R.string.scan_the_invoice),)
                 }
             }
         }
@@ -227,7 +227,7 @@ fun InvoiceReminder(
         }
 
         CustomButton(
-            buttonText = "Save",
+            buttonText = stringResource(R.string.save),
             onClick = {
                 val normalizedAmount = amount.replace(",", ".")
 
@@ -273,7 +273,7 @@ fun InvoiceReminder(
         Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedSegmentedButtonRow (
-            options = listOf("Unprocessed Invoices", "Processed Invoices"),
+            options = listOf(stringResource(R.string.unprocessed_invoices), stringResource(R.string.processed_invoices)),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
                 selectedTabIndex = index
@@ -293,8 +293,7 @@ fun InvoiceReminder(
                                 .padding(horizontal = 20.dp)
                                 .padding(top = 20.dp)
                         ) {
-                            Text(
-                                "You have no unprocessed invoices right now.",
+                            Text(text = stringResource(R.string.you_have_no_unprocessed_invoices),
                                 style = TextStyle(textAlign = TextAlign.Center),
                                 fontSize = 23.sp,
                                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -332,7 +331,7 @@ fun InvoiceReminder(
                                 .padding(top = 20.dp)
                         ) {
                             Text(
-                                "You have no processed invoices right now.",
+                                text = stringResource(R.string.you_have_no_processed_invoices),
                                 style = TextStyle(textAlign = TextAlign.Center),
                                 fontSize = 23.sp,
                                 color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)

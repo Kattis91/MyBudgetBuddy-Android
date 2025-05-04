@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +35,6 @@ import com.kat.mybudgetbuddy.budget.BudgetManager
 import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.CategoryList
 import com.kat.mybudgetbuddy.components.HandleCategoryDialog
-import com.kat.mybudgetbuddy.components.SegmentedButtonRow
 import com.kat.mybudgetbuddy.models.Category
 import com.kat.mybudgetbuddy.models.CategoryType
 import kotlinx.coroutines.launch
@@ -74,7 +74,7 @@ fun CategoryManagement(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        "Manage Categories",
+                        text = stringResource(R.string.manage_categories),
                         fontSize = 21.sp,
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                         modifier = Modifier.padding(start = 18.dp)
@@ -93,7 +93,7 @@ fun CategoryManagement(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 AnimatedSegmentedButtonRow(
-                    options = listOf("Incomes", "Fixed", "Variable"),
+                    options = listOf(stringResource(R.string.incomes), stringResource(R.string.fixed), stringResource(R.string.variable)),
                     selectedIndex = selectedTabIndex,
                     onSelectionChanged = { index ->
                         selectedTabIndex = index

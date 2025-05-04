@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,12 +49,12 @@ fun HandleCategoryDialog(
     val isDarkMode = isSystemInDarkTheme()
     var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
 
-    val titleText = if (isEditing) "Editing" else "Adding"
+    val titleText = if (isEditing) stringResource(R.string.editing) else stringResource(R.string.adding)
     val categoryTypeText = if (category != null) {
         when (category.type) {
-            CategoryType.INCOME -> "Income Category"
-            CategoryType.FIXED_EXPENSE -> "Fixed Expense Category"
-            CategoryType.VARIABLE_EXPENSE -> "Variable Expense Category"
+            CategoryType.INCOME -> stringResource(R.string.income_category)
+            CategoryType.FIXED_EXPENSE -> stringResource(R.string.fixed_expense_category)
+            CategoryType.VARIABLE_EXPENSE -> stringResource(R.string.variable_expense_category)
         }
     } else {
         ""
@@ -113,7 +114,7 @@ fun HandleCategoryDialog(
                 CustomTextField(
                     value = categoryName,
                     onValueChange = { categoryName = it },
-                    label = "Category Name",
+                    label = stringResource(R.string.category_name),
                     icon = Icons.Default.FolderOpen,
                     onChange = {
                         onErrorMessageChange("")
@@ -136,7 +137,7 @@ fun HandleCategoryDialog(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     CustomButton(
-                        buttonText = "Save",
+                        buttonText = stringResource(R.string.save),
                         onClick = {
                             onSaveCategory(categoryName)
                         },

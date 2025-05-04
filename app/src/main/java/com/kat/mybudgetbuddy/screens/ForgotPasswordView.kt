@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -81,7 +82,7 @@ fun ForgotPasswordScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Reset password",
+                        text = stringResource(R.string.reset_password),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 50.dp),
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -122,7 +123,7 @@ fun ForgotPasswordScreen(
                 }
 
                 CustomButton(
-                    buttonText = "Send Reset Link",
+                    buttonText = stringResource(R.string.send_reset_link),
                     onClick = {
                         val validationError = ValidationUtils.validateReset(email)
                         if (validationError != null) {

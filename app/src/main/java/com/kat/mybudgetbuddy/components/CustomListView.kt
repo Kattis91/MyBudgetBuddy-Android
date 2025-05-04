@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kat.mybudgetbuddy.R
@@ -172,7 +173,7 @@ fun <T : Identifiable> CustomListView(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CustomButton(
-                        buttonText = "Mark as processed",
+                        buttonText = stringResource(R.string.mark_as_processed),
                         onClick = {
                             if (onMarkAsProcessed != null) {
                                 onMarkAsProcessed(item)

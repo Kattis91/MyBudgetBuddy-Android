@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -82,7 +83,7 @@ fun PasswordConfirmationView(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Confirm Deletion",
+                        text = stringResource(R.string.confirm_deletion),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 50.dp),
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -92,7 +93,7 @@ fun PasswordConfirmationView(
                 CustomTextField(
                     value = confirmationText,
                     onValueChange = { confirmationText = it },
-                    label = "Type DELETE to confirm",
+                    label = stringResource(R.string.type_delete_to_confirm),
                     icon = Icons.Default.Email,
                     onChange = {
                         errorMessage = ""
@@ -103,7 +104,7 @@ fun PasswordConfirmationView(
                 CustomTextField(
                     value = confirmationPassword,
                     onValueChange = { confirmationPassword = it },
-                    label = "Your current password",
+                    label = stringResource(R.string.current_password),
                     icon = Icons.Default.Email,
                     onChange = {
                         errorMessage = ""
@@ -132,7 +133,7 @@ fun PasswordConfirmationView(
                     }
                 }
                 CustomButton(
-                    buttonText = "Delete Account",
+                    buttonText = stringResource(R.string.delete_account),
                     onClick = {
                         if (confirmationText != "DELETE") {
                             errorMessage = "You must type DELETE to confirm"

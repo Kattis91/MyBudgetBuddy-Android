@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,8 +56,7 @@ fun DeleteAccountView(
                         .fillMaxWidth()
                 ) {
                     // Centered title
-                    Text(
-                        "Delete Account",
+                    Text(text = stringResource(R.string.delete_account),
                         fontSize = 21.sp,
                         color = if (isDarkMode) Color.White else colorResource(id = R.color.text_color),
                         modifier = Modifier.align(Alignment.Center)
@@ -90,13 +90,13 @@ fun DeleteAccountView(
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "Warning: Account Deletion",
+                        text = stringResource(R.string.warning_account_deletion),
                         fontSize = 20.sp,
                         color = Color(0xFFFF9800)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "This action cannot be undone. All your data will be permanently deleted.",
+                        text = stringResource(R.string.this_action_cannot_be_undone),
                         fontSize = 16.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center,
@@ -104,7 +104,7 @@ fun DeleteAccountView(
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     CustomButton(
-                        buttonText = "Delete with password",
+                        buttonText = stringResource(R.string.delete_with_password),
                         onClick = { showDeleteConfirmationDialog = true },
                         isIncome = false,
                         isExpense = true,
@@ -112,7 +112,7 @@ fun DeleteAccountView(
                         width = 0
                     )
                     CustomButton(
-                        buttonText = "Forgot Password?",
+                        buttonText = stringResource(R.string.forgot_password),
                         onClick = { showForgotPasswordDialog = true },
                         isIncome = false,
                         isExpense = true,
