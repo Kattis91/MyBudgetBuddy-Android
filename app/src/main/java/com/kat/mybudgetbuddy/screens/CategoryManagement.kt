@@ -53,7 +53,8 @@ fun CategoryManagement(
     var showEditDialog by remember { mutableStateOf(false) }
     var categoryToEdit by remember { mutableStateOf<Category?>(null) }
 
-    var errorMessage by remember { mutableStateOf("") }
+    // Change from storing string to storing resource ID
+    var errorMessageResId by remember { mutableStateOf<Int?>(null) }
 
     val categories = incomeCategories + fixedExpenseCategories + variableExpenseCategories
 
@@ -116,7 +117,7 @@ fun CategoryManagement(
                     categories = currentCategories,
                     onAddCategoryClick = {
                         showAddDialog = true
-                        errorMessage = ""
+                        errorMessageResId = null
                     },
                     onEditCategoryClick = { categoryName ->
                         // Create a Category object for editing
@@ -124,7 +125,7 @@ fun CategoryManagement(
                             name = categoryName,
                             type = currentCategoryType
                         )
-                        errorMessage = ""
+                        errorMessageResId = null
                         showEditDialog = true
                     },
                     onDeleteCategoryClick = { categoryName ->
@@ -138,14 +139,14 @@ fun CategoryManagement(
             HandleCategoryDialog(
                 onDismiss = {
                     showAddDialog = false
-                    errorMessage = ""
+                    errorMessageResId = null
                 },
                 onSaveCategory = { categoryName ->
                     coroutineScope.launch {
                         if (categoryName.isBlank()) {
-                            errorMessage = "Category name cannot be empty"
+                            errorMessageResId = R.string.category_name_cannot_be_empty
                         } else if (categoryName in categories) {
-                            errorMessage = "Category already exists"
+                            errorMessageResId = R.string.category_already_exists
                         } else {
                             viewModel.addCategory(categoryName, currentCategoryType)
                             showAddDialog = false
@@ -154,37 +155,37 @@ fun CategoryManagement(
                 },
                 isEditing = false,
                 category = Category("", "", currentCategoryType),
-                errorMessage = errorMessage,
-                onErrorMessageChange = { errorMessage = it }
+                errorMessageResId = errorMessageResId,
+                onErrorMessageChange = { errorMessageResId = it }
             )
         } else if (categoryToEdit != null) {
             val currentCategoryType = CategoryType.entries[selectedTabIndex]
             HandleCategoryDialog(
                 onDismiss = {
                     showEditDialog = false
-                    errorMessage = ""
+                    errorMessageResId = null
                 },
                 onSaveCategory = { categoryName ->
                     categoryToEdit?.let { category ->
                         if (categoryName.isBlank()) {
-                            errorMessage = "Category name cannot be empty"
+                            errorMessageResId = R.string.category_name_cannot_be_empty
                         } else if (categoryName in categories) {
-                            errorMessage = "Category already exists"
+                            errorMessageResId = R.string.category_already_exists
                         } else {
                             viewModel.editCategory(
                                 oldName = category.name,
                                 newName = categoryName,
                                 currentCategoryType
                             )
-                            errorMessage = ""
+                            errorMessageResId = null
                             showEditDialog = false
                         }
                     }
                 },
                 isEditing = true,
                 category = categoryToEdit,
-                errorMessage = errorMessage,
-                onErrorMessageChange = { errorMessage = it }
+                errorMessageResId = errorMessageResId,
+                onErrorMessageChange = { errorMessageResId = it }
             )
         }
     }

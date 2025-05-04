@@ -81,7 +81,8 @@ fun ExpensesTabView(
 
     val totalExpenses by viewModel.totalExpenses.collectAsState()
 
-    var errorMessage by remember { mutableStateOf("") }
+    // Change from storing string to storing resource ID
+    var errorMessageResId by remember { mutableStateOf<Int?>(null) }
 
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -164,7 +165,8 @@ fun ExpensesTabView(
                 label = stringResource(R.string.enter_expense),
                 icon = Icons.Default.RemoveCircleOutline,
                 onChange = {
-                    errorMessage = ""
+                    // Clear error message when typing
+                    errorMessageResId = null
                 }
             )
 
@@ -189,9 +191,12 @@ fun ExpensesTabView(
             .heightIn(min = 25.dp)
             .align(Alignment.Start)
             .padding(start = 25.dp)) {
-            if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage,
-                    color = colorResource(id = R.color.error_message_color))
+            // Display error message using stringResource
+            errorMessageResId?.let { resId ->
+                Text(
+                    text = stringResource(resId),
+                    color = colorResource(id = R.color.error_message_color)
+                )
             }
         }
 
@@ -202,14 +207,14 @@ fun ExpensesTabView(
                 val expense = normalizedAmount.toDoubleOrNull()
 
                 if (expense == null) {
-                    errorMessage = "Amount must be a number."
+                    errorMessageResId = R.string.amount_must_be_a_number
                 } else if (expense <= 0.00) {
-                    errorMessage = "Amount must be greater than zero."
+                    errorMessageResId = R.string.amount_must_be_greater_than_zero
                 } else {
                     if (showNewCategoryField) {
                         if (newCategory.isNotEmpty()) {
                             CoroutineScope(Dispatchers.Main).launch {
-                                errorMessage = ""
+                                errorMessageResId = null
                                 val success =
                                     if(selectedExpenseType == ExpenseViewType.FIXED)
                                         viewModel.addCategory(newCategory, CategoryType.FIXED_EXPENSE)
@@ -224,13 +229,13 @@ fun ExpensesTabView(
                                     newCategory = ""
                                     selectedCategory = ""
                                 } else if (newCategory in categories) {
-                                    errorMessage = "Category already exists"
+                                    errorMessageResId = R.string.category_already_exists
                                 } else {
-                                    errorMessage = "Failed to add category"
+                                    errorMessageResId = R.string.failed_to_add_category
                                 }
                             }
                         } else {
-                            errorMessage = "Please add a category"
+                            errorMessageResId = R.string.please_add_a_category
                         }
                     } else {
                         if (selectedCategory.isNotEmpty()) {
@@ -239,7 +244,7 @@ fun ExpensesTabView(
                             expenseAmount = ""
                             selectedCategory = ""
                         } else {
-                            errorMessage = "Please select a category"
+                            errorMessageResId = R.string.please_select_a_category
                         }
                     }
                 }

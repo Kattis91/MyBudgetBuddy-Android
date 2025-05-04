@@ -43,8 +43,8 @@ fun HandleCategoryDialog(
     onSaveCategory: (String) -> Unit,
     isEditing: Boolean = false,
     category: Category? = null,
-    errorMessage: String = "",
-    onErrorMessageChange: (String) -> Unit
+    errorMessageResId: Int? = null,  // Changed to Int? for resource ID
+    onErrorMessageChange: (Int?) -> Unit  // Changed to take Int? for resource ID
 ) {
     val isDarkMode = isSystemInDarkTheme()
     var categoryName by remember { mutableStateOf(if (isEditing && category != null) category.name else "") }
@@ -117,7 +117,7 @@ fun HandleCategoryDialog(
                     label = stringResource(R.string.category_name),
                     icon = Icons.Default.FolderOpen,
                     onChange = {
-                        onErrorMessageChange("")
+                        onErrorMessageChange(null)  // Clear error with null instead of empty string
                     }
                 )
 
@@ -125,8 +125,10 @@ fun HandleCategoryDialog(
 
                 Box(modifier = Modifier.heightIn(min = 30.dp)
                 ) {
-                    if (errorMessage.isNotEmpty()) {
-                        Text(text = errorMessage,
+                    // Use stringResource to convert the resource ID to a localized string
+                    errorMessageResId?.let { resId ->
+                        Text(
+                            text = stringResource(resId),
                             color = colorResource(id = R.color.error_message_color)
                         )
                     }

@@ -72,7 +72,8 @@ fun IncomesTabView(
 
     val totalIncome by viewModel.totalIncome.collectAsState()
 
-    var errorMessage by remember { mutableStateOf("") }
+    // Change from storing string to storing resource ID
+    var errorMessageResId by remember { mutableStateOf<Int?>(null) }
 
     val isDarkMode = isSystemInDarkTheme()
     val textColor = if (isDarkMode) Color.White else colorResource(id = R.color.text_color)
@@ -137,7 +138,8 @@ fun IncomesTabView(
                 label = stringResource(R.string.enter_income),
                 icon = Icons.Default.AddCircleOutline,
                 onChange = {
-                    errorMessage = ""
+                    // Clear error message when typing
+                    errorMessageResId = null
                 }
             )
 
@@ -162,9 +164,12 @@ fun IncomesTabView(
             .heightIn(min = 25.dp)
             .align(Alignment.Start)
             .padding(start = 25.dp)) {
-            if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage,
-                    color = colorResource(id = R.color.error_message_color))
+            // Display error message using stringResource
+            errorMessageResId?.let { resId ->
+                Text(
+                    text = stringResource(resId),
+                    color = colorResource(id = R.color.error_message_color)
+                )
             }
         }
 
@@ -176,17 +181,16 @@ fun IncomesTabView(
 
                 // Check if income is valid and greater than zero
                 if (income == null) {
-                    errorMessage = "Amount must be a number."
+                    errorMessageResId = R.string.amount_must_be_a_number
                 } else if (income <= 0.00) {
-                    errorMessage = "Amount must be greater than zero."
+                    errorMessageResId = R.string.amount_must_be_greater_than_zero
                 } else {
                     // Proceed with adding category and income
                     if (showNewCategoryField) {
                         if (newCategory.isNotEmpty()) {
                             // Use coroutine scope to launch the suspend function
-                            // In your IncomesTabView
                             CoroutineScope(Dispatchers.Main).launch {
-                                errorMessage = ""  // Clear error message before attempting
+                                errorMessageResId = null  // Clear error message before attempting
                                 Log.d("IncomesTabView", "Adding category: $newCategory")
                                 val success = viewModel.addCategory(newCategory, CategoryType.INCOME)
 
@@ -199,14 +203,14 @@ fun IncomesTabView(
                                     newCategory = ""
                                     selectedCategory = ""
                                 } else if (newCategory in categories) {
-                                    errorMessage = "Category already exists"
+                                    errorMessageResId = R.string.category_already_exists
                                 } else {
                                     Log.e("IncomesTabView", "Failed to add category: $newCategory")
-                                    errorMessage = "Failed to add category"
+                                    errorMessageResId = R.string.failed_to_add_category
                                 }
                             }
                         } else {
-                            errorMessage = "Please add a category"
+                            errorMessageResId = R.string.please_add_a_category
                         }
                     } else {
                         if (selectedCategory.isNotEmpty()) {
@@ -214,7 +218,7 @@ fun IncomesTabView(
                             incomeAmount = ""
                             selectedCategory = ""
                         } else {
-                            errorMessage = "Please select a category"
+                            errorMessageResId = R.string.please_select_a_category
                         }
                     }
                 }

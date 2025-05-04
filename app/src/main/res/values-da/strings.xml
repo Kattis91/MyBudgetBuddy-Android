@@ -72,6 +72,8 @@
 
     <!-- Categories -->
     <string name="failed_to_add_category">Kunne ikke tilføje kategori</string>
+    <string name="category_already_exists">Kategori findes allerede</string>
+    <string name="category_name_cannot_be_empty">Kategorinavn må ikke være tomt</string>
     <string name="fixed">Faste</string>
     <string name="fixed_expense_category">Fast Udgiftskategori</string>
     <string name="fixed_expenses">Faste Udgifter</string>

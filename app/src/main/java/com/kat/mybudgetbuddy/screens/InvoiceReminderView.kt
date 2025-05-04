@@ -75,7 +75,8 @@ fun InvoiceReminder(
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var expiryDate by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
+    // Change from storing string to storing resource ID
+    var errorMessageResId by remember { mutableStateOf<Int?>(null) }
 
     val invoices by viewModel.invoices.collectAsState()
     val unprocessedInvoiceState by viewModel.unprocessedInvoices.collectAsState()
@@ -139,7 +140,8 @@ fun InvoiceReminder(
                 label = stringResource(R.string.title),
                 icon = Icons.Default.Doorbell,
                 onChange = {
-                    errorMessage = ""
+                    // Clear error message when typing
+                    errorMessageResId = null
                 }
             )
 
@@ -151,7 +153,8 @@ fun InvoiceReminder(
                 label = stringResource(R.string.amount),
                 icon = Icons.Default.AttachMoney,
                 onChange = {
-                    errorMessage = ""
+                    // Clear error message when typing
+                    errorMessageResId = null
                 }
             )
 
@@ -220,9 +223,11 @@ fun InvoiceReminder(
             .heightIn(min = 25.dp)
             .align(Alignment.Start)
             .padding(start = 25.dp)) {
-            if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage,
-                    color = colorResource(id = R.color.error_message_color))
+            errorMessageResId?.let { resId ->
+                Text(
+                    text = stringResource(resId),
+                    color = colorResource(id = R.color.error_message_color)
+                )
             }
         }
 
@@ -233,17 +238,17 @@ fun InvoiceReminder(
 
                 when {
                     title.isEmpty() -> {
-                        errorMessage = "Please enter a title"
+                        errorMessageResId = R.string.please_enter_a_title
                     }
                     normalizedAmount.toDoubleOrNull() == null -> {
-                        errorMessage = "Amount must be a number"
+                        errorMessageResId = R.string.amount_must_be_a_number
                     }
                     (normalizedAmount.toDoubleOrNull() ?: 0.0) <= 0.0 -> {
-                        errorMessage = "Amount must be greater than zero"
+                        errorMessageResId = R.string.amount_must_be_greater_than_zero
                     }
                     else -> {
                         val invoiceAmount = normalizedAmount.toDoubleOrNull() ?: 0.0
-                        errorMessage = ""
+                        errorMessageResId = null
                         viewModel.addInvoice(
                             title = title,
                             amount = invoiceAmount,

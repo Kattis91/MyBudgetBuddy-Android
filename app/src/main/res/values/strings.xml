@@ -71,6 +71,8 @@
 
     <!-- Categories -->
     <string name="failed_to_add_category">Failed to add category</string>
+    <string name="category_already_exists">Category already exists</string>
+    <string name="category_name_cannot_be_empty">Category name cannot be empty</string>
     <string name="fixed">Fixed</string>
     <string name="fixed_expense_category">Fixed Expense Category</string>
     <string name="fixed_expenses">Fixed Expenses</string>
