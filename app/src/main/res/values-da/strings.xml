@@ -141,10 +141,15 @@
     <string name="tap_the_expenses_tab">Tryk på fanen Udgifter for at spore dine køb</string>
     <string name="tap_the_incomes_tab">Tryk på fanen Indkomst for at spore din indtjening</string>
     <string name="tap_the_amount">Tryk på beløbet</string>
+    <string name="no_incomes_added">Du har ikke tilføjet nogen indkomst for denne periode.</string>
+    <string name="no_fixed_expenses_added">Du har ikke tilføjet nogen faste udgifter for denne periode.</string>
+    <string name="no_variable_expenses_added">Du har ikke tilføjet nogen variable udgifter for denne periode.</string>
 
     <!-- Overview & Statistics -->
     <string name="overview">Oversigt</string>
     <string name="outcome">Udfald</string>
+    <string name="outcome_negative">Udfald: - %1$s</string>
+    <string name="outcome_positive">Udfald: %1$s</string>
     <string name="outcome_format">Udfald: %.2f</string>
     <string name="this_percentage_shows">Denne procentdel viser, hvor meget af din indkomst, der er blevet sparet eller brugt. Det er en fantastisk måde at se, hvordan du klarer dig!</string>
 

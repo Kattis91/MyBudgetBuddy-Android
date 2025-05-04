@@ -140,10 +140,15 @@
     <string name="tap_the_expenses_tab">Tap the expenses tab to track your latest purchases</string>
     <string name="tap_the_incomes_tab">Tap the incomes tab to track your latest earnings</string>
     <string name="tap_the_amount">Tap the amount</string>
+    <string name="no_incomes_added">You didn\'t add any incomes for this period.</string>
+    <string name="no_fixed_expenses_added">You didn\'t add any fixed expenses for this period.</string>
+    <string name="no_variable_expenses_added">You didn\'t add any variable expenses for this period.</string>
 
     <!-- Overview & Statistics -->
     <string name="overview">Overview</string>
     <string name="outcome">Outcome</string>
+    <string name="outcome_negative">Outcome: - %1$s</string>
+    <string name="outcome_positive">Outcome: %1$s</string>
     <string name="outcome_format">Outcome: %.2f</string>
     <string name="this_percentage_shows">This percentage shows how much of your income has been saved or spent. It\'s a great way to see how you\'re doing!</string>
 
