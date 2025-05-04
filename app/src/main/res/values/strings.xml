@@ -89,6 +89,7 @@
 
     <!-- About developer -->
     <string name="about_developer">I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch.</string>
+    <string name="the_icon_is_taken_from">The icon is taken from </string>
 
     <!-- Income related -->
     <string name="include_fixed_expenses">Include Fixed Expenses</string>

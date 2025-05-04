@@ -23,16 +23,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.AnimatedSegmentedButtonRow
 import com.kat.mybudgetbuddy.components.FeatureCard
-import com.kat.mybudgetbuddy.components.SectionHeader
-import com.kat.mybudgetbuddy.data.aboutTheDeveloper
-import com.kat.mybudgetbuddy.data.extraFeatures
-import com.kat.mybudgetbuddy.data.features
+import com.kat.mybudgetbuddy.data.createAboutDeveloperList
+import com.kat.mybudgetbuddy.data.createExtraFeaturesList
+import com.kat.mybudgetbuddy.data.createFeaturesList
+
 
 @Composable
 fun InfoScreen(
@@ -72,7 +73,7 @@ fun InfoScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            "Budgeting made easy, so you can focus on what matters most to you!",
+            text = stringResource(R.string.budgeting_made_easy),
             fontSize = 20.sp,
             modifier = Modifier.padding(horizontal = 20.dp),
             color = textColor
@@ -81,7 +82,7 @@ fun InfoScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         AnimatedSegmentedButtonRow (
-            options = listOf("About", "Extra", "Development"),
+            options = listOf(stringResource(R.string.about), stringResource(R.string.extra), stringResource(R.string.development)),
             selectedIndex = selectedTabIndex,
             onSelectionChanged = { index ->
                 selectedTabIndex = index
@@ -92,14 +93,17 @@ fun InfoScreen(
 
         when (selectedTabIndex) {
             0 -> {
-                features.forEach { FeatureCard(it) }
+                val features = createFeaturesList()
+                features.forEach( { FeatureCard(it) })
 
             }
             1 -> {
+                val extraFeatures = createExtraFeaturesList()
                 extraFeatures.forEach { FeatureCard(it) }
 
             }
             2 -> {
+                val aboutTheDeveloper = createAboutDeveloperList()
                 aboutTheDeveloper.forEach { FeatureCard(it) }
             }
         }

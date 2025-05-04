@@ -90,6 +90,7 @@
 
     <!-- About developer -->
     <string name="about_developer">Jeg er Ekaterina Durneva Svedmark, skaberen af denne app og en håbefuld app-udvikler. Dette er mit tredje projekt og min første uafhængige app, bygget fra koncept til lancering.</string>
+    <string name="the_icon_is_taken_from">Ikonet er taget fra </string>
 
     <!-- Income related -->
     <string name="include_fixed_expenses">Inkluder Faste Udgifter</string>

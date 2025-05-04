@@ -1,5 +1,6 @@
 package com.kat.mybudgetbuddy.data
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Alarm
@@ -11,7 +12,11 @@ import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.kat.mybudgetbuddy.R
 import com.kat.mybudgetbuddy.components.CreditsText
 
 data class FeatureItem(
@@ -20,22 +25,56 @@ data class FeatureItem(
     val content: (@Composable () -> Unit)? = null
 )
 
-val features = listOf(
-    FeatureItem(Icons.Default.FormatListNumbered, "Add your income and expenses, with expenses categorized as fixed or variable."),
-    FeatureItem(Icons.Default.Category, "Organize your finances better by adding your own categories, or stick with the default ones."),
-    FeatureItem(Icons.Default.CalendarMonth, "Customize your own budget periods: choose from monthly, weekly, or even 5-day periods to match your needs."),
-    FeatureItem(Icons.Default.BarChart, "Keep track of your entire budget history, so you can see exactly where your money goes.")
-)
+@Composable
+fun createFeaturesList(): List<FeatureItem> {
+    return listOf(
+        FeatureItem(
+            Icons.Default.FormatListNumbered,
+            text = stringResource(R.string.add_your_income_and_expenses)
+        ),
+        FeatureItem(
+            Icons.Default.Category,
+            text = stringResource(R.string.organize_your_finances)
+        ),
+        FeatureItem(
+            Icons.Default.CalendarMonth,
+            text = stringResource(R.string.customize_budget_periods)
+        ),
+        FeatureItem(
+            Icons.Default.BarChart,
+            text = stringResource(R.string.keep_track_of_your_entire_budget)
+        )
+    )
+}
 
-val extraFeatures = listOf(
-    FeatureItem(Icons.Default.AccessTime, "Stay in Control – Get timely reminders when your budget period is ending, so you can plan ahead with confidence."),
-    FeatureItem(Icons.Default.Alarm, "Never Miss a Payment – Invoice reminders ensure you stay on track and stress-free when it comes to due dates.")
-)
+@Composable
+fun createExtraFeaturesList(): List<FeatureItem> {
+    return listOf(
+        FeatureItem(
+            Icons.Default.AccessTime,
+            text = stringResource(R.string.stay_in_control)
+        ),
+        FeatureItem(
+            Icons.Default.Alarm,
+            text = stringResource(R.string.never_miss_a_payment)
+        )
+    )
+}
 
-val aboutTheDeveloper = listOf(
-    FeatureItem(Icons.Default.Computer, "I’m Ekaterina Durneva Svedmark, the creator of this app and an aspiring app developer. This is my third project and my first independent app, built from concept to launch."),
-    FeatureItem(Icons.Default.Star, content = {
-        Text("The icon is taken from ")
-        CreditsText()
-    })
-)
+@Composable
+fun createAboutDeveloperList(): List<FeatureItem> {
+    return listOf(
+        FeatureItem(
+            Icons.Default.Computer,
+            text = stringResource(R.string.about_developer)
+        ),
+        FeatureItem(
+            Icons.Default.Star, content = {
+            Text(
+                text = stringResource(R.string.the_icon_is_taken_from),
+                modifier = Modifier.padding(horizontal = 6.dp)
+            )
+            CreditsText()
+        })
+    )
+}
