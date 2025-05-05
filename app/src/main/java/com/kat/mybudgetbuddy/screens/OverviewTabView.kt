@@ -57,7 +57,7 @@ fun OverviewTabView(
 
     val nonEmptyPeriods = historicalPeriods.filter {
         it.incomes.isNotEmpty() || it.fixedExpenses.isNotEmpty() || it.variableExpenses.isNotEmpty()
-    }
+    }.reversed()
     val currentPeriod by viewModel.currentPeriod.observeAsState()
 
     val isDarkMode = isSystemInDarkTheme()
