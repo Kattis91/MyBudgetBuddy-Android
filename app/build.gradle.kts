@@ -14,7 +14,7 @@ android {
         applicationId = "com.kat.mybudgetbuddy"
         minSdk = 24
         targetSdk = 35
-        versionCode = 7
+        versionCode = 8
         versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
