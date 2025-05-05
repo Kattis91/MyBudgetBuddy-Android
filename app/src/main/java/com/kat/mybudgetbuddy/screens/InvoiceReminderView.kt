@@ -204,6 +204,7 @@ fun InvoiceReminder(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            /*
             TextButton(onClick = {
                 showScannerSheet = true
             }) {
@@ -217,6 +218,7 @@ fun InvoiceReminder(
                     Text(text = stringResource(R.string.scan_the_invoice),)
                 }
             }
+             */
         }
 
         Box(modifier = Modifier
